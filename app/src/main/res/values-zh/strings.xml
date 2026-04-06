@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- App -->
+    <string name="app_name">联系人</string>
+
+    <!-- Navigation Labels -->
+    <string name="nav_contacts">联系人</string>
+    <string name="nav_recents">最近</string>
+    <string name="nav_favorites">收藏</string>
+    <string name="nav_settings">设置</string>
+
+    <!-- Contacts Screen -->
+    <string name="contacts_title">联系人</string>
+    <string name="search_contacts_hint">搜索联系人…</string>
+    <string name="no_contacts_found">未找到联系人</string>
+    <string name="no_contacts_message">您的联系人列表为空。\n添加新联系人以开始使用。</string>
+    <string name="contact_count">%d 个联系人</string>
+    <string name="loading_contacts">正在加载联系人…</string>
+    <string name="permission_required">需要权限</string>
+    <string name="contacts_permission_message">需要联系人权限以显示您的联系人。</string>
+    <string name="grant_permission">授予权限</string>
+    <string name="contacts_subtitle">你的联系人，一键即可访问</string>
+
+    <!-- Permission Screen -->
+    <string name="perm_one">读取联系人</string>
+    <string name="perm_one_desc">显示并搜索你的联系人列表</string>
+    <string name="perm_two">拨打电话</string>
+    <string name="perm_two_desc">直接从应用中拨打号码</string>
+    <string name="perm_three">通话记录</string>
+    <string name="perm_three_desc">查看最近通话和通话记录</string>
+
+    <string name="permissions_needed">需要一些权限</string>
+    <string name="permissions_needed_desc">这些权限是应用正常运行所必需的。我们绝不会共享你的数据。</string>
+    <string name="grant_permissions">授予权限</string>
+    <string name="skip_now">暂时跳过</string>
+
+    <!-- Onboarding Screen -->
+    <string name="onboarding_1_title">所有联系人</string>
+    <string name="onboarding_1_subtitle">集中在一处</string>
+    <string name="onboarding_1_desc">浏览、搜索并管理设备上的所有联系人——整洁有序，随时可用。</string>
+
+    <string name="onboarding_2_title">拨号与发现</string>
+    <string name="onboarding_2_subtitle">即时完成</string>
+    <string name="onboarding_2_desc">在拨号盘输入时，匹配的联系人会实时显示。一键即可拨打电话。</string>
+
+    <string name="onboarding_3_title">收藏与最近通话</string>
+    <string name="onboarding_3_subtitle">始终可见</string>
+    <string name="onboarding_3_desc">固定常用联系人并查看通话记录——重要内容始终置顶显示。</string>
+
+    <string name="skip_text">跳过</string>
+    <string name="get_started">开始使用</string>
+    <string name="next">下一步</string>
+
+    <!-- Recents Screen -->
+    <string name="recents_title">最近</string>
+    <string name="no_recent_calls">没有最近通话</string>
+    <string name="no_recents_message">您的通话记录为空。\n拨打电话后会显示在这里。</string>
+    <string name="call_log_permission_message">需要通话记录权限以显示最近通话。</string>
+    <string name="clear_all_recents">清除全部</string>
+    <string name="call_duration">通话时长：%s</string>
+    <string name="call_type_incoming">来电</string>
+    <string name="call_type_outgoing">去电</string>
+    <string name="call_type_missed">未接来电</string>
+    <string name="call_type_rejected">已拒绝</string>
+    <string name="call_type_voicemail">语音信箱</string>
+    <string name="call_type_unknown">未知</string>
+    <string name="today">今天</string>
+    <string name="yesterday">昨天</string>
+
+    <!-- Favorites Screen -->
+    <string name="favorites_title">收藏</string>
+    <string name="no_favorites">暂无收藏</string>
+    <string name="no_favorites_message">为联系人加星标\n即可添加到收藏。</string>
+
+    <!-- Contact Detail Screen -->
+    <string name="contact_detail_title">联系人</string>
+    <string name="action_call">拨打电话</string>
+    <string name="action_message">发送消息</string>
+    <string name="action_email">电子邮件</string>
+    <string name="action_video">视频通话</string>
+    <string name="action_add_favorite">添加到收藏</string>
+    <string name="action_remove_favorite">从收藏中移除</string>
+    <string name="action_edit">编辑联系人</string>
+    <string name="action_delete">删除联系人</string>
+    <string name="action_share">分享联系人</string>
+    <string name="section_phone">电话</string>
+    <string name="section_email">电子邮件</string>
+    <string name="section_address">地址</string>
+    <string name="section_notes">备注</string>
+    <string name="phone_mobile">手机</string>
+    <string name="phone_home">家庭</string>
+    <string name="phone_work">工作</string>
+    <string name="phone_other">其他</string>
+    <string name="copy_to_clipboard">已复制到剪贴板</string>
+
+    <!-- Actions -->
+    <string name="add_contact">添加联系人</string>
+    <string name="fab_add_contact_description">添加新联系人</string>
+    <string name="back_button_description">返回</string>
+    <string name="search_button_description">搜索</string>
+    <string name="more_options_description">更多选项</string>
+    <string name="contact_avatar_description">%s 的联系人头像</string>
+    <string name="call_type_icon_description">通话类型：%s</string>
+    <string name="action_call_back">回拨</string>
+    <string name="settings">设置</string>
+    <string name="about">关于</string>
+
+    <!-- Dialogs -->
+    <string name="confirm_delete_title">删除联系人</string>
+    <string name="confirm_delete_message">确定要删除 %s 吗？</string>
+    <string name="confirm_clear_history_title">清除通话记录</string>
+    <string name="confirm_clear_history_message">确定要清除所有最近通话吗？</string>
+    <string name="dialog_yes">是</string>
+    <string name="dialog_no">否</string>
+    <string name="dialog_cancel">取消</string>
+    <string name="dialog_ok">确定</string>
+
+    <!-- Errors -->
+    <string name="error_loading_contacts">加载联系人失败。</string>
+    <string name="error_loading_call_log">加载通话记录失败。</string>
+    <string name="error_no_phone_app">此设备未找到电话应用。</string>
+    <string name="error_no_messaging_app">此设备未找到消息应用。</string>
+    <string name="error_no_email_app">未找到电子邮件应用。</string>
+
+    <!-- Accessibility -->
+    <string name="cd_search_clear">清除搜索</string>
+    <string name="cd_toggle_favorite">切换收藏</string>
+    <string name="cd_contact_photo">联系人照片</string>
+    <string name="cd_call_icon">通话图标</string>
+
+    <!-- Sort & Filter -->
+    <string name="sort_by">排序方式</string>
+    <string name="sort_first_name">名字</string>
+    <string name="sort_last_name">姓氏</string>
+    <string name="filter_all">全部</string>
+    <string name="filter_with_phone">有电话号码</string>
+    <string name="system">系统</string>
+    <string name="light">浅色</string>
+    <string name="dark">深色</string>
+    <string name="language">设置语言</string>
+    <string name="sim_settings">SIM卡设置</string>
+    <string name="sim_settings_desc">管理SIM卡和默认通话SIM卡</string>
+    <string name="call_settings">通话设置</string>
+    <string name="call_settings_desc">管理通话选项</string>
+    <string name="default_apps">默认应用</string>
+    <string name="default_apps_desc">更改默认通话应用</string>
+
+    <!-- Theme -->
+    <string name="theme">主题</string>
+    <string name="accent_color">强调色</string>
+
+    <string name="nav_dialpad">拨号盘</string>
+    <string name="dialpad_title">拨号盘</string>
+    <string name="dialpad_call_button">拨打电话</string>
+    <string name="dialpad_backspace">删除数字</string>
+
+</resources>

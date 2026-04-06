@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- App -->
+    <string name="app_name">Contactos</string>
+
+    <!-- Navigation Labels -->
+    <string name="nav_contacts">Contactos</string>
+    <string name="nav_recents">Recientes</string>
+    <string name="nav_favorites">Favoritos</string>
+    <string name="nav_settings">Configuración</string>
+
+    <!-- Contacts Screen -->
+    <string name="contacts_title">Contactos</string>
+    <string name="search_contacts_hint">Buscar contactos…</string>
+    <string name="no_contacts_found">No se encontraron contactos</string>
+    <string name="no_contacts_message">Tu lista de contactos está vacía.\nAgrega un nuevo contacto para comenzar.</string>
+    <string name="contact_count">%d contactos</string>
+    <string name="loading_contacts">Cargando contactos…</string>
+    <string name="permission_required">Permiso requerido</string>
+    <string name="contacts_permission_message">Se requiere permiso de contactos para mostrar tus contactos.</string>
+    <string name="grant_permission">Conceder permiso</string>
+    <string name="contacts_subtitle">Tus contactos, a un toque</string>
+
+    <!-- Permission Screen -->
+    <string name="perm_one">Leer contactos</string>
+    <string name="perm_one_desc">Mostrar y buscar en tu lista de contactos</string>
+    <string name="perm_two">Realizar llamadas</string>
+    <string name="perm_two_desc">Marcar números directamente desde la app</string>
+    <string name="perm_three">Historial de llamadas</string>
+    <string name="perm_three_desc">Ver tus llamadas recientes y el registro de llamadas</string>
+
+    <string name="permissions_needed">Se requieren algunos permisos</string>
+    <string name="permissions_needed_desc">Estos son necesarios para que la app funcione correctamente. Nunca compartimos tus datos.</string>
+    <string name="grant_permissions">Conceder permisos</string>
+    <string name="skip_now">Omitir por ahora</string>
+
+    <!-- Onboarding Screen -->
+    <string name="onboarding_1_title">Todos tus contactos</string>
+    <string name="onboarding_1_subtitle">en un solo lugar</string>
+    <string name="onboarding_1_desc">Explora, busca y gestiona todos los contactos de tu dispositivo — organizados de forma clara y siempre a tu alcance.</string>
+
+    <string name="onboarding_2_title">Marcar y descubrir</string>
+    <string name="onboarding_2_subtitle">al instante</string>
+    <string name="onboarding_2_desc">Escribe en el marcador y ve contactos coincidentes en tiempo real. Llama a cualquiera con un solo toque.</string>
+
+    <string name="onboarding_3_title">Favoritos y recientes</string>
+    <string name="onboarding_3_subtitle">siempre visibles</string>
+    <string name="onboarding_3_desc">Fija tus contactos más llamados y revisa tu historial — todo lo importante aparece arriba.</string>
+
+    <string name="skip_text">Omitir</string>
+    <string name="get_started">Comenzar</string>
+    <string name="next">Siguiente</string>
+
+    <!-- Recents Screen -->
+    <string name="recents_title">Recientes</string>
+    <string name="no_recent_calls">No hay llamadas recientes</string>
+    <string name="no_recents_message">Tu historial de llamadas está vacío.\nRealiza una llamada para verla aquí.</string>
+    <string name="call_log_permission_message">Se requiere permiso del registro de llamadas para mostrar las llamadas recientes.</string>
+    <string name="clear_all_recents">Borrar todo</string>
+    <string name="call_duration">Duración: %s</string>
+    <string name="call_type_incoming">Entrante</string>
+    <string name="call_type_outgoing">Saliente</string>
+    <string name="call_type_missed">Perdida</string>
+    <string name="call_type_rejected">Rechazada</string>
+    <string name="call_type_voicemail">Buzón de voz</string>
+    <string name="call_type_unknown">Desconocido</string>
+    <string name="today">Hoy</string>
+    <string name="yesterday">Ayer</string>
+
+    <!-- Favorites Screen -->
+    <string name="favorites_title">Favoritos</string>
+    <string name="no_favorites">Aún no hay favoritos</string>
+    <string name="no_favorites_message">Marca un contacto con estrella\npara añadirlo a favoritos.</string>
+
+    <!-- Contact Detail Screen -->
+    <string name="contact_detail_title">Contacto</string>
+    <string name="action_call">Llamar</string>
+    <string name="action_message">Mensaje</string>
+    <string name="action_email">Correo electrónico</string>
+    <string name="action_video">Video</string>
+    <string name="action_add_favorite">Añadir a favoritos</string>
+    <string name="action_remove_favorite">Eliminar de favoritos</string>
+    <string name="action_edit">Editar contacto</string>
+    <string name="action_delete">Eliminar contacto</string>
+    <string name="action_share">Compartir contacto</string>
+    <string name="section_phone">Teléfono</string>
+    <string name="section_email">Correo electrónico</string>
+    <string name="section_address">Dirección</string>
+    <string name="section_notes">Notas</string>
+    <string name="phone_mobile">Móvil</string>
+    <string name="phone_home">Casa</string>
+    <string name="phone_work">Trabajo</string>
+    <string name="phone_other">Otro</string>
+    <string name="copy_to_clipboard">Copiado al portapapeles</string>
+
+    <!-- Actions -->
+    <string name="add_contact">Agregar contacto</string>
+    <string name="fab_add_contact_description">Agregar nuevo contacto</string>
+    <string name="back_button_description">Volver</string>
+    <string name="search_button_description">Buscar</string>
+    <string name="more_options_description">Más opciones</string>
+    <string name="contact_avatar_description">Avatar del contacto para %s</string>
+    <string name="call_type_icon_description">Tipo de llamada: %s</string>
+    <string name="action_call_back">Devolver llamada</string>
+    <string name="settings">Configuración</string>
+    <string name="about">Acerca de</string>
+
+    <!-- Dialogs -->
+    <string name="confirm_delete_title">Eliminar contacto</string>
+    <string name="confirm_delete_message">¿Estás seguro de que deseas eliminar a %s?</string>
+    <string name="confirm_clear_history_title">Borrar historial de llamadas</string>
+    <string name="confirm_clear_history_message">¿Estás seguro de que deseas borrar todas las llamadas recientes?</string>
+    <string name="dialog_yes">Sí</string>
+    <string name="dialog_no">No</string>
+    <string name="dialog_cancel">Cancelar</string>
+    <string name="dialog_ok">Aceptar</string>
+
+    <!-- Errors -->
+    <string name="error_loading_contacts">Error al cargar los contactos.</string>
+    <string name="error_loading_call_log">Error al cargar el historial de llamadas.</string>
+    <string name="error_no_phone_app">No se encontró una aplicación de teléfono en este dispositivo.</string>
+    <string name="error_no_messaging_app">No se encontró una aplicación de mensajería en este dispositivo.</string>
+    <string name="error_no_email_app">No se encontró una aplicación de correo electrónico.</string>
+
+    <!-- Accessibility -->
+    <string name="cd_search_clear">Borrar búsqueda</string>
+    <string name="cd_toggle_favorite">Alternar favorito</string>
+    <string name="cd_contact_photo">Foto del contacto</string>
+    <string name="cd_call_icon">Icono de llamada</string>
+
+    <!-- Sort & Filter -->
+    <string name="sort_by">Ordenar por</string>
+    <string name="sort_first_name">Nombre</string>
+    <string name="sort_last_name">Apellido</string>
+    <string name="filter_all">Todos</string>
+    <string name="filter_with_phone">Con teléfono</string>
+    <string name="system">Sistema</string>
+    <string name="light">Claro</string>
+    <string name="dark">Oscuro</string>
+    <string name="language">Establecer idioma</string>
+    <string name="sim_settings">Configuración de SIM</string>
+    <string name="sim_settings_desc">Gestionar tarjetas SIM y SIM predeterminada para llamadas</string>
+    <string name="call_settings">Configuración de llamadas</string>
+    <string name="call_settings_desc">Gestionar opciones de llamadas</string>
+    <string name="default_apps">Aplicaciones predeterminadas</string>
+    <string name="default_apps_desc">Cambiar la aplicación de llamadas predeterminada</string>
+
+    <!-- Theme -->
+    <string name="theme">Tema</string>
+    <string name="accent_color">Color de acento</string>
+
+    <string name="nav_dialpad">Teclado</string>
+    <string name="dialpad_title">Teclado</string>
+    <string name="dialpad_call_button">Realizar llamada</string>
+    <string name="dialpad_backspace">Eliminar dígito</string>
+
+</resources>

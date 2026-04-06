@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- App -->
+    <string name="app_name">연락처</string>
+
+    <!-- Navigation Labels -->
+    <string name="nav_contacts">연락처</string>
+    <string name="nav_recents">최근 기록</string>
+    <string name="nav_favorites">즐겨찾기</string>
+    <string name="nav_settings">설정</string>
+
+    <!-- Contacts Screen -->
+    <string name="contacts_title">연락처</string>
+    <string name="search_contacts_hint">연락처 검색…</string>
+    <string name="no_contacts_found">연락처를 찾을 수 없습니다</string>
+    <string name="no_contacts_message">연락처 목록이 비어 있습니다.\n새 연락처를 추가하여 시작하세요.</string>
+    <string name="contact_count">%d개의 연락처</string>
+    <string name="loading_contacts">연락처를 불러오는 중…</string>
+    <string name="permission_required">권한 필요</string>
+    <string name="contacts_permission_message">연락처를 표시하려면 연락처 권한이 필요합니다.</string>
+    <string name="grant_permission">권한 허용</string>
+    <string name="contacts_subtitle">내 연락처, 한 번의 탭으로</string>
+
+    <!-- Permission Screen -->
+    <string name="perm_one">연락처 읽기</string>
+    <string name="perm_one_desc">연락처 목록을 표시하고 검색합니다</string>
+    <string name="perm_two">전화 걸기</string>
+    <string name="perm_two_desc">앱에서 직접 번호를 눌러 전화합니다</string>
+    <string name="perm_three">통화 기록</string>
+    <string name="perm_three_desc">최근 통화 및 통화 기록을 확인합니다</string>
+
+    <string name="permissions_needed">몇 가지 권한이 필요합니다</string>
+    <string name="permissions_needed_desc">앱이 제대로 작동하려면 필요합니다. 귀하의 데이터는 절대 공유되지 않습니다.</string>
+    <string name="grant_permissions">권한 허용</string>
+    <string name="skip_now">지금 건너뛰기</string>
+
+    <!-- Onboarding Screen -->
+    <string name="onboarding_1_title">모든 연락처</string>
+    <string name="onboarding_1_subtitle">한 곳에서</string>
+    <string name="onboarding_1_desc">기기의 모든 연락처를 탐색, 검색 및 관리하세요 — 깔끔하게 정리되어 항상 쉽게 접근할 수 있습니다.</string>
+
+    <string name="onboarding_2_title">전화 및 검색</string>
+    <string name="onboarding_2_subtitle">즉시</string>
+    <string name="onboarding_2_desc">다이얼패드에 입력하면 일치하는 연락처가 실시간으로 표시됩니다. 한 번의 탭으로 누구에게나 전화하세요.</string>
+
+    <string name="onboarding_3_title">즐겨찾기 및 최근 통화</string>
+    <string name="onboarding_3_subtitle">항상 표시</string>
+    <string name="onboarding_3_desc">자주 연락하는 연락처를 고정하고 통화 기록을 확인하세요 — 중요한 항목이 상단에 표시됩니다.</string>
+
+    <string name="skip_text">건너뛰기</string>
+    <string name="get_started">시작하기</string>
+    <string name="next">다음</string>
+
+    <!-- Recents Screen -->
+    <string name="recents_title">최근 기록</string>
+    <string name="no_recent_calls">최근 통화 없음</string>
+    <string name="no_recents_message">통화 기록이 비어 있습니다.\n통화를 하면 여기에 표시됩니다.</string>
+    <string name="call_log_permission_message">최근 통화를 표시하려면 통화 기록 권한이 필요합니다.</string>
+    <string name="clear_all_recents">모두 삭제</string>
+    <string name="call_duration">통화 시간: %s</string>
+    <string name="call_type_incoming">수신</string>
+    <string name="call_type_outgoing">발신</string>
+    <string name="call_type_missed">부재중</string>
+    <string name="call_type_rejected">거부됨</string>
+    <string name="call_type_voicemail">음성 사서함</string>
+    <string name="call_type_unknown">알 수 없음</string>
+    <string name="today">오늘</string>
+    <string name="yesterday">어제</string>
+
+    <!-- Favorites Screen -->
+    <string name="favorites_title">즐겨찾기</string>
+    <string name="no_favorites">아직 즐겨찾기가 없습니다</string>
+    <string name="no_favorites_message">연락처에 별표를 표시하여\n즐겨찾기에 추가하세요.</string>
+
+    <!-- Contact Detail Screen -->
+    <string name="contact_detail_title">연락처</string>
+    <string name="action_call">전화</string>
+    <string name="action_message">메시지</string>
+    <string name="action_email">이메일</string>
+    <string name="action_video">영상 통화</string>
+    <string name="action_add_favorite">즐겨찾기에 추가</string>
+    <string name="action_remove_favorite">즐겨찾기에서 제거</string>
+    <string name="action_edit">연락처 수정</string>
+    <string name="action_delete">연락처 삭제</string>
+    <string name="action_share">연락처 공유</string>
+    <string name="section_phone">전화번호</string>
+    <string name="section_email">이메일</string>
+    <string name="section_address">주소</string>
+    <string name="section_notes">메모</string>
+    <string name="phone_mobile">휴대폰</string>
+    <string name="phone_home">집</string>
+    <string name="phone_work">직장</string>
+    <string name="phone_other">기타</string>
+    <string name="copy_to_clipboard">클립보드에 복사됨</string>
+
+    <!-- Actions -->
+    <string name="add_contact">연락처 추가</string>
+    <string name="fab_add_contact_description">새 연락처 추가</string>
+    <string name="back_button_description">뒤로 가기</string>
+    <string name="search_button_description">검색</string>
+    <string name="more_options_description">더 많은 옵션</string>
+    <string name="contact_avatar_description">%s의 연락처 아바타</string>
+    <string name="call_type_icon_description">통화 유형: %s</string>
+    <string name="action_call_back">다시 전화</string>
+    <string name="settings">설정</string>
+    <string name="about">정보</string>
+
+    <!-- Dialogs -->
+    <string name="confirm_delete_title">연락처 삭제</string>
+    <string name="confirm_delete_message">%s을(를) 삭제하시겠습니까?</string>
+    <string name="confirm_clear_history_title">통화 기록 삭제</string>
+    <string name="confirm_clear_history_message">모든 최근 통화를 삭제하시겠습니까?</string>
+    <string name="dialog_yes">예</string>
+    <string name="dialog_no">아니요</string>
+    <string name="dialog_cancel">취소</string>
+    <string name="dialog_ok">확인</string>
+
+    <!-- Errors -->
+    <string name="error_loading_contacts">연락처를 불러오지 못했습니다.</string>
+    <string name="error_loading_call_log">통화 기록을 불러오지 못했습니다.</string>
+    <string name="error_no_phone_app">이 기기에 전화 앱이 없습니다.</string>
+    <string name="error_no_messaging_app">이 기기에 메시지 앱이 없습니다.</string>
+    <string name="error_no_email_app">이메일 앱을 찾을 수 없습니다.</string>
+
+    <!-- Accessibility -->
+    <string name="cd_search_clear">검색 지우기</string>
+    <string name="cd_toggle_favorite">즐겨찾기 전환</string>
+    <string name="cd_contact_photo">연락처 사진</string>
+    <string name="cd_call_icon">통화 아이콘</string>
+
+    <!-- Sort & Filter -->
+    <string name="sort_by">정렬 기준</string>
+    <string name="sort_first_name">이름</string>
+    <string name="sort_last_name">성</string>
+    <string name="filter_all">전체</string>
+    <string name="filter_with_phone">전화번호 있음</string>
+    <string name="system">시스템</string>
+    <string name="light">라이트</string>
+    <string name="dark">다크</string>
+    <string name="language">언어 설정</string>
+    <string name="sim_settings">SIM 설정</string>
+    <string name="sim_settings_desc">SIM 카드 및 기본 통화 SIM 관리</string>
+    <string name="call_settings">통화 설정</string>
+    <string name="call_settings_desc">통화 옵션 관리</string>
+    <string name="default_apps">기본 앱</string>
+    <string name="default_apps_desc">기본 통화 앱 변경</string>
+
+    <!-- Theme -->
+    <string name="theme">테마</string>
+    <string name="accent_color">강조 색상</string>
+
+    <string name="nav_dialpad">다이얼패드</string>
+    <string name="dialpad_title">다이얼패드</string>
+    <string name="dialpad_call_button">전화 걸기</string>
+    <string name="dialpad_backspace">숫자 삭제</string>
+
+</resources>

@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- App -->
+    <string name="app_name">संपर्क</string>
+
+    <!-- Navigation Labels -->
+    <string name="nav_contacts">संपर्क</string>
+    <string name="nav_recents">हाल के</string>
+    <string name="nav_favorites">पसंदीदा</string>
+    <string name="nav_settings">सेटिंग्स</string>
+
+    <!-- Contacts Screen -->
+    <string name="contacts_title">संपर्क</string>
+    <string name="search_contacts_hint">संपर्क खोजें…</string>
+    <string name="no_contacts_found">कोई संपर्क नहीं मिला</string>
+    <string name="no_contacts_message">आपकी संपर्क सूची खाली है।\nशुरू करने के लिए नया संपर्क जोड़ें।</string>
+    <string name="contact_count">%d संपर्क</string>
+    <string name="loading_contacts">संपर्क लोड हो रहे हैं…</string>
+    <string name="permission_required">अनुमति आवश्यक है</string>
+    <string name="contacts_permission_message">आपके संपर्क दिखाने के लिए संपर्क अनुमति आवश्यक है।</string>
+    <string name="grant_permission">अनुमति दें</string>
+    <string name="contacts_subtitle">आपके संपर्क, बस एक टैप दूर</string>
+
+    <!-- Permission Screen -->
+    <string name="perm_one">संपर्क पढ़ें</string>
+    <string name="perm_one_desc">अपनी संपर्क सूची देखें और खोजें</string>
+    <string name="perm_two">कॉल करें</string>
+    <string name="perm_two_desc">ऐप से सीधे नंबर डायल करें</string>
+    <string name="perm_three">कॉल इतिहास</string>
+    <string name="perm_three_desc">अपनी हाल की कॉल और कॉल लॉग देखें</string>
+
+    <string name="permissions_needed">कुछ अनुमतियाँ आवश्यक हैं</string>
+    <string name="permissions_needed_desc">ऐप के सही तरीके से काम करने के लिए ये आवश्यक हैं। हम कभी भी आपका डेटा साझा नहीं करते।</string>
+    <string name="grant_permissions">अनुमतियाँ दें</string>
+    <string name="skip_now">अभी छोड़ें</string>
+
+    <!-- Onboarding Screen -->
+    <string name="onboarding_1_title">आपके सभी संपर्क</string>
+    <string name="onboarding_1_subtitle">एक ही जगह पर</string>
+    <string name="onboarding_1_desc">अपने डिवाइस के सभी संपर्क ब्राउज़ करें, खोजें और प्रबंधित करें — साफ़-सुथरे तरीके से व्यवस्थित और हमेशा आपके पास।</string>
+
+    <string name="onboarding_2_title">डायल करें और खोजें</string>
+    <string name="onboarding_2_subtitle">तुरंत</string>
+    <string name="onboarding_2_desc">डायलपैड पर टाइप करें और तुरंत मिलते-जुलते संपर्क देखें। किसी को भी एक टैप में कॉल करें।</string>
+
+    <string name="onboarding_3_title">पसंदीदा और हाल की कॉल</string>
+    <string name="onboarding_3_subtitle">हमेशा दिखाई दें</string>
+    <string name="onboarding_3_desc">अपने सबसे अधिक कॉल किए गए संपर्कों को पिन करें और कॉल इतिहास देखें — महत्वपूर्ण चीजें हमेशा ऊपर दिखेंगी।</string>
+
+    <string name="skip_text">छोड़ें</string>
+    <string name="get_started">शुरू करें</string>
+    <string name="next">आगे</string>
+
+    <!-- Recents Screen -->
+    <string name="recents_title">हाल के</string>
+    <string name="no_recent_calls">कोई हाल की कॉल नहीं</string>
+    <string name="no_recents_message">आपका कॉल इतिहास खाली है।\nइसे यहां देखने के लिए कॉल करें।</string>
+    <string name="call_log_permission_message">आपकी हाल की कॉल दिखाने के लिए कॉल लॉग अनुमति आवश्यक है।</string>
+    <string name="clear_all_recents">सभी साफ़ करें</string>
+    <string name="call_duration">अवधि: %s</string>
+    <string name="call_type_incoming">आने वाली</string>
+    <string name="call_type_outgoing">जाने वाली</string>
+    <string name="call_type_missed">मिस्ड</string>
+    <string name="call_type_rejected">अस्वीकृत</string>
+    <string name="call_type_voicemail">वॉइसमेल</string>
+    <string name="call_type_unknown">अज्ञात</string>
+    <string name="today">आज</string>
+    <string name="yesterday">कल</string>
+
+    <!-- Favorites Screen -->
+    <string name="favorites_title">पसंदीदा</string>
+    <string name="no_favorites">अभी कोई पसंदीदा नहीं</string>
+    <string name="no_favorites_message">किसी संपर्क को स्टार करें\nउसे पसंदीदा में जोड़ने के लिए।</string>
+
+    <!-- Contact Detail Screen -->
+    <string name="contact_detail_title">संपर्क</string>
+    <string name="action_call">कॉल</string>
+    <string name="action_message">संदेश</string>
+    <string name="action_email">ईमेल</string>
+    <string name="action_video">वीडियो</string>
+    <string name="action_add_favorite">पसंदीदा में जोड़ें</string>
+    <string name="action_remove_favorite">पसंदीदा से हटाएं</string>
+    <string name="action_edit">संपर्क संपादित करें</string>
+    <string name="action_delete">संपर्क हटाएं</string>
+    <string name="action_share">संपर्क साझा करें</string>
+    <string name="section_phone">फ़ोन</string>
+    <string name="section_email">ईमेल</string>
+    <string name="section_address">पता</string>
+    <string name="section_notes">नोट्स</string>
+    <string name="phone_mobile">मोबाइल</string>
+    <string name="phone_home">घर</string>
+    <string name="phone_work">कार्यस्थल</string>
+    <string name="phone_other">अन्य</string>
+    <string name="copy_to_clipboard">क्लिपबोर्ड में कॉपी किया गया</string>
+
+    <!-- Actions -->
+    <string name="add_contact">संपर्क जोड़ें</string>
+    <string name="fab_add_contact_description">नया संपर्क जोड़ें</string>
+    <string name="back_button_description">वापस जाएं</string>
+    <string name="search_button_description">खोजें</string>
+    <string name="more_options_description">अधिक विकल्प</string>
+    <string name="contact_avatar_description">%s के लिए संपर्क अवतार</string>
+    <string name="call_type_icon_description">कॉल प्रकार: %s</string>
+    <string name="action_call_back">वापस कॉल करें</string>
+    <string name="settings">सेटिंग्स</string>
+    <string name="about">के बारे में</string>
+
+    <!-- Dialogs -->
+    <string name="confirm_delete_title">संपर्क हटाएं</string>
+    <string name="confirm_delete_message">क्या आप वाकई %s को हटाना चाहते हैं?</string>
+    <string name="confirm_clear_history_title">कॉल इतिहास साफ़ करें</string>
+    <string name="confirm_clear_history_message">क्या आप वाकई सभी हाल की कॉल हटाना चाहते हैं?</string>
+    <string name="dialog_yes">हाँ</string>
+    <string name="dialog_no">नहीं</string>
+    <string name="dialog_cancel">रद्द करें</string>
+    <string name="dialog_ok">ठीक है</string>
+
+    <!-- Errors -->
+    <string name="error_loading_contacts">संपर्क लोड करने में विफल।</string>
+    <string name="error_loading_call_log">कॉल इतिहास लोड करने में विफल।</string>
+    <string name="error_no_phone_app">इस डिवाइस पर कोई फोन ऐप नहीं मिला।</string>
+    <string name="error_no_messaging_app">इस डिवाइस पर कोई मैसेजिंग ऐप नहीं मिला।</string>
+    <string name="error_no_email_app">कोई ईमेल ऐप नहीं मिला।</string>
+
+    <!-- Accessibility -->
+    <string name="cd_search_clear">खोज साफ़ करें</string>
+    <string name="cd_toggle_favorite">पसंदीदा टॉगल करें</string>
+    <string name="cd_contact_photo">संपर्क फोटो</string>
+    <string name="cd_call_icon">कॉल आइकन</string>
+
+    <!-- Sort & Filter -->
+    <string name="sort_by">इसके अनुसार क्रमबद्ध करें</string>
+    <string name="sort_first_name">पहला नाम</string>
+    <string name="sort_last_name">अंतिम नाम</string>
+    <string name="filter_all">सभी</string>
+    <string name="filter_with_phone">फ़ोन वाले</string>
+    <string name="system">सिस्टम</string>
+    <string name="light">लाइट</string>
+    <string name="dark">डार्क</string>
+    <string name="language">भाषा सेट करें</string>
+    <string name="sim_settings">सिम सेटिंग्स</string>
+    <string name="sim_settings_desc">सिम कार्ड और डिफ़ॉल्ट कॉलिंग सिम प्रबंधित करें</string>
+    <string name="call_settings">कॉल सेटिंग्स</string>
+    <string name="call_settings_desc">कॉलिंग विकल्प प्रबंधित करें</string>
+    <string name="default_apps">डिफ़ॉल्ट ऐप्स</string>
+    <string name="default_apps_desc">डिफ़ॉल्ट कॉलिंग ऐप बदलें</string>
+
+    <!-- Theme -->
+    <string name="theme">थीम</string>
+    <string name="accent_color">एक्सेंट रंग</string>
+
+    <string name="nav_dialpad">डायलपैड</string>
+    <string name="dialpad_title">डायलपैड</string>
+    <string name="dialpad_call_button">कॉल करें</string>
+    <string name="dialpad_backspace">अंक हटाएं</string>
+
+</resources>

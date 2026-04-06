@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App -->
+    <string name="app_name">Contacts</string>
+
+    <!-- Navigation Labels -->
+    <string name="nav_contacts">Contacts</string>
+    <string name="nav_recents">Recents</string>
+    <string name="nav_favorites">Favorites</string>
+    <string name="nav_settings">Settings</string>
+
+    <!-- Contacts Screen -->
+    <string name="contacts_title">Contacts</string>
+    <string name="search_contacts_hint">Search contacts…</string>
+    <string name="no_contacts_found">No contacts found</string>
+    <string name="no_contacts_message">Your contact list is empty.\nAdd a new contact to get started.</string>
+    <string name="contact_count">%d contacts</string>
+    <string name="loading_contacts">Loading contacts…</string>
+    <string name="permission_required">Permission Required</string>
+    <string name="contacts_permission_message">Contacts permission is required to display your contacts.</string>
+    <string name="grant_permission">Grant Permission</string>
+    <string name="contacts_subtitle">Your people, one tap away </string>
+
+    <!-- Permission Screen -->
+    <string name="perm_one">Read Contacts</string>
+    <string name="perm_one_desc">Display and search your contacts list</string>
+    <string name="perm_two">Make Calls</string>
+    <string name="perm_two_desc">Dial numbers directly from the app</string>
+    <string name="perm_three">Call History</string>
+    <string name="perm_three_desc">Show your recent calls and call log</string>
+
+    <string name="permissions_needed">A few permissions needed</string>
+    <string name="permissions_needed_desc">These are required for the app to work properly. We never share your data.</string>
+    <string name="grant_permissions">Grant Permissions</string>
+    <string name="skip_now">Skip for now</string>
+
+    <!-- Onboarding Screen -->
+    <string name="onboarding_1_title">All your contacts</string>
+    <string name="onboarding_1_subtitle">in one place</string>
+    <string name="onboarding_1_desc">Browse, search, and manage every contact on your device — cleanly organised and always at hand.</string>
+    <string name="onboarding_2_title">Dial &amp; discover</string>
+    <string name="onboarding_2_subtitle">instantly</string>
+    <string name="onboarding_2_desc">Type on the dialpad and watch matching contacts appear in real-time. Call anyone with a single tap.</string>
+    <string name="onboarding_3_title">Favourites &amp; recents</string>
+    <string name="onboarding_3_subtitle">always visible</string>
+    <string name="onboarding_3_desc">Pin your most-called contacts and revisit your call history — everything important surfaces to the top.</string>
+
+    <string name="skip_text">Skip</string>
+    <string name="get_started">Get Started</string>
+    <string name="next">Next</string>
+
+    <!-- Recents Screen -->
+    <string name="recents_title">Recents</string>
+    <string name="no_recent_calls">No recent calls</string>
+    <string name="no_recents_message">Your call history is empty.\nMake a call to see it here.</string>
+    <string name="call_log_permission_message">Call log permission is required to display your recent calls.</string>
+    <string name="clear_all_recents">Clear All</string>
+    <string name="call_duration">Duration: %s</string>
+    <string name="call_type_incoming">Incoming</string>
+    <string name="call_type_outgoing">Outgoing</string>
+    <string name="call_type_missed">Missed</string>
+    <string name="call_type_rejected">Rejected</string>
+    <string name="call_type_voicemail">Voicemail</string>
+    <string name="call_type_unknown">Unknown</string>
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
+
+    <!-- Favorites Screen -->
+    <string name="favorites_title">Favorites</string>
+    <string name="no_favorites">No favorites yet</string>
+    <string name="no_favorites_message">Star a contact to add them\nto your favorites.</string>
+
+    <!-- Contact Detail Screen -->
+    <string name="contact_detail_title">Contact</string>
+    <string name="action_call">Call</string>
+    <string name="action_message">Message</string>
+    <string name="action_email">Email</string>
+    <string name="action_video">Video</string>
+    <string name="action_add_favorite">Add to favorites</string>
+    <string name="action_remove_favorite">Remove from favorites</string>
+    <string name="action_edit">Edit contact</string>
+    <string name="action_delete">Delete contact</string>
+    <string name="action_share">Share contact</string>
+    <string name="section_phone">Phone</string>
+    <string name="section_email">Email</string>
+    <string name="section_address">Address</string>
+    <string name="section_notes">Notes</string>
+    <string name="phone_mobile">Mobile</string>
+    <string name="phone_home">Home</string>
+    <string name="phone_work">Work</string>
+    <string name="phone_other">Other</string>
+    <string name="copy_to_clipboard">Copied to clipboard</string>
+
+    <!-- Actions -->
+    <string name="add_contact">Add Contact</string>
+    <string name="fab_add_contact_description">Add new contact</string>
+    <string name="back_button_description">Go back</string>
+    <string name="search_button_description">Search</string>
+    <string name="more_options_description">More options</string>
+    <string name="contact_avatar_description">Contact avatar for %s</string>
+    <string name="call_type_icon_description">Call type: %s</string>
+    <string name="action_call_back">Call back</string>
+    <string name="settings">Settings</string>
+    <string name="about">About</string>
+
+    <!-- Dialogs -->
+    <string name="confirm_delete_title">Delete Contact</string>
+    <string name="confirm_delete_message">Are you sure you want to delete %s?</string>
+    <string name="confirm_clear_history_title">Clear Call History</string>
+    <string name="confirm_clear_history_message">Are you sure you want to clear all recent calls?</string>
+    <string name="dialog_yes">Yes</string>
+    <string name="dialog_no">No</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="dialog_ok">OK</string>
+
+    <!-- Errors -->
+    <string name="error_loading_contacts">Failed to load contacts.</string>
+    <string name="error_loading_call_log">Failed to load call history.</string>
+    <string name="error_no_phone_app">No phone app found on this device.</string>
+    <string name="error_no_messaging_app">No messaging app found on this device.</string>
+    <string name="error_no_email_app">No email app found.</string>
+
+    <!-- Accessibility -->
+    <string name="cd_search_clear">Clear search</string>
+    <string name="cd_toggle_favorite">Toggle favorite</string>
+    <string name="cd_contact_photo">Contact photo</string>
+    <string name="cd_call_icon">Call icon</string>
+
+    <!-- Sort & Filter -->
+    <string name="sort_by">Sort by</string>
+    <string name="sort_first_name">First name</string>
+    <string name="sort_last_name">Last name</string>
+    <string name="filter_all">All</string>
+    <string name="filter_with_phone">With phone</string>
+
+    <!-- Sort & Filter -->
+    <string name="theme">Theme</string>
+    <string name="accent_color">Accent Color</string>
+    <string name="system">System</string>
+    <string name="light">Light</string>
+    <string name="dark">Dark</string>
+    <string name="language">Set Language</string>
+    <string name="sim_settings">SIM settings</string>
+    <string name="sim_settings_desc">Manage SIM cards and default calling SIM</string>
+    <string name="call_settings">Call settings</string>
+    <string name="call_settings_desc">Manage calling options</string>
+    <string name="default_apps">Default apps</string>
+    <string name="default_apps_desc">Change default calling app</string>
+
+    <!-- Bottom nav -->
+    <string name="nav_dialpad">Dialpad</string>
+
+    <!-- Dialpad screen -->
+    <string name="dialpad_title">Dialpad</string>
+    <string name="dialpad_call_button">Make call</string>
+    <string name="dialpad_backspace">Delete digit</string>
+
+</resources>
