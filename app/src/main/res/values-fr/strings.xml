@@ -154,4 +154,31 @@
     <string name="dialpad_title">Clavier</string>
     <string name="dialpad_call_button">Passer un appel</string>
     <string name="dialpad_backspace">Supprimer un chiffre</string>
+
+    <string name="overlay_permission_title">Autoriser l\'affichage par-dessus d\'autres applications</string>
+    <string name="overlay_permission_desc">Cette autorisation nous permet d\'afficher des actions rapides utiles après la fin d\'un appel, même lorsque votre écran est verrouillé ou que vous utilisez une autre application.</string>
+    <string name="open_settings">Ouvrir les paramètres</string>
+    <string name="why_do_we_need_this">Pourquoi en avons-nous besoin ?</string>
+    <string name="why_do_we_need_this_desc">Pour afficher l\'écran après appel (actions rapides comme rappeler, WhatsApp, SMS), même lorsque votre téléphone est verrouillé ou que vous utilisez une autre application.</string>
+
+    <string name="call_back">Rappeler</string>
+    <string name="quick_sms">SMS rapide</string>
+    <string name="add_to_contacts">Ajouter aux contacts</string>
+    <string name="block_spam">Bloquer / Spam</string>
+    <string name="dismiss_btn">Fermer</string>
+    <string name="msg_whatsapp">Message sur WhatsApp</string>
+
+    <string name="onboarding_4_title">Gestes intelligents</string>
+    <string name="onboarding_4_subtitle">Actions rapides</string>
+    <string name="onboarding_4_desc">Glissez à droite pour appeler, à gauche pour un message rapide.</string>
+
+    <string name="privacy_policy">Politique de confidentialité</string>
+    <string name="privacy_policy_desc">Lisez notre politique de confidentialité</string>
+
+    <string name="terms_conditions">Conditions générales</string>
+    <string name="terms_conditions_desc">Lisez les conditions générales</string>
+
+    <string name="permission_consent">
+En continuant, j’accepte la politique de confidentialité et les conditions générales.
+</string>
 </resources>

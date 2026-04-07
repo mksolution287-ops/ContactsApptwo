@@ -155,4 +155,31 @@
     <string name="dialpad_call_button">Make call</string>
     <string name="dialpad_backspace">Delete digit</string>
 
+    <string name="overlay_permission_title">Allow Display Over Other Apps</string>
+    <string name="overlay_permission_desc">This permission lets us show helpful quick actions after a call ends, even when your screen is locked or you\'re using another app.</string>
+    <string name="open_settings">Open Settings</string>
+    <string name="why_do_we_need_this">Why do we need this?</string>
+    <string name="why_do_we_need_this_desc">To show the post-call screen (quick actions like Call Back, WhatsApp, SMS) even when your phone is locked or you\'re using another app.</string>
+
+    //labels
+    <string name="call_back">Call back</string>
+    <string name="quick_sms">Quick SMS</string>
+    <string name="add_to_contacts">Add to Contacts</string>
+    <string name="block_spam">Block / Spam</string>
+    <string name="dismiss_btn">Dismiss</string>
+    <string name="msg_whatsapp">Message on Whatsapp</string>
+
+    <string name="onboarding_4_title">Smart Gestures</string>
+    <string name="onboarding_4_subtitle">Quick Actions</string>
+    <string name="onboarding_4_desc">Swipe right to make a call, swipe left for quick message.</string>
+
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="privacy_policy_desc">Read our privacy policy</string>
+
+    <string name="terms_conditions">Terms &amp; Conditions</string>
+    <string name="terms_conditions_desc">Read terms and conditions</string>
+    <string name="permission_consent">
+    By continuing, I accept the Privacy Policy and Terms &amp; Conditions.
+    </string>
+
 </resources>

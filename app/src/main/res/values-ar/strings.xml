@@ -155,4 +155,30 @@
     <string name="dialpad_call_button">إجراء مكالمة</string>
     <string name="dialpad_backspace">حذف رقم</string>
 
+    <string name="overlay_permission_title">السماح بالعرض فوق التطبيقات الأخرى</string>
+    <string name="overlay_permission_desc">يتيح لنا هذا الإذن عرض إجراءات سريعة مفيدة بعد انتهاء المكالمة، حتى عندما تكون الشاشة مقفلة أو عند استخدام تطبيق آخر.</string>
+    <string name="open_settings">فتح الإعدادات</string>
+    <string name="why_do_we_need_this">لماذا نحتاج هذا؟</string>
+    <string name="why_do_we_need_this_desc">لعرض شاشة ما بعد المكالمة (إجراءات سريعة مثل إعادة الاتصال، واتساب، الرسائل) حتى عندما يكون هاتفك مقفلاً أو أثناء استخدام تطبيق آخر.</string>
+
+    <string name="call_back">إعادة الاتصال</string>
+    <string name="quick_sms">رسالة سريعة</string>
+    <string name="add_to_contacts">إضافة إلى جهات الاتصال</string>
+    <string name="block_spam">حظر / سبام</string>
+    <string name="dismiss_btn">إغلاق</string>
+    <string name="msg_whatsapp">إرسال رسالة عبر واتساب</string>
+
+    <string name="onboarding_4_title">إيماءات ذكية</string>
+    <string name="onboarding_4_subtitle">إجراءات سريعة</string>
+    <string name="onboarding_4_desc">اسحب لليمين لإجراء مكالمة، واسحب لليسار لإرسال رسالة سريعة.</string>
+
+    <string name="privacy_policy">سياسة الخصوصية</string>
+    <string name="privacy_policy_desc">اقرأ سياسة الخصوصية الخاصة بنا</string>
+
+    <string name="terms_conditions">الشروط والأحكام</string>
+    <string name="terms_conditions_desc">اقرأ الشروط والأحكام</string>
+
+    <string name="permission_consent">
+بالمتابعة، أوافق على سياسة الخصوصية والشروط والأحكام.
+</string>
 </resources>

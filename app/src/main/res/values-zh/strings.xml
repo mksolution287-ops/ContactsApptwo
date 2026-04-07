@@ -155,4 +155,30 @@
     <string name="dialpad_call_button">拨打电话</string>
     <string name="dialpad_backspace">删除数字</string>
 
+
+    <string name="overlay_permission_title">允许在其他应用上方显示</string>
+    <string name="overlay_permission_desc">此权限允许我们在通话结束后显示有用的快捷操作，即使屏幕被锁定或您正在使用其他应用。</string>
+    <string name="open_settings">打开设置</string>
+    <string name="why_do_we_need_this">为什么需要此权限？</string>
+    <string name="why_do_we_need_this_desc">用于显示通话后的界面（如回拨、WhatsApp、短信等快捷操作），即使手机被锁定或正在使用其他应用。</string>
+
+    <string name="call_back">回拨</string>
+    <string name="quick_sms">快速短信</string>
+    <string name="add_to_contacts">添加到联系人</string>
+    <string name="block_spam">阻止 / 垃圾信息</string>
+    <string name="dismiss_btn">关闭</string>
+    <string name="msg_whatsapp">通过WhatsApp发送消息</string>
+
+    <string name="onboarding_4_title">智能手势</string>
+    <string name="onboarding_4_subtitle">快捷操作</string>
+    <string name="onboarding_4_desc">向右滑动拨打电话，向左滑动发送快速消息。</string>
+    <string name="privacy_policy">隐私政策</string>
+    <string name="privacy_policy_desc">阅读我们的隐私政策</string>
+
+    <string name="terms_conditions">条款和条件</string>
+    <string name="terms_conditions_desc">阅读条款和条件</string>
+
+    <string name="permission_consent">
+继续操作即表示我同意隐私政策和条款与条件。
+</string>
 </resources>

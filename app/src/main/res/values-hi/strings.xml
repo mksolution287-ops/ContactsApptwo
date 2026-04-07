@@ -155,4 +155,31 @@
     <string name="dialpad_call_button">कॉल करें</string>
     <string name="dialpad_backspace">अंक हटाएं</string>
 
+
+    <string name="overlay_permission_title">अन्य ऐप्स के ऊपर दिखाने की अनुमति दें</string>
+    <string name="overlay_permission_desc">यह अनुमति हमें कॉल समाप्त होने के बाद उपयोगी त्वरित क्रियाएं दिखाने देती है, भले ही आपकी स्क्रीन लॉक हो या आप किसी अन्य ऐप का उपयोग कर रहे हों।</string>
+    <string name="open_settings">सेटिंग्स खोलें</string>
+    <string name="why_do_we_need_this">हमें इसकी आवश्यकता क्यों है?</string>
+    <string name="why_do_we_need_this_desc">पोस्ट-कॉल स्क्रीन (जैसे कॉल बैक, व्हाट्सएप, एसएमएस जैसी त्वरित क्रियाएं) दिखाने के लिए, भले ही आपका फोन लॉक हो या आप किसी अन्य ऐप का उपयोग कर रहे हों।</string>
+
+    <string name="call_back">वापस कॉल करें</string>
+    <string name="quick_sms">त्वरित एसएमएस</string>
+    <string name="add_to_contacts">संपर्क में जोड़ें</string>
+    <string name="block_spam">ब्लॉक / स्पैम</string>
+    <string name="dismiss_btn">बंद करें</string>
+    <string name="msg_whatsapp">व्हाट्सएप पर संदेश भेजें</string>
+
+    <string name="onboarding_4_title">स्मार्ट जेस्चर</string>
+    <string name="onboarding_4_subtitle">त्वरित क्रियाएं</string>
+    <string name="onboarding_4_desc">कॉल करने के लिए दाएं स्वाइप करें, त्वरित संदेश के लिए बाएं स्वाइप करें।</string>
+
+    <string name="privacy_policy">गोपनीयता नीति</string>
+    <string name="privacy_policy_desc">हमारी गोपनीयता नीति पढ़ें</string>
+
+    <string name="terms_conditions">नियम और शर्तें</string>
+    <string name="terms_conditions_desc">नियम और शर्तें पढ़ें</string>
+
+    <string name="permission_consent">
+जारी रखते हुए, मैं गोपनीयता नीति और नियम व शर्तों को स्वीकार करता हूँ।
+</string>
 </resources>

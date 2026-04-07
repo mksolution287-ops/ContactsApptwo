@@ -3,16 +3,18 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'com.google.devtools.ksp'
     id 'kotlin-parcelize'
+    id 'com.google.gms.google-services'          // ← Add this
+    id 'com.google.firebase.crashlytics'         // ← Add this
 }
 
 android {
-    namespace 'com.contactsapp'
-    compileSdk 34
+    namespace 'com.contactsapptwomktech'
+    compileSdk 36
 
     defaultConfig {
-        applicationId "com.contactsapp"
+        applicationId "com.contactsapptwomktech"
         minSdk 26
-        targetSdk 34
+        targetSdk 36
         versionCode 1
         versionName "1.0"
 
@@ -88,6 +90,13 @@ dependencies {
 
     // Coil for image loading
     implementation 'io.coil-kt:coil-compose:2.6.0'
+
+    // ==================== Firebase ====================
+    // Use the latest stable BOM (as of April 2026)
+    implementation platform('com.google.firebase:firebase-bom:32.8.1')
+
+    implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.google.firebase:firebase-crashlytics'
 
     // Testing
     testImplementation 'junit:junit:4.13.2'

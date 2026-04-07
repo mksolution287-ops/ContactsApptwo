@@ -155,4 +155,30 @@
     <string name="dialpad_call_button">Anruf tätigen</string>
     <string name="dialpad_backspace">Ziffer löschen</string>
 
+    <string name="overlay_permission_title">Anzeige über anderen Apps erlauben</string>
+    <string name="overlay_permission_desc">Diese Berechtigung ermöglicht es uns, hilfreiche Schnellaktionen nach einem Anruf anzuzeigen, auch wenn der Bildschirm gesperrt ist oder Sie eine andere App verwenden.</string>
+    <string name="open_settings">Einstellungen öffnen</string>
+    <string name="why_do_we_need_this">Warum brauchen wir das?</string>
+    <string name="why_do_we_need_this_desc">Um den Bildschirm nach dem Anruf (Schnellaktionen wie Rückruf, WhatsApp, SMS) anzuzeigen, auch wenn Ihr Telefon gesperrt ist oder Sie eine andere App verwenden.</string>
+
+    <string name="call_back">Zurückrufen</string>
+    <string name="quick_sms">Schnelle SMS</string>
+    <string name="add_to_contacts">Zu Kontakten hinzufügen</string>
+    <string name="block_spam">Blockieren / Spam</string>
+    <string name="dismiss_btn">Schließen</string>
+    <string name="msg_whatsapp">Nachricht über WhatsApp</string>
+
+    <string name="onboarding_4_title">Intelligente Gesten</string>
+    <string name="onboarding_4_subtitle">Schnellaktionen</string>
+    <string name="onboarding_4_desc">Nach rechts wischen, um anzurufen, nach links für eine schnelle Nachricht.</string>
+
+    <string name="privacy_policy">Datenschutzerklärung</string>
+    <string name="privacy_policy_desc">Lesen Sie unsere Datenschutzerklärung</string>
+
+    <string name="terms_conditions">Allgemeine Geschäftsbedingungen</string>
+    <string name="terms_conditions_desc">Lesen Sie die Allgemeinen Geschäftsbedingungen</string>
+
+    <string name="permission_consent">
+Indem ich fortfahre, akzeptiere ich die Datenschutzerklärung und die Allgemeinen Geschäftsbedingungen.
+</string>
 </resources>

@@ -155,4 +155,30 @@
     <string name="dialpad_call_button">Realizar llamada</string>
     <string name="dialpad_backspace">Eliminar dígito</string>
 
+    <string name="overlay_permission_title">Permitir mostrar sobre otras aplicaciones</string>
+    <string name="overlay_permission_desc">Este permiso nos permite mostrar acciones rápidas útiles después de que finalice una llamada, incluso cuando la pantalla está bloqueada o estás usando otra aplicación.</string>
+    <string name="open_settings">Abrir ajustes</string>
+    <string name="why_do_we_need_this">¿Por qué necesitamos esto?</string>
+    <string name="why_do_we_need_this_desc">Para mostrar la pantalla posterior a la llamada (acciones rápidas como devolver llamada, WhatsApp, SMS) incluso cuando el teléfono está bloqueado o estás usando otra aplicación.</string>
+
+    <string name="call_back">Devolver llamada</string>
+    <string name="quick_sms">SMS rápido</string>
+    <string name="add_to_contacts">Agregar a contactos</string>
+    <string name="block_spam">Bloquear / Spam</string>
+    <string name="dismiss_btn">Descartar</string>
+    <string name="msg_whatsapp">Mensaje en WhatsApp</string>
+
+    <string name="onboarding_4_title">Gestos inteligentes</string>
+    <string name="onboarding_4_subtitle">Acciones rápidas</string>
+    <string name="onboarding_4_desc">Desliza a la derecha para llamar, desliza a la izquierda para mensaje rápido.</string>
+
+    <string name="privacy_policy">Política de privacidad</string>
+    <string name="privacy_policy_desc">Lee nuestra política de privacidad</string>
+
+    <string name="terms_conditions">Términos y condiciones</string>
+    <string name="terms_conditions_desc">Lee los términos y condiciones</string>
+
+    <string name="permission_consent">
+Al continuar, acepto la política de privacidad y los términos y condiciones.
+</string>
 </resources>

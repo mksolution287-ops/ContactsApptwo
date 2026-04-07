@@ -154,4 +154,31 @@
     <string name="dialpad_title">ダイヤルパッド</string>
     <string name="dialpad_call_button">通話する</string>
     <string name="dialpad_backspace">数字を削除</string>
+
+    <string name="overlay_permission_title">他のアプリの上に表示を許可</string>
+    <string name="overlay_permission_desc">この権限により、画面がロックされている場合や他のアプリを使用中でも、通話終了後に便利なクイックアクションを表示できます。</string>
+    <string name="open_settings">設定を開く</string>
+    <string name="why_do_we_need_this">なぜこれが必要ですか？</string>
+    <string name="why_do_we_need_this_desc">電話がロックされている場合や他のアプリを使用中でも、通話後の画面（折り返し電話、WhatsApp、SMSなどのクイックアクション）を表示するためです。</string>
+
+    <string name="call_back">折り返し電話</string>
+    <string name="quick_sms">クイックSMS</string>
+    <string name="add_to_contacts">連絡先に追加</string>
+    <string name="block_spam">ブロック / スパム</string>
+    <string name="dismiss_btn">閉じる</string>
+    <string name="msg_whatsapp">WhatsAppでメッセージ</string>
+
+    <string name="onboarding_4_title">スマートジェスチャー</string>
+    <string name="onboarding_4_subtitle">クイックアクション</string>
+    <string name="onboarding_4_desc">右にスワイプで通話、左にスワイプでクイックメッセージ。</string>
+
+    <string name="privacy_policy">プライバシーポリシー</string>
+    <string name="privacy_policy_desc">プライバシーポリシーを読む</string>
+
+    <string name="terms_conditions">利用規約</string>
+    <string name="terms_conditions_desc">利用規約を読む</string>
+
+    <string name="permission_consent">
+続行することで、プライバシーポリシーと利用規約に同意したことになります。
+</string>
 </resources>
