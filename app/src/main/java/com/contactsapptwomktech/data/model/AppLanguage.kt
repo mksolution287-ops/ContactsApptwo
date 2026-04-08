@@ -6,6 +6,7 @@ enum class AppLanguage(
     val nativeName  : String,   // native script
     val flag        : String    // emoji flag
 ) {
+    SYSTEM_DEFAULT("", "System default language", "System", "🌐"),
     ENGLISH  ("en",    "English",  "English",   "🇬🇧"),
     HINDI    ("hi",    "Hindi",    "हिन्दी",      "🇮🇳"),
     ARABIC   ("ar",    "Arabic",   "العربية",    "🇸🇦"),

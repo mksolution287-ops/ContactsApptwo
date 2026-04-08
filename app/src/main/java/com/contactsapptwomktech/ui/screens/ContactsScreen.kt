@@ -220,9 +220,19 @@ fun ContactsScreen(
                 }
             }
             is UiState.Success -> {
-                val grouped = filteredContacts
-                    .groupBy { it.name.firstOrNull()?.uppercaseChar()?.toString() ?: "#" }
-                    .toSortedMap()
+//                val grouped = filteredContacts
+//                    .groupBy { it.name.firstOrNull()?.uppercaseChar()?.toString() ?: "#" }
+//                    .toSortedMap()
+                val favorites = filteredContacts.filter { it.isFavorite }
+                val grouped = buildMap {
+                    if (favorites.isNotEmpty()) put("★", favorites)  // favorites section first
+                    putAll(
+                        filteredContacts
+                            .filter { !it.isFavorite }
+                            .groupBy { it.name.firstOrNull()?.uppercaseChar()?.toString() ?: "#" }
+                            .toSortedMap()
+                    )
+                }
 
                 if (filteredContacts.isEmpty()) {
                     EmptyState(

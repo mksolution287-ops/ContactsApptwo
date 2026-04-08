@@ -108,6 +108,38 @@ object IntentUtils {
         }
     }
 
+    /**
+     * Opens the system call log filtered to a specific phone number.
+     */
+    fun openCallHistory(context: Context, phoneNumber: String) {
+        try {
+            val intent = Intent(Intent.ACTION_VIEW).apply {
+                data  = Uri.parse("content://call_log/calls")
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            }
+            context.startActivity(intent)
+        } catch (e: Exception) {
+            Toast.makeText(context, "No call history app found", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    /**
+     * Opens the system contact editor pre-filled to delete the given contact.
+     * Android doesn't expose a direct delete intent, so we open the edit screen
+     * and the user can delete from there — or use ContentResolver directly if
+     * you have WRITE_CONTACTS permission (handled via confirmation dialog in UI).
+     */
+    fun deleteContact(context: Context, contactId: Long) {
+        try {
+            val uri    = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI, contactId.toString())
+            val intent = Intent(Intent.ACTION_DELETE, uri).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            }
+            context.startActivity(intent)
+        } catch (e: Exception) {
+            Toast.makeText(context, "Unable to delete contact", Toast.LENGTH_SHORT).show()
+        }
+    }
     fun makeCall(context: Context, phoneNumber: String, errorMsg: String) {
         try {
             val intent = Intent(Intent.ACTION_CALL).apply {
@@ -124,5 +156,44 @@ object IntentUtils {
     fun openDialer(context: Context) {
         val intent = Intent(Intent.ACTION_DIAL)
         context.startActivity(intent)
+    }
+    /**
+     * Deletes a contact DIRECTLY using ContentResolver.
+     * This removes the contact completely (no system edit screen).
+     *
+     * Requires: android.permission.WRITE_CONTACTS
+     * Important: Delete at RawContacts level to properly clean up everything.
+     */
+    fun deleteContactDirect(context: Context, contactId: Long): Boolean {
+        val contentResolver = context.contentResolver
+
+        try {
+            // Delete all RawContacts linked to this Contact ID
+            // This is the recommended & cleanest way
+            val selection = "${ContactsContract.RawContacts.CONTACT_ID} = ?"
+            val selectionArgs = arrayOf(contactId.toString())
+
+            val rowsDeleted = contentResolver.delete(
+                ContactsContract.RawContacts.CONTENT_URI,
+                selection,
+                selectionArgs
+            )
+
+            return if (rowsDeleted > 0) {
+                Toast.makeText(context, "Contact deleted successfully", Toast.LENGTH_SHORT).show()
+                true
+            } else {
+                Toast.makeText(context, "Contact not found or already deleted", Toast.LENGTH_SHORT).show()
+                false
+            }
+
+        } catch (e: SecurityException) {
+            Toast.makeText(context, "Permission denied. Cannot delete contact.", Toast.LENGTH_LONG).show()
+            return false
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Toast.makeText(context, "Failed to delete contact", Toast.LENGTH_SHORT).show()
+            return false
+        }
     }
 }

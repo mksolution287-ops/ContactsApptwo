@@ -1,5 +1,7 @@
 package com.contactsapptwomktech.data.model
 
+import android.net.Uri
+
 data class CallLogEntry(
     val id: Long,
     val number: String,
@@ -7,7 +9,7 @@ data class CallLogEntry(
     val callType: CallType,
     val date: Long,
     val duration: Long,
-    val photoUri: String? = null
+    val photoUri: Uri
 ) {
     val displayName: String
         get() = contactName?.takeIf { it.isNotBlank() } ?: number

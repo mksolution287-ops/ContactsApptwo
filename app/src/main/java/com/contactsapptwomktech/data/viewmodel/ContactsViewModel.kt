@@ -7,11 +7,13 @@ import com.contactsapptwomktech.data.model.CallLogEntry
 import com.contactsapptwomktech.data.model.Contact
 import com.contactsapptwomktech.data.repository.CallLogRepository
 import com.contactsapptwomktech.data.repository.ContactsRepository
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -33,17 +35,31 @@ class ContactsViewModel(application: Application) : AndroidViewModel(application
     private val _searchQuery = MutableStateFlow("")
     val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
 
-    val filteredContacts: StateFlow<List<Contact>> = combine(
-        _contactsState, _searchQuery
-    ) { state, query ->
-        if (state !is UiState.Success) return@combine emptyList()
-        if (query.isBlank()) state.data
-        else state.data.filter { contact ->
-            contact.name.contains(query, ignoreCase = true) ||
-                    contact.phoneNumbers.any { it.number.contains(query) } ||
-                    contact.emails.any { it.address.contains(query, ignoreCase = true) }
-        }
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+//    val filteredContacts: StateFlow<List<Contact>> = combine(
+//        _contactsState, _searchQuery
+//    ) { state, query ->
+//        if (state !is UiState.Success) return@combine emptyList()
+//        if (query.isBlank()) state.data
+//        else state.data.filter { contact ->
+//            contact.name.contains(query, ignoreCase = true) ||
+//                    contact.phoneNumbers.any { it.number.contains(query) } ||
+//                    contact.emails.any { it.address.contains(query, ignoreCase = true) }
+//        }
+//    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+val filteredContacts: StateFlow<List<Contact>> = combine(
+    _contactsState, _searchQuery
+) { state, query ->
+    if (state !is UiState.Success) return@combine emptyList()
+    val filtered = if (query.isBlank()) state.data
+    else state.data.filter { contact ->
+        contact.name.contains(query, ignoreCase = true) ||
+                contact.phoneNumbers.any { it.number.contains(query) } ||
+                contact.emails.any { it.address.contains(query, ignoreCase = true) }
+    }
+    // Favorites first, then rest alphabetically
+    filtered.sortedWith(compareByDescending<Contact> { it.isFavorite }.thenBy { it.name.lowercase() })
+}.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
 
     val favorites: StateFlow<List<Contact>> = _contactsState.combine(_searchQuery) { state, _ ->
         if (state !is UiState.Success) emptyList()
@@ -105,5 +121,35 @@ class ContactsViewModel(application: Application) : AndroidViewModel(application
     fun getContactById(id: Long): Contact? {
         val state = _contactsState.value
         return if (state is UiState.Success) state.data.find { it.id == id } else null
+    }
+    /**
+     * Returns a Flow that emits the contact whenever the contacts list changes
+     * (e.g. after a favourite toggle). Used by ContactDetailScreen to stay reactive.
+     */
+    fun getContactByIdAsFlow(id: Long): Flow<Contact?> =
+        _contactsState.map { state ->
+            if (state is UiState.Success) state.data.find { it.id == id } else null
+        }
+
+    /**
+     * Toggles the favourite/starred flag for a contact and persists it to the
+     * device's Contacts provider so the change survives app restarts.
+     */
+    fun toggleFavorite(contactId: Long) {
+        val current = _contactsState.value
+        if (current !is UiState.Success) return
+
+        val updatedList = current.data.map { contact ->
+            if (contact.id == contactId) contact.copy(isFavorite = !contact.isFavorite)
+            else contact
+        }
+        // Optimistic UI update
+        _contactsState.value = UiState.Success(updatedList)
+
+        // Persist to Android Contacts provider
+        val newFav = updatedList.find { it.id == contactId }?.isFavorite ?: return
+        viewModelScope.launch {
+            contactsRepo.setFavorite(contactId, newFav)
+        }
     }
 }

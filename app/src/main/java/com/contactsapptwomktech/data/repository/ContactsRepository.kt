@@ -1,6 +1,7 @@
 package com.contactsapptwomktech.data.repository
 
 import android.content.ContentResolver
+import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.net.Uri
@@ -23,8 +24,6 @@ class ContactsRepository(private val context: Context) {
         val projection = arrayOf(
             ContactsContract.Contacts._ID,
             ContactsContract.Contacts.DISPLAY_NAME_PRIMARY,
-//            ContactsContract.Contacts.GIVEN_NAME,
-//            ContactsContract.Contacts.FAMILY_NAME,
             ContactsContract.Contacts.PHOTO_URI,
             ContactsContract.Contacts.STARRED,
             ContactsContract.Contacts.HAS_PHONE_NUMBER
@@ -39,29 +38,23 @@ class ContactsRepository(private val context: Context) {
         )
 
         cursor?.use {
-            val idIdx = it.getColumnIndexOrThrow(ContactsContract.Contacts._ID)
-            val nameIdx = it.getColumnIndexOrThrow(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY)
-//            val givenIdx = it.getColumnIndex(ContactsContract.Contacts.GIVEN_NAME)
-//            val familyIdx = it.getColumnIndex(ContactsContract.Contacts.FAMILY_NAME)
-            val photoIdx = it.getColumnIndexOrThrow(ContactsContract.Contacts.PHOTO_URI)
+            val idIdx      = it.getColumnIndexOrThrow(ContactsContract.Contacts._ID)
+            val nameIdx    = it.getColumnIndexOrThrow(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY)
+            val photoIdx   = it.getColumnIndexOrThrow(ContactsContract.Contacts.PHOTO_URI)
             val starredIdx = it.getColumnIndexOrThrow(ContactsContract.Contacts.STARRED)
 
             while (it.moveToNext()) {
-                val id = it.getLong(idIdx)
-                val name = it.getString(nameIdx) ?: ""
-//                val firstName = if (givenIdx >= 0) it.getString(givenIdx) ?: "" else ""
-//                val lastName = if (familyIdx >= 0) it.getString(familyIdx) ?: "" else ""
-                val firstName = ""
-                val lastName = ""
+                val id          = it.getLong(idIdx)
+                val name        = it.getString(nameIdx) ?: ""
                 val photoUriStr = it.getString(photoIdx)
-                val starred = it.getInt(starredIdx) == 1
+                val starred     = it.getInt(starredIdx) == 1
 
                 contacts[id] = ContactBuilder(
-                    id = id,
-                    name = name,
-                    firstName = firstName,
-                    lastName = lastName,
-                    photoUri = photoUriStr?.let { Uri.parse(it) },
+                    id         = id,
+                    name       = name,
+                    firstName  = "",
+                    lastName   = "",
+                    photoUri   = photoUriStr?.let { s -> Uri.parse(s) },
                     isFavorite = starred
                 )
             }
@@ -81,18 +74,18 @@ class ContactsRepository(private val context: Context) {
 
         phoneCursor?.use {
             val contactIdIdx = it.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.CONTACT_ID)
-            val numberIdx = it.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER)
-            val typeIdx = it.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.TYPE)
-            val labelIdx = it.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.LABEL)
+            val numberIdx    = it.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER)
+            val typeIdx      = it.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.TYPE)
+            val labelIdx     = it.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.LABEL)
 
             while (it.moveToNext()) {
                 val contactId = it.getLong(contactIdIdx)
-                val number = it.getString(numberIdx) ?: continue
+                val number    = it.getString(numberIdx) ?: continue
                 val type = when (it.getInt(typeIdx)) {
                     ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE -> PhoneType.MOBILE
-                    ContactsContract.CommonDataKinds.Phone.TYPE_HOME -> PhoneType.HOME
-                    ContactsContract.CommonDataKinds.Phone.TYPE_WORK -> PhoneType.WORK
-                    else -> PhoneType.OTHER
+                    ContactsContract.CommonDataKinds.Phone.TYPE_HOME   -> PhoneType.HOME
+                    ContactsContract.CommonDataKinds.Phone.TYPE_WORK   -> PhoneType.WORK
+                    else                                                -> PhoneType.OTHER
                 }
                 val label = it.getString(labelIdx)
                 contacts[contactId]?.phones?.add(PhoneNumber(number, type, label))
@@ -113,24 +106,24 @@ class ContactsRepository(private val context: Context) {
 
         emailCursor?.use {
             val contactIdIdx = it.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Email.CONTACT_ID)
-            val addressIdx = it.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Email.ADDRESS)
-            val typeIdx = it.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Email.TYPE)
-            val labelIdx = it.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Email.LABEL)
+            val addressIdx   = it.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Email.ADDRESS)
+            val typeIdx      = it.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Email.TYPE)
+            val labelIdx     = it.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Email.LABEL)
 
             while (it.moveToNext()) {
                 val contactId = it.getLong(contactIdIdx)
-                val address = it.getString(addressIdx) ?: continue
+                val address   = it.getString(addressIdx) ?: continue
                 val type = when (it.getInt(typeIdx)) {
                     ContactsContract.CommonDataKinds.Email.TYPE_HOME -> EmailType.HOME
                     ContactsContract.CommonDataKinds.Email.TYPE_WORK -> EmailType.WORK
-                    else -> EmailType.OTHER
+                    else                                             -> EmailType.OTHER
                 }
                 val label = it.getString(labelIdx)
                 contacts[contactId]?.emails?.add(EmailAddress(address, type, label))
             }
         }
 
-        // Fetch company/notes
+        // Fetch company / notes
         val dataCursor: Cursor? = resolver.query(
             ContactsContract.Data.CONTENT_URI,
             arrayOf(
@@ -149,11 +142,11 @@ class ContactsRepository(private val context: Context) {
 
         dataCursor?.use {
             val contactIdIdx = it.getColumnIndexOrThrow(ContactsContract.Data.CONTACT_ID)
-            val mimeIdx = it.getColumnIndexOrThrow(ContactsContract.Data.MIMETYPE)
+            val mimeIdx      = it.getColumnIndexOrThrow(ContactsContract.Data.MIMETYPE)
 
             while (it.moveToNext()) {
                 val contactId = it.getLong(contactIdIdx)
-                val mime = it.getString(mimeIdx)
+                val mime      = it.getString(mimeIdx)
                 when (mime) {
                     ContactsContract.CommonDataKinds.Organization.CONTENT_ITEM_TYPE -> {
                         val companyIdx = it.getColumnIndex(ContactsContract.CommonDataKinds.Organization.COMPANY)
@@ -170,29 +163,44 @@ class ContactsRepository(private val context: Context) {
         contacts.values.map { it.build() }
     }
 
+    /**
+     * Persists the starred/favourite flag to the Android Contacts provider.
+     * Requires WRITE_CONTACTS permission.
+     */
+    suspend fun setFavorite(contactId: Long, isFavorite: Boolean) = withContext(Dispatchers.IO) {
+        val values = ContentValues().apply {
+            put(ContactsContract.Contacts.STARRED, if (isFavorite) 1 else 0)
+        }
+        val uri = Uri.withAppendedPath(
+            ContactsContract.Contacts.CONTENT_URI,
+            contactId.toString()
+        )
+        context.contentResolver.update(uri, values, null, null)
+    }
+
     private data class ContactBuilder(
-        val id: Long,
-        val name: String,
-        val firstName: String,
-        val lastName: String,
-        val photoUri: Uri?,
+        val id        : Long,
+        val name      : String,
+        val firstName : String,
+        val lastName  : String,
+        val photoUri  : Uri?,
         val isFavorite: Boolean,
-        val phones: MutableList<PhoneNumber> = mutableListOf(),
-        val emails: MutableList<EmailAddress> = mutableListOf(),
-        var company: String? = null,
-        var notes: String? = null
+        val phones    : MutableList<PhoneNumber>  = mutableListOf(),
+        val emails    : MutableList<EmailAddress> = mutableListOf(),
+        var company   : String? = null,
+        var notes     : String? = null
     ) {
         fun build() = Contact(
-            id = id,
-            name = name,
-            firstName = firstName,
-            lastName = lastName,
+            id           = id,
+            name         = name,
+            firstName    = firstName,
+            lastName     = lastName,
             phoneNumbers = phones.toList(),
-            emails = emails.toList(),
-            photoUri = photoUri,
-            isFavorite = isFavorite,
-            company = company,
-            notes = notes
+            emails       = emails.toList(),
+            photoUri     = photoUri,
+            isFavorite   = isFavorite,
+            company      = company,
+            notes        = notes
         )
     }
 }

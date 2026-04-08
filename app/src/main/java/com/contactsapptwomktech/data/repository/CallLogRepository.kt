@@ -2,6 +2,7 @@ package com.contactsapptwomktech.data.repository
 
 import android.content.Context
 import android.database.Cursor
+import android.net.Uri
 import android.provider.CallLog
 import android.util.Log
 import com.contactsapptwomktech.data.model.CallLogEntry
@@ -51,7 +52,9 @@ class CallLogRepository(private val context: Context) {
                         callType = CallType.fromInt(it.getInt(typeIdx)),
                         date = it.getLong(dateIdx),
                         duration = it.getLong(durationIdx),
-                        photoUri = it.getString(photoIdx)
+                        photoUri = Uri.parse(
+                            it.getString(photoIdx) ?: ""
+                        )
                     )
                 )
                 count++

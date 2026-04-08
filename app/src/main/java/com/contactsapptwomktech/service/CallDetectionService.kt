@@ -15,6 +15,8 @@ import com.contactsapptwomktech.data.model.CallType
 import com.contactsapptwomktech.data.repository.CallLogRepository
 import com.contactsapptwomktech.ui.overlay.*
 import kotlinx.coroutines.*
+import android.content.Context
+
 
 class CallDetectionService : Service() {
 
@@ -149,4 +151,42 @@ private suspend fun fetchLastCallAndShowOverlay() {
         private const val NOTIF_ID   = 1001
         private const val CHANNEL_ID = "call_detection_channel"
     }
+
+
+    // Inside CallDetectionService.kt
+
+    private fun showCallerIdNotification(number: String, callerName: String?) {
+        val prefs = getSharedPreferences("settings", Context.MODE_PRIVATE)
+        val callerIdEnabled = prefs.getBoolean("caller_id_enabled", false)
+        if (!callerIdEnabled) return
+
+        val channelId = "caller_id_channel"
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                channelId,
+                "Caller ID",
+                NotificationManager.IMPORTANCE_HIGH
+            ).apply {
+                description = "Shows caller information"
+                lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+            }
+            getSystemService(NotificationManager::class.java)
+                .createNotificationChannel(channel)
+        }
+
+        val displayName = callerName ?: number
+        val notification = NotificationCompat.Builder(this, channelId)
+            .setSmallIcon(R.drawable.ic_call)           // use your call icon
+            .setContentTitle("📞 Incoming Call")
+            .setContentText(displayName)
+            .setSubText(number)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setCategory(NotificationCompat.CATEGORY_CALL)
+            .setAutoCancel(true)
+            .build()
+
+        getSystemService(NotificationManager::class.java)
+            .notify(101, notification)
+    }
+
 }

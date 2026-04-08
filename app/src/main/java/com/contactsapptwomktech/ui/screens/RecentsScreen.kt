@@ -1,5 +1,6 @@
 package com.contactsapptwomktech.ui.screens
 
+import android.content.Context
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -112,6 +113,21 @@ fun RecentsScreen(
 
     val permissionState = rememberPermissionState(android.Manifest.permission.READ_CALL_LOG) { granted ->
         if (granted) viewModel.loadCallLog()
+    }
+    // At the top of RecentsScreen composable:
+    val prefs   = remember { context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE) }
+    var showPermissionDialog by remember {
+        mutableStateOf(!prefs.getBoolean("permissions_asked", false))
+    }
+
+// Show dialog
+    if (showPermissionDialog) {
+        RequiredPermissionsDialog(
+            onDismiss = {
+                prefs.edit().putBoolean("permissions_asked", true).apply()
+                showPermissionDialog = false
+            }
+        )
     }
     val searchQuery  by viewModel.searchQuery.collectAsState()
     var isSearchActive by remember { mutableStateOf(false) }
@@ -411,7 +427,7 @@ private fun CallLogItem(entry: CallLogEntry, onCallClick: () -> Unit) {
             .padding(horizontal = 20.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        ContactAvatar(name = entry.displayName, photoUri = null, size = 46.dp)
+        ContactAvatar(name = entry.displayName, photoUri = entry.photoUri, size = 46.dp)
         Spacer(Modifier.width(14.dp))
 
         Column(modifier = Modifier.weight(1f)) {

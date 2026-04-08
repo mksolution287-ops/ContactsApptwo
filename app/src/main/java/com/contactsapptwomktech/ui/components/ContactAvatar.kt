@@ -23,6 +23,50 @@ import coil.compose.AsyncImage
 import com.contactsapptwomktech.R
 import com.contactsapptwomktech.utils.AvatarColorUtils
 
+//@Composable
+//fun ContactAvatar(
+//    name: String,
+//    photoUri: Uri?,
+//    modifier: Modifier = Modifier,
+//    size: Dp = 48.dp,
+//    fontSize: TextUnit = 18.sp
+//) {
+//    val initials = buildInitials(name)
+//    val bgColor = AvatarColorUtils.getColor(name)
+//
+//    Box(
+//        modifier = modifier
+//            .size(size)
+//            .clip(CircleShape),
+//        contentAlignment = Alignment.Center
+//    ) {
+//        if (photoUri != null) {
+//            AsyncImage(
+//                model = photoUri,
+//                contentDescription = stringResource(R.string.cd_contact_photo),
+//                modifier = Modifier
+//                    .size(size)
+//                    .clip(CircleShape),
+//                contentScale = ContentScale.Crop,
+//            )
+//        } else {
+//            Box(
+//                modifier = Modifier
+//                    .size(size)
+//                    .background(bgColor),
+//                contentAlignment = Alignment.Center
+//            ) {
+//                Text(
+//                    text = initials,
+//                    color = Color.White,
+//                    fontSize = fontSize,
+//                    fontWeight = FontWeight.SemiBold,
+//                    style = MaterialTheme.typography.labelLarge
+//                )
+//            }
+//        }
+//    }
+//}
 @Composable
 fun ContactAvatar(
     name: String,
@@ -34,13 +78,17 @@ fun ContactAvatar(
     val initials = buildInitials(name)
     val bgColor = AvatarColorUtils.getColor(name)
 
+    val hasValidPhoto = photoUri != null &&
+            photoUri != Uri.EMPTY &&
+            photoUri.toString().isNotBlank()
+
     Box(
         modifier = modifier
             .size(size)
             .clip(CircleShape),
         contentAlignment = Alignment.Center
     ) {
-        if (photoUri != null) {
+        if (hasValidPhoto) {
             AsyncImage(
                 model = photoUri,
                 contentDescription = stringResource(R.string.cd_contact_photo),
@@ -48,6 +96,10 @@ fun ContactAvatar(
                     .size(size)
                     .clip(CircleShape),
                 contentScale = ContentScale.Crop,
+
+                //IMPORTANT fallback
+                error = null,
+                fallback = null
             )
         } else {
             Box(

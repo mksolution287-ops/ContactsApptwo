@@ -151,10 +151,14 @@ fun MainScreen(
     // • Language already chosen + onboarding done  → go straight to Contacts
     // • Language already chosen + onboarding NOT done → skip Splash, go to Onboarding
     // • Nothing chosen yet → show Splash → Language
+//    val startDestination = when {
+//        onboardingDone               -> Screen.Recents.route
+//        selectedLanguage != null     -> Screen.Permission.route   // language set, finish onboarding
+//        else                         -> Screen.Splash.route
+//    }
     val startDestination = when {
-        onboardingDone               -> Screen.Recents.route
-        selectedLanguage != null     -> Screen.Permission.route   // language set, finish onboarding
-        else                         -> Screen.Splash.route
+        selectedLanguage != null -> Screen.Recents.route
+        else                     -> Screen.Splash.route
     }
 
     val items = listOf(
@@ -224,7 +228,7 @@ fun MainScreen(
                 composable(Screen.Splash.route) {
                     SplashScreen(
                         onFinished = {
-                            navController.navigate(Screen.Language.route) {
+                            navController.navigate(Screen.Permission.route) {
                                 popUpTo(Screen.Splash.route) { inclusive = true }
                             }
                         }
@@ -238,7 +242,10 @@ fun MainScreen(
                             LocaleHelper.saveLanguage(context, language.code)
                             onboardingViewModel.saveLanguage(language)
                             // Language chosen — skip splash on next launch, go to permissions
-                            navController.navigate(Screen.Permission.route) {
+//                            navController.navigate(Screen.Permission.route) {
+//                                popUpTo(Screen.Language.route) { inclusive = true }
+//                            }
+                            navController.navigate(Screen.Recents.route) {
                                 popUpTo(Screen.Language.route) { inclusive = true }
                             }
                             (context as Activity).recreate()
@@ -251,45 +258,45 @@ fun MainScreen(
                         onPermissionsResult = { _ ->
                             // Whether granted or denied, continue to onboarding
                             onboardingViewModel.markPermissionsAsked()
-                            navController.navigate(Screen.OverlayPermission.route) {
+                            navController.navigate(Screen.Language.route) {
                                 popUpTo(Screen.Permission.route) { inclusive = true }
                             }
                         },
                         onSkip = {
-                            navController.navigate(Screen.OverlayPermission.route) {
+                            navController.navigate(Screen.Language.route) {
                                 popUpTo(Screen.Permission.route) { inclusive = true }
                             }
                         }
                     )
                 }
 
-                composable(Screen.OverlayPermission.route) {
-                    OverlayPermissionScreen(
-                        onNext = {
-//                            onboardingViewModel.markOnboardingDone()   // or mark overlay asked
-                            navController.navigate(Screen.Onboarding.route) {
-                                popUpTo(Screen.OverlayPermission.route) { inclusive = true }
-                            }
-                        },
-                        onSkip = {
+//                composable(Screen.OverlayPermission.route) {
+//                    OverlayPermissionScreen(
+//                        onNext = {
+////                            onboardingViewModel.markOnboardingDone()   // or mark overlay asked
+//                            navController.navigate(Screen.Onboarding.route) {
+//                                popUpTo(Screen.OverlayPermission.route) { inclusive = true }
+//                            }
+//                        },
+//                        onSkip = {
+////                            onboardingViewModel.markOnboardingDone()
+//                            navController.navigate(Screen.Onboarding.route) {
+//                                popUpTo(Screen.OverlayPermission.route) { inclusive = true }
+//                            }
+//                        }
+//                    )
+//                }
+
+//                composable(Screen.Onboarding.route) {
+//                    OnboardingScreen(
+//                        onFinished = {
 //                            onboardingViewModel.markOnboardingDone()
-                            navController.navigate(Screen.Onboarding.route) {
-                                popUpTo(Screen.OverlayPermission.route) { inclusive = true }
-                            }
-                        }
-                    )
-                }
-
-                composable(Screen.Onboarding.route) {
-                    OnboardingScreen(
-                        onFinished = {
-                            onboardingViewModel.markOnboardingDone()
-                            navController.navigate(Screen.Contacts.route) {
-                                popUpTo(Screen.Onboarding.route) { inclusive = true }
-                            }
-                        }
-                    )
-                }
+//                            navController.navigate(Screen.Contacts.route) {
+//                                popUpTo(Screen.Onboarding.route) { inclusive = true }
+//                            }
+//                        }
+//                    )
+//                }
 
                 // ── Main app ───────────────────────────────────────────────
 

@@ -1,202 +1,165 @@
 package com.contactsapptwomktech.ui.screens
 
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import java.util.Locale
 import com.contactsapptwomktech.data.model.AppLanguage
 
-/**
- * Language selection screen shown once — either right after the splash
- * (first launch) or when the user wants to change language in Settings.
- *
- * @param initialLanguage  Pre-select this language (null = nothing pre-selected).
- * @param onLanguageChosen Called with the chosen language; caller persists + navigates.
- */
 @Composable
 fun LanguageSelectScreen(
-    initialLanguage : AppLanguage? = null,
+    initialLanguage: AppLanguage? = null,
     onLanguageChosen: (AppLanguage) -> Unit
 ) {
-    var selected by rememberSaveable { mutableStateOf(initialLanguage) }
+    var selected by rememberSaveable {
+        mutableStateOf(initialLanguage ?: AppLanguage.SYSTEM_DEFAULT)
+    }
+
+    val languages = AppLanguage.entries
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(Color(0xFF000000))
             .statusBarsPadding()
-            .padding(horizontal = 20.dp),
+            .padding(horizontal = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(Modifier.height(40.dp))
 
-        // ── Header ─────────────────────────────────────────────────────────
-        Text(
-            text       = "Choose your language",
-            style      = MaterialTheme.typography.headlineMedium,
-            fontWeight = FontWeight.Bold,
-            color      = MaterialTheme.colorScheme.onBackground,
-            textAlign  = TextAlign.Center
-        )
-        Spacer(Modifier.height(6.dp))
-        Text(
-            text      = "You can change this anytime in Settings",
-            style     = MaterialTheme.typography.bodyMedium,
-            color     = MaterialTheme.colorScheme.onSurfaceVariant,
-            textAlign = TextAlign.Center
-        )
-
-        Spacer(Modifier.height(32.dp))
-
-        // ── Language grid ──────────────────────────────────────────────────
-        LazyVerticalGrid(
-            columns        = GridCells.Fixed(3),
-            modifier       = Modifier.weight(1f),
-            contentPadding = PaddingValues(bottom = 16.dp),
-            verticalArrangement   = Arrangement.spacedBy(12.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        // ── Header ─────────────────────────────────────────────
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 12.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            items(AppLanguage.entries) { language ->
-                LanguageTile(
-                    language   = language,
-                    isSelected = selected == language,
-                    onClick    = { selected = language }
+            Text(
+                text = "Select Language",
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.SemiBold,
+                color = Color.White
+            )
+
+            IconButton(
+                onClick = { onLanguageChosen(selected) } // ✅ always valid now
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Check,
+                    contentDescription = "Confirm",
+                    tint = Color(0xFF34C759),
+                    modifier = Modifier.size(28.dp)
                 )
             }
         }
 
-        // ── Continue button ────────────────────────────────────────────────
-        Button(
-            onClick  = { selected?.let { onLanguageChosen(it) } },
-            enabled  = selected != null,
-            shape    = RoundedCornerShape(14.dp),
-            colors   = ButtonDefaults.buttonColors(
-                containerColor         = MaterialTheme.colorScheme.primary,
-                disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant
-            ),
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(54.dp)
-        ) {
-            Text(
-                text       = "Continue",
-                style      = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.SemiBold
-            )
-        }
+        Spacer(Modifier.height(8.dp))
 
-        Spacer(Modifier.height(24.dp))
+        // ── Language List ───────────────────────────────────────
+        LazyColumn(
+            modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            contentPadding = PaddingValues(vertical = 8.dp)
+        ) {
+            items(languages) { lang ->
+
+                val displayName = if (lang == AppLanguage.SYSTEM_DEFAULT) {
+                    val systemLang = Locale.getDefault().displayLanguage
+                    "🌐 System default ($systemLang)"
+                } else {
+                    "${lang.flag} ${lang.displayName}"
+                }
+
+                val isSelected = selected == lang
+
+                LanguageTile(
+                    displayName = displayName,
+                    isSelected = isSelected,
+                    onClick = {
+                        selected = lang
+                    }
+                )
+            }
+        }
     }
 }
 
-// ---------------------------------------------------------------------------
-// Single language tile
-// ---------------------------------------------------------------------------
-
+// ─────────────────────────────────────────────────────────────
+// Language Tile
+// ─────────────────────────────────────────────────────────────
 @Composable
 private fun LanguageTile(
-    language   : AppLanguage,
-    isSelected : Boolean,
-    onClick    : () -> Unit
+    displayName: String,
+    isSelected: Boolean,
+    onClick: () -> Unit
 ) {
-    val scale by animateFloatAsState(
-        targetValue = if (isSelected) 0.96f else 1f,
-        animationSpec = tween(120),
-        label = "tile_scale"
-    )
     val bgColor by animateColorAsState(
-        targetValue = if (isSelected)
-            MaterialTheme.colorScheme.primaryContainer
-        else
-            MaterialTheme.colorScheme.surfaceVariant,
-        animationSpec = tween(160),
-        label = "tile_bg"
-    )
-    val borderColor by animateColorAsState(
-        targetValue = if (isSelected)
-            MaterialTheme.colorScheme.primary
-        else
-            Color.Transparent,
-        animationSpec = tween(160),
-        label = "tile_border"
+        targetValue = if (isSelected) Color(0xFF1C1C1E) else Color(0xFF2C2C2E),
+        animationSpec = tween(150)
     )
 
-    Box(
+    Row(
         modifier = Modifier
-            .scale(scale)
+            .fillMaxWidth()
             .clip(RoundedCornerShape(14.dp))
             .background(bgColor)
-            .border(
-                width = 1.5.dp,
-                color = borderColor,
-                shape = RoundedCornerShape(14.dp)
-            )
             .clickable(onClick = onClick)
-            .padding(vertical = 16.dp, horizontal = 8.dp),
-        contentAlignment = Alignment.Center
+            .padding(horizontal = 20.dp, vertical = 18.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(
-                text      = language.flag,
-                fontSize  = 28.sp,
-                textAlign = TextAlign.Center
-            )
-            Spacer(Modifier.height(6.dp))
-            Text(
-                text       = language.nativeName,
-                style      = MaterialTheme.typography.labelMedium,
-                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-                color      = if (isSelected)
-                    MaterialTheme.colorScheme.onPrimaryContainer
-                else
-                    MaterialTheme.colorScheme.onSurfaceVariant,
-                textAlign  = TextAlign.Center,
-                maxLines   = 1
-            )
-            Text(
-                text      = language.displayName,
-                style     = MaterialTheme.typography.labelSmall,
-                color     = if (isSelected)
-                    MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
-                else
-                    MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
-                textAlign = TextAlign.Center,
-                maxLines  = 1
-            )
+
+        // Radio button
+        Box(
+            modifier = Modifier
+                .size(24.dp)
+                .clip(CircleShape)
+                .border(
+                    width = 2.dp,
+                    color = if (isSelected) Color(0xFF34C759) else Color(0xFF8E8E93),
+                    shape = CircleShape
+                )
+                .background(
+                    if (isSelected) Color(0xFF34C759) else Color.Transparent
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            if (isSelected) {
+                Box(
+                    modifier = Modifier
+                        .size(10.dp)
+                        .clip(CircleShape)
+                        .background(Color.White)
+                )
+            }
         }
+
+        Spacer(Modifier.width(16.dp))
+
+        Text(
+            text = displayName,
+            style = MaterialTheme.typography.titleMedium,
+            fontSize = 17.sp,
+            fontWeight = FontWeight.Normal,
+            color = Color.White
+        )
     }
 }

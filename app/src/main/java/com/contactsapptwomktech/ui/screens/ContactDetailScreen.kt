@@ -23,20 +23,15 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
-import androidx.compose.material.icons.automirrored.outlined.Notes
-import androidx.compose.material.icons.outlined.Business
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Call
 import androidx.compose.material.icons.outlined.ChatBubbleOutline
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
-import androidx.compose.material.icons.outlined.Email
-import androidx.compose.material.icons.outlined.MoreVert
-import androidx.compose.material.icons.outlined.Phone
+import androidx.compose.material.icons.outlined.History
 import androidx.compose.material.icons.outlined.Share
-import androidx.compose.material.icons.outlined.Videocam
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material.icons.outlined.StarBorder
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -45,10 +40,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -58,7 +55,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
@@ -70,7 +66,6 @@ import androidx.compose.ui.unit.sp
 import com.contactsapptwomktech.R
 import com.contactsapptwomktech.data.viewmodel.ContactsViewModel
 import com.contactsapptwomktech.ui.components.ContactAvatar
-import com.contactsapptwomktech.utils.AvatarColorUtils
 import com.contactsapptwomktech.utils.IntentUtils
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -81,7 +76,9 @@ fun ContactDetailScreen(
     onBack: () -> Unit
 ) {
     val context = LocalContext.current
-    val contact = viewModel.getContactById(contactId)
+
+    // Observe contact live so favourite toggle reflects immediately
+    val contact by viewModel.getContactByIdAsFlow(contactId).collectAsState(initial = null)
 
     if (contact == null) {
         Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -90,274 +87,257 @@ fun ContactDetailScreen(
         return
     }
 
-    var menuExpanded by remember { mutableStateOf(false) }
-    var visible by remember { mutableStateOf(false) }
+    val c = contact!!   // safe after null check above
+
+    var visible          by remember { mutableStateOf(false) }
+    var showDeleteDialog by remember { mutableStateOf(false) }
+
     LaunchedEffect(Unit) { visible = true }
 
-    val alpha by animateFloatAsState(targetValue = if (visible) 1f else 0f, tween(400), label = "a")
-    val avatarScale by animateFloatAsState(targetValue = if (visible) 1f else 0.7f, tween(500), label = "s")
+    val alpha       by animateFloatAsState(if (visible) 1f else 0f,  tween(400), label = "a")
+    val avatarScale by animateFloatAsState(if (visible) 1f else 0.7f, tween(500), label = "s")
 
-    val avatarBg = AvatarColorUtils.getColor(contact.displayName)
+    // ── Delete confirmation dialog ─────────────────────────────────────────
+    if (showDeleteDialog) {
+        AlertDialog(
+            onDismissRequest = { showDeleteDialog = false },
+            title   = { Text("Delete contact") },
+            text    = { Text("Delete ${c.displayName}? This cannot be undone.") },
+            confirmButton = {
+                TextButton(onClick = {
+                    showDeleteDialog = false
+                    IntentUtils.deleteContactDirect(context, c.id)
+                    onBack()
+                }) { Text("Delete", color = MaterialTheme.colorScheme.error) }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDeleteDialog = false }) { Text("Cancel") }
+            }
+        )
+    }
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = {},
+                title = { Text("Contact", fontWeight = FontWeight.SemiBold) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.AutoMirrored.Outlined.ArrowBack, stringResource(R.string.back_button_description))
                     }
                 },
                 actions = {
-                    IconButton(onClick = { IntentUtils.editContact(context, contact.id) }) {
-                        Icon(Icons.Outlined.Edit, stringResource(R.string.action_edit))
-                    }
-                    IconButton(onClick = { menuExpanded = true }) {
-                        Icon(Icons.Outlined.MoreVert, stringResource(R.string.more_options_description))
-                    }
-                    DropdownMenu(expanded = menuExpanded, onDismissRequest = { menuExpanded = false }) {
-                        DropdownMenuItem(
-                            text = { Text(stringResource(R.string.action_share)) },
-                            onClick = {
-                                menuExpanded = false
-                                IntentUtils.shareContact(context, contact.id)
-                            },
-                            leadingIcon = { Icon(Icons.Outlined.Share, null) }
+                    TextButton(onClick = { IntentUtils.editContact(context, c.id) }) {
+                        Text(
+                            text  = stringResource(R.string.action_edit),
+                            color = MaterialTheme.colorScheme.primary,
+                            fontWeight = FontWeight.SemiBold
                         )
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent),
+                colors   = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background),
                 modifier = Modifier.statusBarsPadding()
             )
-        }
+        },
+        containerColor = MaterialTheme.colorScheme.background
     ) { paddingValues ->
         LazyColumn(
-            modifier = Modifier
+            modifier       = Modifier
                 .fillMaxSize()
                 .alpha(alpha)
                 .padding(paddingValues),
             contentPadding = PaddingValues(bottom = 40.dp)
         ) {
-            // Hero header
+
+            // ── Avatar + name + primary phone ──────────────────────────────
             item {
-                Box(
-                    modifier = Modifier
+                Column(
+                    modifier            = Modifier
                         .fillMaxWidth()
-                        .background(
-                            Brush.verticalGradient(
-                                colors = listOf(
-                                    avatarBg.copy(alpha = 0.12f),
-                                    Color.Transparent
-                                )
-                            )
-                        )
-                        .padding(top = 8.dp, bottom = 24.dp),
-                    contentAlignment = Alignment.Center
+                        .padding(top = 24.dp, bottom = 20.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        ContactAvatar(
-                            name = contact.displayName,
-                            photoUri = contact.photoUri,
-                            size = 100.dp,
-                            fontSize = 36.sp,
-                            modifier = Modifier.scale(avatarScale)
-                        )
-                        Spacer(Modifier.height(16.dp))
+                    ContactAvatar(
+                        name     = c.displayName,
+                        photoUri = c.photoUri,
+                        size     = 96.dp,
+                        fontSize = 36.sp,
+                        modifier = Modifier.scale(avatarScale)
+                    )
+                    Spacer(Modifier.height(14.dp))
+                    Text(
+                        text      = c.displayName,
+                        style     = MaterialTheme.typography.headlineSmall,
+                        fontWeight = FontWeight.Bold,
+                        color     = MaterialTheme.colorScheme.onBackground,
+                        textAlign = TextAlign.Center,
+                        modifier  = Modifier.padding(horizontal = 24.dp)
+                    )
+                    c.primaryPhone?.let { phone ->
+                        Spacer(Modifier.height(4.dp))
                         Text(
-                            text = contact.displayName,
-                            style = MaterialTheme.typography.headlineMedium,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onBackground,
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.padding(horizontal = 24.dp)
+                            text  = phone,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
-                        contact.company?.let {
-                            Spacer(Modifier.height(4.dp))
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Icon(
-                                    Icons.Outlined.Business,
-                                    null,
-                                    Modifier.size(14.dp),
-                                    tint = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                                Spacer(Modifier.width(4.dp))
-                                Text(
-                                    text = it,
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                            }
-                        }
                     }
                 }
             }
 
-            // Quick action chips
+            // ── 4 action buttons ───────────────────────────────────────────
             item {
-                val primaryPhone = contact.primaryPhone
-                val primaryEmail = contact.emails.firstOrNull()?.address
+                Row(
+                    modifier              = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 12.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
+                ) {
+                    // Call
+                    ActionButton(
+                        icon    = Icons.Outlined.Call,
+                        label   = stringResource(R.string.action_call),
+                        enabled = c.primaryPhone != null,
+                        onClick = {
+                            c.primaryPhone?.let {
+                                IntentUtils.makeCall(context, it, context.getString(R.string.error_no_phone_app))
+                            }
+                        }
+                    )
+                    // Share
+                    ActionButton(
+                        icon    = Icons.Outlined.Share,
+                        label   = stringResource(R.string.action_share),
+                        onClick = { IntentUtils.shareContact(context, c.id) }
+                    )
+                    // Message
+                    ActionButton(
+                        icon    = Icons.Outlined.ChatBubbleOutline,
+                        label   = stringResource(R.string.action_message),
+                        enabled = c.primaryPhone != null,
+                        onClick = {
+                            c.primaryPhone?.let {
+                                IntentUtils.sendSms(context, it, context.getString(R.string.error_no_messaging_app))
+                            }
+                        }
+                    )
+                    // Favourite toggle
+                    ActionButton(
+                        icon    = if (c.isFavorite) Icons.Filled.Star else Icons.Outlined.StarBorder,
+                        label   = "Favourite",
+                        tint    = if (c.isFavorite) Color(0xFFFFD700) else null,
+                        onClick = { viewModel.toggleFavorite(c.id) }
+                    )
+                }
+                Spacer(Modifier.height(20.dp))
+            }
 
+            // ── Phone section ──────────────────────────────────────────────
+            if (c.phoneNumbers.isNotEmpty()) {
+                item {
+                    SectionHeader(title = "Phone")
+                    Surface(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 12.dp),
+                        shape  = RoundedCornerShape(12.dp),
+                        color  = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+                    ) {
+                        Column {
+                            c.phoneNumbers.forEachIndexed { i, phone ->
+                                if (i > 0) HorizontalDivider(
+                                    modifier  = Modifier.padding(horizontal = 16.dp),
+                                    color     = MaterialTheme.colorScheme.outlineVariant,
+                                    thickness = 0.5.dp
+                                )
+                                PhoneRow(
+                                    number   = phone.number,
+                                    label    = phoneTypeLabel(phone.type),
+                                    onCall   = {
+                                        IntentUtils.makeCall(context, phone.number, context.getString(R.string.error_no_phone_app))
+                                    },
+                                    onSms    = {
+                                        IntentUtils.sendSms(context, phone.number, context.getString(R.string.error_no_messaging_app))
+                                    }
+                                )
+                            }
+                        }
+                    }
+                    Spacer(Modifier.height(16.dp))
+                }
+            }
+
+            // ── Delete + Call History row ──────────────────────────────────
+            item {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 20.dp),
-                    horizontalArrangement = Arrangement.spacedBy(10.dp, Alignment.CenterHorizontally)
+                        .padding(horizontal = 12.dp),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
-                    if (primaryPhone != null) {
-                        QuickActionButton(
-                            icon = Icons.Outlined.Call,
-                            label = stringResource(R.string.action_call),
-                            containerColor = MaterialTheme.colorScheme.primaryContainer,
-                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                            onClick = {
-                                IntentUtils.makeCall(
-                                    context, primaryPhone,
-                                    context.getString(R.string.error_no_phone_app)
-                                )
-                            }
-                        )
-                        QuickActionButton(
-                            icon = Icons.Outlined.ChatBubbleOutline,
-                            label = stringResource(R.string.action_message),
-                            containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                            contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                            onClick = {
-                                IntentUtils.sendSms(
-                                    context, primaryPhone,
-                                    context.getString(R.string.error_no_messaging_app)
-                                )
-                            }
-                        )
-                        QuickActionButton(
-                            icon = Icons.Outlined.Videocam,
-                            label = stringResource(R.string.action_video),
-                            containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                            contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
-                            onClick = { IntentUtils.videoCall(context, primaryPhone) }
-                        )
-                    }
-                    if (primaryEmail != null) {
-                        QuickActionButton(
-                            icon = Icons.Outlined.Email,
-                            label = stringResource(R.string.action_email),
-                            containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                            contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                            onClick = {
-                                IntentUtils.sendEmail(
-                                    context, primaryEmail,
-                                    context.getString(R.string.error_no_email_app)
-                                )
-                            }
-                        )
-                    }
-                }
-                Spacer(Modifier.height(24.dp))
-            }
-
-            // Phone numbers
-            if (contact.phoneNumbers.isNotEmpty()) {
-                item {
-                    SectionCard(title = stringResource(R.string.section_phone)) {
-                        contact.phoneNumbers.forEachIndexed { i, phone ->
-                            if (i > 0) HorizontalDivider(
-                                Modifier.padding(horizontal = 16.dp),
-                                color = MaterialTheme.colorScheme.outlineVariant,
-                                thickness = 0.5.dp
-                            )
-                            ContactInfoRow(
-                                icon = Icons.Outlined.Phone,
-                                label = phoneTypeLabel(phone.type),
-                                value = phone.number,
-                                onClick = {
-                                    IntentUtils.dialNumber(
-                                        context, phone.number,
-                                        context.getString(R.string.error_no_phone_app)
-                                    )
-                                },
-                                trailingAction = {
-                                    Surface(
-                                        shape = CircleShape,
-                                        color = MaterialTheme.colorScheme.secondaryContainer,
-                                        modifier = Modifier
-                                            .size(34.dp)
-                                            .clip(CircleShape)
-                                            .clickable {
-                                                IntentUtils.sendSms(
-                                                    context, phone.number,
-                                                    context.getString(R.string.error_no_messaging_app)
-                                                )
-                                            }
-                                    ) {
-                                        Box(contentAlignment = Alignment.Center) {
-                                            Icon(
-                                                Icons.Outlined.ChatBubbleOutline,
-                                                stringResource(R.string.action_message),
-                                                Modifier.size(16.dp),
-                                                tint = MaterialTheme.colorScheme.onSecondaryContainer
-                                            )
-                                        }
-                                    }
-                                }
-                            )
-                        }
-                    }
-                    Spacer(Modifier.height(12.dp))
-                }
-            }
-
-            // Email addresses
-            if (contact.emails.isNotEmpty()) {
-                item {
-                    SectionCard(title = stringResource(R.string.section_email)) {
-                        contact.emails.forEachIndexed { i, email ->
-                            if (i > 0) HorizontalDivider(
-                                Modifier.padding(horizontal = 16.dp),
-                                color = MaterialTheme.colorScheme.outlineVariant,
-                                thickness = 0.5.dp
-                            )
-                            ContactInfoRow(
-                                icon = Icons.Outlined.Email,
-                                label = emailTypeLabel(email.type),
-                                value = email.address,
-                                onClick = {
-                                    IntentUtils.sendEmail(
-                                        context, email.address,
-                                        context.getString(R.string.error_no_email_app)
-                                    )
-                                }
-                            )
-                        }
-                    }
-                    Spacer(Modifier.height(12.dp))
-                }
-            }
-
-            // Notes
-            contact.notes?.takeIf { it.isNotBlank() }?.let { notes ->
-                item {
-                    SectionCard(title = stringResource(R.string.section_notes)) {
+                    // Delete button
+                    Surface(
+                        modifier = Modifier
+                            .weight(1f)
+                            .clip(RoundedCornerShape(12.dp))
+                            .clickable { showDeleteDialog = true },
+                        shape = RoundedCornerShape(12.dp),
+                        color = Color(0xFF3A1A1A)
+                    ) {
                         Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp),
-                            verticalAlignment = Alignment.Top
+                            modifier            = Modifier.padding(vertical = 16.dp),
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment   = Alignment.CenterVertically
                         ) {
                             Icon(
-                                Icons.AutoMirrored.Outlined.Notes,
-                                null,
-                                Modifier.size(20.dp),
-                                tint = MaterialTheme.colorScheme.primary
+                                imageVector        = Icons.Outlined.Delete,
+                                contentDescription = "Delete",
+                                tint               = Color(0xFFE57373),
+                                modifier           = Modifier.size(20.dp)
                             )
-                            Spacer(Modifier.width(12.dp))
+                            Spacer(Modifier.width(8.dp))
                             Text(
-                                text = notes,
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurface
+                                text       = "Delete",
+                                color      = Color(0xFFE57373),
+                                fontWeight = FontWeight.SemiBold,
+                                fontSize   = 15.sp
                             )
                         }
                     }
-                    Spacer(Modifier.height(12.dp))
+
+                    // Call History button
+                    Surface(
+                        modifier = Modifier
+                            .weight(1f)
+                            .clip(RoundedCornerShape(12.dp))
+                            .clickable {
+                                c.primaryPhone?.let {
+                                    IntentUtils.openCallHistory(context, it)
+                                }
+                            },
+                        shape = RoundedCornerShape(12.dp),
+                        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+                    ) {
+                        Row(
+                            modifier              = Modifier.padding(vertical = 16.dp),
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment     = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                imageVector        = Icons.Outlined.History,
+                                contentDescription = "Call History",
+                                tint               = MaterialTheme.colorScheme.onSurfaceVariant,
+                                modifier           = Modifier.size(20.dp)
+                            )
+                            Spacer(Modifier.width(8.dp))
+                            Text(
+                                text       = "Call History",
+                                color      = MaterialTheme.colorScheme.onSurfaceVariant,
+                                fontWeight = FontWeight.SemiBold,
+                                fontSize   = 15.sp
+                            )
+                        }
+                    }
                 }
+                Spacer(Modifier.height(16.dp))
             }
 
             item { Spacer(Modifier.navigationBarsPadding()) }
@@ -365,108 +345,137 @@ fun ContactDetailScreen(
     }
 }
 
+// ---------------------------------------------------------------------------
+// Action button (Call / Share / Message / Favourite)
+// ---------------------------------------------------------------------------
+
 @Composable
-private fun QuickActionButton(
-    icon: ImageVector,
-    label: String,
-    containerColor: Color,
-    contentColor: Color,
-    onClick: () -> Unit
+private fun ActionButton(
+    icon    : ImageVector,
+    label   : String,
+    enabled : Boolean = true,
+    tint    : Color?  = null,
+    onClick : () -> Unit
 ) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+    val alpha = if (enabled) 1f else 0.4f
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier            = Modifier.alpha(alpha)
+    ) {
         Surface(
-            shape = RoundedCornerShape(16.dp),
-            color = containerColor,
+            shape    = RoundedCornerShape(14.dp),
+            color    = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f),
             modifier = Modifier
-                .size(56.dp)
-                .clip(RoundedCornerShape(16.dp))
-                .clickable(onClick = onClick)
+                .size(64.dp)
+                .clip(RoundedCornerShape(14.dp))
+                .clickable(enabled = enabled, onClick = onClick)
         ) {
             Box(contentAlignment = Alignment.Center) {
-                Icon(icon, contentDescription = label, tint = contentColor, modifier = Modifier.size(24.dp))
+                Icon(
+                    imageVector        = icon,
+                    contentDescription = label,
+                    tint               = tint ?: MaterialTheme.colorScheme.onSurface,
+                    modifier           = Modifier.size(26.dp)
+                )
             }
         }
         Spacer(Modifier.height(6.dp))
         Text(
-            text = label,
+            text  = label,
             style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
     }
 }
 
-@Composable
-private fun SectionCard(title: String, content: @Composable () -> Unit) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp),
-        shape = MaterialTheme.shapes.large,
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
-    ) {
-        Column {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.primary,
-                fontWeight = FontWeight.SemiBold,
-                modifier = Modifier.padding(start = 16.dp, top = 14.dp, bottom = 4.dp)
-            )
-            content()
-        }
-    }
-}
+// ---------------------------------------------------------------------------
+// Section header
+// ---------------------------------------------------------------------------
 
 @Composable
-private fun ContactInfoRow(
-    icon: ImageVector,
-    label: String,
-    value: String,
-    onClick: () -> Unit,
-    trailingAction: (@Composable () -> Unit)? = null
+private fun SectionHeader(title: String) {
+    Text(
+        text     = title,
+        style    = MaterialTheme.typography.titleMedium,
+        fontWeight = FontWeight.SemiBold,
+        color    = MaterialTheme.colorScheme.onBackground,
+        modifier = Modifier.padding(start = 16.dp, bottom = 6.dp, top = 4.dp)
+    )
+}
+
+// ---------------------------------------------------------------------------
+// Phone row with message + call icons on the right
+// ---------------------------------------------------------------------------
+
+@Composable
+private fun PhoneRow(
+    number  : String,
+    label   : String,
+    onCall  : () -> Unit,
+    onSms   : () -> Unit
 ) {
     Row(
-        modifier = Modifier
+        modifier          = Modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick)
-            .padding(horizontal = 16.dp, vertical = 12.dp),
+            .padding(horizontal = 16.dp, vertical = 14.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = null,
-            modifier = Modifier.size(20.dp),
-            tint = MaterialTheme.colorScheme.primary
-        )
-        Spacer(Modifier.width(12.dp))
         Column(modifier = Modifier.weight(1f)) {
             Text(
-                text = value,
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.primary
+                text       = number,
+                style      = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Medium,
+                color      = MaterialTheme.colorScheme.onSurface
             )
             Text(
-                text = label,
+                text  = label,
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
-        trailingAction?.invoke()
+
+        // Message icon
+        Box(
+            modifier         = Modifier
+                .size(36.dp)
+                .clip(CircleShape)
+                .clickable(onClick = onSms)
+                .background(MaterialTheme.colorScheme.surfaceVariant),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                imageVector        = Icons.Outlined.ChatBubbleOutline,
+                contentDescription = "SMS",
+                tint               = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier           = Modifier.size(18.dp)
+            )
+        }
+
+        Spacer(Modifier.width(10.dp))
+
+        // Call icon
+        Box(
+            modifier         = Modifier
+                .size(36.dp)
+                .clip(CircleShape)
+                .clickable(onClick = onCall)
+                .background(MaterialTheme.colorScheme.surfaceVariant),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                imageVector        = Icons.Outlined.Call,
+                contentDescription = "Call",
+                tint               = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier           = Modifier.size(18.dp)
+            )
+        }
     }
 }
 
 @Composable
 private fun phoneTypeLabel(type: com.contactsapptwomktech.data.model.PhoneType): String = when (type) {
     com.contactsapptwomktech.data.model.PhoneType.MOBILE -> stringResource(R.string.phone_mobile)
-    com.contactsapptwomktech.data.model.PhoneType.HOME -> stringResource(R.string.phone_home)
-    com.contactsapptwomktech.data.model.PhoneType.WORK -> stringResource(R.string.phone_work)
-    com.contactsapptwomktech.data.model.PhoneType.OTHER -> stringResource(R.string.phone_other)
-}
-
-@Composable
-private fun emailTypeLabel(type: com.contactsapptwomktech.data.model.EmailType): String = when (type) {
-    com.contactsapptwomktech.data.model.EmailType.HOME -> stringResource(R.string.phone_home)
-    com.contactsapptwomktech.data.model.EmailType.WORK -> stringResource(R.string.phone_work)
-    com.contactsapptwomktech.data.model.EmailType.OTHER -> stringResource(R.string.phone_other)
+    com.contactsapptwomktech.data.model.PhoneType.HOME   -> stringResource(R.string.phone_home)
+    com.contactsapptwomktech.data.model.PhoneType.WORK   -> stringResource(R.string.phone_work)
+    com.contactsapptwomktech.data.model.PhoneType.OTHER  -> stringResource(R.string.phone_other)
 }

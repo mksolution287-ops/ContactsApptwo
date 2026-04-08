@@ -112,6 +112,12 @@ class MainActivity : ComponentActivity() {
         // Optional: Log app open
 //        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.APP_OPEN) {}
 
+        // ── Restore persisted settings ──────────────────────────────
+        val prefs = getSharedPreferences("settings", MODE_PRIVATE)
+        val callerIdOn = prefs.getBoolean("caller_id_enabled", false)
+        settingsViewModel.setCallerIdEnabled(callerIdOn)
+
+
         setContent {
             val themeSettings by settingsViewModel.themeSettings.collectAsState()
 
@@ -129,7 +135,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    /** Sets Device Manufacturer and Model as custom keys in Crashlytics */
     private fun setDeviceInfoToCrashlytics(crashlytics: FirebaseCrashlytics) {
         try {
             val manufacturer = Build.MANUFACTURER ?: "Unknown"
@@ -162,7 +167,6 @@ class MainActivity : ComponentActivity() {
 
     override fun onResume() {
         super.onResume()
-
         val hasPhonePermission = ContextCompat.checkSelfPermission(
             this, android.Manifest.permission.READ_PHONE_STATE
         ) == android.content.pm.PackageManager.PERMISSION_GRANTED

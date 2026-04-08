@@ -28,6 +28,11 @@
     <string name="perm_two_desc">Dial numbers directly from the app</string>
     <string name="perm_three">Call History</string>
     <string name="perm_three_desc">Show your recent calls and call log</string>
+    <string name="perm_four">Phone State</string>
+    <string name="perm_four_desc">Detect incoming, outgoing, and missed calls accurately.</string>
+    <string name="perm_five">Notification</string>
+    <string name="perm_five_desc">Notifications are used to provide important updates and alerts from the app.</string>
+
 
     <string name="permissions_needed">A few permissions needed</string>
     <string name="permissions_needed_desc">These are required for the app to work properly. We never share your data.</string>
@@ -179,7 +184,7 @@
     <string name="terms_conditions">Terms &amp; Conditions</string>
     <string name="terms_conditions_desc">Read terms and conditions</string>
     <string name="permission_consent">
-    By continuing, I accept the Privacy Policy and Terms &amp; Conditions.
+    By tapping Agree &amp; continue, you accept our Privacy Policy and Terms &amp; Conditions.
     </string>
 
 </resources>
