@@ -181,4 +181,41 @@
     <string name="permission_consent">
 계속 진행하면 개인정보 처리방침 및 이용 약관에 동의하는 것입니다.
 </string>
+    <string name="dark_mode">다크 모드</string>
+    <string name="change_language">언어 변경</string>
+    <string name="sound">소리</string>
+    <string name="keypad_sound">키패드 소리</string>
+    <string name="soundnvibration">소리 및 진동</string>
+    <string name="calleridoverlay">발신자 ID 오버레이</string>
+    <string name="sim_preferences">SIM 설정</string>
+    <string name="accessibility">접근성</string>
+    <string name="call_back_screen">콜백 화면</string>
+    <string name="legal">법적 정보</string>
+    <string name="close">닫기</string>
+    <string name="choose_accent_color">강조 색상 선택</string>
+    <string name="dynamic_system">동적(시스템)</string>
+    <string name="caller_id_disable">발신자 ID가 비활성화되었습니다!</string>
+    <string name="caller_id_disable_desc">기본 발신자 ID 앱으로 설정하려면 탭하세요.</string>
+    <string name="delete_contact">연락처 삭제</string>
+    <string name="delete_contact_confirmation">%1$s을(를) 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.</string>
+    <string name="delete">삭제</string>
+    <string name="call_history">통화 기록</string>
+    <string name="permission_subtitle">최상의 통화 경험을 제공하기 위해 몇 가지 권한이 필요합니다.</string>
+    <string name="permission_subtitle_desc">연락처는 안전하게 보호되며 누구와도 공유되지 않습니다.</string>
+    <string name="continue_btn">계속</string>
+    <string name="calls_with_contact_placeholder">%1$s와의 통화가\n여기에 표시됩니다</string>
+    <string name="this_contact">이 연락처</string>
+    <string name="total">전체</string>
+    <string name="incoming">수신</string>
+    <string name="outgoing">발신</string>
+    <string name="missed">부재중</string>
+    <string name="perm_four">전화 상태</string>
+    <string name="perm_four_desc">수신, 발신 및 부재중 전화를 정확하게 감지합니다.</string>
+    <string name="perm_five">알림</string>
+    <string name="perm_five_desc">알림은 앱의 중요한 업데이트 및 알림을 제공하는 데 사용됩니다.</string>
+    <string name="filter_chip_all">전체</string>
+    <string name="filter_chip_incoming">수신</string>
+    <string name="filter_chip_outgoing">발신</string>
+    <string name="filter_chip_missed">부재중</string>
+    <string name="filter_chip_rejected">거절됨</string>
 </resources>

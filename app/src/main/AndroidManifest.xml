@@ -42,9 +42,26 @@
         </activity>
 
         <service
+            android:name="com.contactsapptwomktech.service.AppCallScreeningService"
+            android:exported="true"
+            android:permission="android.permission.BIND_SCREENING_SERVICE">
+            <intent-filter>
+                <action android:name="android.telecom.CallScreeningService" />
+            </intent-filter>
+        </service>
+
+
+        <service
             android:name="com.contactsapptwomktech.service.CallDetectionService"
             android:foregroundServiceType="phoneCall"
             android:exported="false" />
+
+        <!-- 2. Service declaration — paste inside <application> -->
+
+        <service
+            android:name=".service.CallerIdOverlayService"
+            android:exported="false"
+            android:foregroundServiceType="phoneCall" />
 
         <activity
             android:name="com.contactsapptwomktech.ui.overlay.PostCallOverlayActivity"

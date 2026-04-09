@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.displayCutoutPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -73,7 +74,8 @@ import com.contactsapptwomktech.utils.IntentUtils
 fun ContactDetailScreen(
     contactId: Long,
     viewModel: ContactsViewModel,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    onCallHistory: (contactId: Long) -> Unit
 ) {
     val context = LocalContext.current
 
@@ -101,17 +103,17 @@ fun ContactDetailScreen(
     if (showDeleteDialog) {
         AlertDialog(
             onDismissRequest = { showDeleteDialog = false },
-            title   = { Text("Delete contact") },
-            text    = { Text("Delete ${c.displayName}? This cannot be undone.") },
+            title   = { Text(stringResource(R.string.delete_contact)) },
+            text    = { Text(stringResource(R.string.delete_contact_confirmation,c.displayName)) },
             confirmButton = {
                 TextButton(onClick = {
                     showDeleteDialog = false
                     IntentUtils.deleteContactDirect(context, c.id)
                     onBack()
-                }) { Text("Delete", color = MaterialTheme.colorScheme.error) }
+                }) { Text(stringResource(R.string.delete), color = MaterialTheme.colorScheme.error) }
             },
             dismissButton = {
-                TextButton(onClick = { showDeleteDialog = false }) { Text("Cancel") }
+                TextButton(onClick = { showDeleteDialog = false }) { Text(stringResource(R.string.dialog_cancel)) }
             }
         )
     }
@@ -119,7 +121,7 @@ fun ContactDetailScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Contact", fontWeight = FontWeight.SemiBold) },
+                title = { Text(stringResource(R.string.contacts_title), fontWeight = FontWeight.SemiBold) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.AutoMirrored.Outlined.ArrowBack, stringResource(R.string.back_button_description))
@@ -233,7 +235,7 @@ fun ContactDetailScreen(
             // ── Phone section ──────────────────────────────────────────────
             if (c.phoneNumbers.isNotEmpty()) {
                 item {
-                    SectionHeader(title = "Phone")
+                    SectionHeader(title = stringResource(R.string.phone_home))
                     Surface(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -295,7 +297,7 @@ fun ContactDetailScreen(
                             )
                             Spacer(Modifier.width(8.dp))
                             Text(
-                                text       = "Delete",
+                                text       = stringResource(R.string.delete),
                                 color      = Color(0xFFE57373),
                                 fontWeight = FontWeight.SemiBold,
                                 fontSize   = 15.sp
@@ -309,9 +311,10 @@ fun ContactDetailScreen(
                             .weight(1f)
                             .clip(RoundedCornerShape(12.dp))
                             .clickable {
-                                c.primaryPhone?.let {
-                                    IntentUtils.openCallHistory(context, it)
-                                }
+//                                c.primaryPhone?.let {
+//                                    IntentUtils.openCallHistory(context, it)
+//                                }
+                                onCallHistory(contactId)
                             },
                         shape = RoundedCornerShape(12.dp),
                         color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
@@ -329,7 +332,7 @@ fun ContactDetailScreen(
                             )
                             Spacer(Modifier.width(8.dp))
                             Text(
-                                text       = "Call History",
+                                text       = stringResource(R.string.call_history),
                                 color      = MaterialTheme.colorScheme.onSurfaceVariant,
                                 fontWeight = FontWeight.SemiBold,
                                 fontSize   = 15.sp

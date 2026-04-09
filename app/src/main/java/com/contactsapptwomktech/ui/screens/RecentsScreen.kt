@@ -159,11 +159,11 @@ fun RecentsScreen(
 
     // Build chip list with localised labels
     val filterChips = listOf(
-        CallFilterChip(null,               "All",      Icons.Outlined.Call),
-        CallFilterChip(CallType.MISSED,    "Missed",   Icons.Outlined.CallMissed),
-        CallFilterChip(CallType.INCOMING,  "Incoming", Icons.Outlined.CallReceived),
-        CallFilterChip(CallType.OUTGOING,  "Outgoing", Icons.Outlined.CallMade),
-        CallFilterChip(CallType.REJECTED,  "Rejected", Icons.Outlined.PhoneDisabled),
+        CallFilterChip(null,               stringResource(R.string.filter_chip_all),      Icons.Outlined.Call),
+        CallFilterChip(CallType.MISSED,    stringResource(R.string.filter_chip_missed),   Icons.Outlined.CallMissed),
+        CallFilterChip(CallType.INCOMING,  stringResource(R.string.filter_chip_incoming), Icons.Outlined.CallReceived),
+        CallFilterChip(CallType.OUTGOING,  stringResource(R.string.filter_chip_outgoing), Icons.Outlined.CallMade),
+        CallFilterChip(CallType.REJECTED,  stringResource(R.string.filter_chip_rejected), Icons.Outlined.PhoneDisabled),
     )
 
     Scaffold(

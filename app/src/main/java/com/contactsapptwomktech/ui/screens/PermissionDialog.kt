@@ -28,7 +28,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Layers
-
+import androidx.compose.ui.res.stringResource
+import com.contactsapptwomktech.R
 data class PermissionItem(
     val icon : ImageVector,
     val label: String
@@ -95,7 +96,7 @@ fun RequiredPermissionsDialog(
 
                 // Title
                 Text(
-                    text       = "Required Permissions",
+                    text       = stringResource(R.string.permission_required),
                     fontWeight = FontWeight.Bold,
                     fontSize   = 20.sp,
                     color      = MaterialTheme.colorScheme.onSurface
@@ -105,7 +106,7 @@ fun RequiredPermissionsDialog(
 
                 // Subtitle
                 Text(
-                    text  = "We need a few permissions to give you the best calling experience.",
+                    text  = stringResource(R.string.permission_subtitle),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -165,7 +166,7 @@ fun RequiredPermissionsDialog(
                     )
                     Spacer(modifier = Modifier.width(10.dp))
                     Text(
-                        text  = "Your contacts are safe and will not be shared with anyone",
+                        text  = stringResource(R.string.permission_subtitle_desc),
                         color = Color.White,
                         style = MaterialTheme.typography.bodySmall
                     )
@@ -194,7 +195,7 @@ fun RequiredPermissionsDialog(
                         }
                     ) {
                         Text(
-                            text      = "Continue",
+                            text      = stringResource(R.string.continue_btn),
                             color     = MaterialTheme.colorScheme.primary,
                             fontWeight = FontWeight.Bold,
                             fontSize  = 16.sp

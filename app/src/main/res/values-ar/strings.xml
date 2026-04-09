@@ -181,4 +181,41 @@
     <string name="permission_consent">
 بالمتابعة، أوافق على سياسة الخصوصية والشروط والأحكام.
 </string>
+    <string name="dark_mode">الوضع الداكن</string>
+    <string name="change_language">تغيير اللغة</string>
+    <string name="sound">الصوت</string>
+    <string name="keypad_sound">صوت لوحة المفاتيح</string>
+    <string name="soundnvibration">الصوت والاهتزاز</string>
+    <string name="calleridoverlay">تراكب معرف المتصل</string>
+    <string name="sim_preferences">تفضيلات شريحة SIM</string>
+    <string name="accessibility">إمكانية الوصول</string>
+    <string name="call_back_screen">شاشة معاودة الاتصال</string>
+    <string name="legal">قانوني</string>
+    <string name="close">إغلاق</string>
+    <string name="choose_accent_color">اختر لون التمييز</string>
+    <string name="dynamic_system">ديناميكي (النظام)</string>
+    <string name="caller_id_disable">تم تعطيل معرف المتصل!</string>
+    <string name="caller_id_disable_desc">اضغط للتعيين كتطبيق معرف المتصل الافتراضي.</string>
+    <string name="delete_contact">حذف جهة الاتصال</string>
+    <string name="delete_contact_confirmation">هل تريد حذف %1$s؟ لا يمكن التراجع عن هذا الإجراء.</string>
+    <string name="delete">حذف</string>
+    <string name="call_history">سجل المكالمات</string>
+    <string name="permission_subtitle">نحتاج إلى بعض الأذونات لنمنحك أفضل تجربة اتصال.</string>
+    <string name="permission_subtitle_desc">جهات اتصالك آمنة ولن تتم مشاركتها مع أي شخص.</string>
+    <string name="continue_btn">متابعة</string>
+    <string name="calls_with_contact_placeholder">ستظهر هنا\nالمكالمات مع %1$s</string>
+    <string name="this_contact">جهة الاتصال هذه</string>
+    <string name="total">الإجمالي</string>
+    <string name="incoming">الواردة</string>
+    <string name="outgoing">الصادرة</string>
+    <string name="missed">الفائتة</string>
+    <string name="perm_four">حالة الهاتف</string>
+    <string name="perm_four_desc">اكتشاف المكالمات الواردة والصادرة والفائتة بدقة.</string>
+    <string name="perm_five">الإشعارات</string>
+    <string name="perm_five_desc">تُستخدم الإشعارات لتقديم التحديثات والتنبيهات المهمة من التطبيق.</string>
+    <string name="filter_chip_all">الكل</string>
+    <string name="filter_chip_incoming">الواردة</string>
+    <string name="filter_chip_outgoing">الصادرة</string>
+    <string name="filter_chip_missed">الفائتة</string>
+    <string name="filter_chip_rejected">المرفوضة</string>
 </resources>

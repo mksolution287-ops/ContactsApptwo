@@ -16,4 +16,7 @@ sealed class Screen(val route: String) {
     object Permission  : Screen("permission")
     object OverlayPermission : Screen("overlay_permission")
     object Onboarding  : Screen("onboarding")
+    object CallHistory : Screen("contact_call_history/{contactId}") {
+        fun createRoute(contactId: Long) = "contact_call_history/$contactId"
+    }
 }

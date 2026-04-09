@@ -181,4 +181,42 @@
     <string name="permission_consent">
 En continuant, j’accepte la politique de confidentialité et les conditions générales.
 </string>
+
+    <string name="dark_mode">Mode sombre</string>
+    <string name="change_language">Changer de langue</string>
+    <string name="sound">Son</string>
+    <string name="keypad_sound">Son du clavier</string>
+    <string name="soundnvibration">Son et vibration</string>
+    <string name="calleridoverlay">Superposition de l’identifiant de l’appelant</string>
+    <string name="sim_preferences">Préférences SIM</string>
+    <string name="accessibility">Accessibilité</string>
+    <string name="call_back_screen">Écran de rappel</string>
+    <string name="legal">Mentions légales</string>
+    <string name="close">Fermer</string>
+    <string name="choose_accent_color">Choisir la couleur d’accent</string>
+    <string name="dynamic_system">Dynamique (Système)</string>
+    <string name="caller_id_disable">Identifiant de l’appelant désactivé !</string>
+    <string name="caller_id_disable_desc">Touchez pour définir cette application comme identifiant d’appelant par défaut.</string>
+    <string name="delete_contact">Supprimer le contact</string>
+    <string name="delete_contact_confirmation">Supprimer %1$s ? Cette action est irréversible.</string>
+    <string name="delete">Supprimer</string>
+    <string name="call_history">Historique des appels</string>
+    <string name="permission_subtitle">Nous avons besoin de quelques autorisations pour vous offrir la meilleure expérience d’appel.</string>
+    <string name="permission_subtitle_desc">Vos contacts sont en sécurité et ne seront partagés avec personne.</string>
+    <string name="continue_btn">Continuer</string>
+    <string name="calls_with_contact_placeholder">Les appels avec %1$s\napparaîtront ici</string>
+    <string name="this_contact">ce contact</string>
+    <string name="total">Total</string>
+    <string name="incoming">Entrants</string>
+    <string name="outgoing">Sortants</string>
+    <string name="missed">Manqués</string>
+    <string name="perm_four">État du téléphone</string>
+    <string name="perm_four_desc">Détectez avec précision les appels entrants, sortants et manqués.</string>
+    <string name="perm_five">Notifications</string>
+    <string name="perm_five_desc">Les notifications sont utilisées pour fournir des mises à jour et alertes importantes de l’application.</string>
+    <string name="filter_chip_all">Tous</string>
+    <string name="filter_chip_incoming">Entrants</string>
+    <string name="filter_chip_outgoing">Sortants</string>
+    <string name="filter_chip_missed">Manqués</string>
+    <string name="filter_chip_rejected">Rejetés</string>
 </resources>

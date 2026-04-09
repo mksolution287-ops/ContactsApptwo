@@ -181,4 +181,41 @@
     <string name="permission_consent">
 Indem ich fortfahre, akzeptiere ich die Datenschutzerklärung und die Allgemeinen Geschäftsbedingungen.
 </string>
+    <string name="dark_mode">Dunkelmodus</string>
+    <string name="change_language">Sprache ändern</string>
+    <string name="sound">Ton</string>
+    <string name="keypad_sound">Tastenton</string>
+    <string name="soundnvibration">Ton &amp; Vibration</string>
+    <string name="calleridoverlay">Anrufer-ID-Overlay</string>
+    <string name="sim_preferences">SIM-Einstellungen</string>
+    <string name="accessibility">Barrierefreiheit</string>
+    <string name="call_back_screen">Rückrufbildschirm</string>
+    <string name="legal">Rechtliches</string>
+    <string name="close">Schließen</string>
+    <string name="choose_accent_color">Akzentfarbe auswählen</string>
+    <string name="dynamic_system">Dynamisch (System)</string>
+    <string name="caller_id_disable">Anrufer-ID deaktiviert!</string>
+    <string name="caller_id_disable_desc">Tippen, um sie als Standard-App für Anrufer-ID festzulegen.</string>
+    <string name="delete_contact">Kontakt löschen</string>
+    <string name="delete_contact_confirmation">%1$s löschen? Dies kann nicht rückgängig gemacht werden.</string>
+    <string name="delete">Löschen</string>
+    <string name="call_history">Anrufverlauf</string>
+    <string name="permission_subtitle">Wir benötigen einige Berechtigungen, um dir das beste Anruferlebnis zu bieten.</string>
+    <string name="permission_subtitle_desc">Deine Kontakte sind sicher und werden mit niemandem geteilt.</string>
+    <string name="continue_btn">Weiter</string>
+    <string name="calls_with_contact_placeholder">Anrufe mit %1$s\nwerden hier angezeigt</string>
+    <string name="this_contact">diesem Kontakt</string>
+    <string name="total">Gesamt</string>
+    <string name="incoming">Eingehend</string>
+    <string name="outgoing">Ausgehend</string>
+    <string name="missed">Verpasst</string>
+    <string name="perm_four">Telefonstatus</string>
+    <string name="perm_four_desc">Eingehende, ausgehende und verpasste Anrufe präzise erkennen.</string>
+    <string name="perm_five">Benachrichtigungen</string>
+    <string name="perm_five_desc">Benachrichtigungen werden verwendet, um wichtige Updates und Hinweise aus der App bereitzustellen.</string>
+    <string name="filter_chip_all">Alle</string>
+    <string name="filter_chip_incoming">Eingehend</string>
+    <string name="filter_chip_outgoing">Ausgehend</string>
+    <string name="filter_chip_missed">Verpasst</string>
+    <string name="filter_chip_rejected">Abgelehnt</string>
 </resources>

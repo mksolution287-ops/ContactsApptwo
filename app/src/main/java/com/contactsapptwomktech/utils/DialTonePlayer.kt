@@ -1,7 +1,11 @@
+// com.contactsapptwomktech.utils.DialTonePlayer.kt
+
 package com.contactsapptwomktech.utils
 
+import android.content.Context
 import android.media.AudioManager
 import android.media.ToneGenerator
+
 
 object DialTonePlayer {
 
@@ -18,7 +22,14 @@ object DialTonePlayer {
         toneGenerator = null
     }
 
-    fun playTone(digit: Char) {
+    fun playTone(digit: Char, context: Context? = null) {
+        // If we have context, check the setting (preferred way)
+        if (context != null) {
+            val prefs = context.getSharedPreferences("settings", Context.MODE_PRIVATE)
+            val keypadSoundEnabled = prefs.getBoolean("keypad_sound_enabled", true)
+            if (!keypadSoundEnabled) return
+        }
+
         val tone = when (digit) {
             '1' -> ToneGenerator.TONE_DTMF_1
             '2' -> ToneGenerator.TONE_DTMF_2
@@ -32,9 +43,10 @@ object DialTonePlayer {
             '0' -> ToneGenerator.TONE_DTMF_0
             '*' -> ToneGenerator.TONE_DTMF_S
             '#' -> ToneGenerator.TONE_DTMF_P
+            '+' -> ToneGenerator.TONE_DTMF_0  // fallback for +
             else -> return
         }
 
-        toneGenerator?.startTone(tone, 150) // duration in ms
+        toneGenerator?.startTone(tone, 120)
     }
 }

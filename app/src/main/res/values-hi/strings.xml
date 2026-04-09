@@ -182,4 +182,41 @@
     <string name="permission_consent">
 जारी रखते हुए, मैं गोपनीयता नीति और नियम व शर्तों को स्वीकार करता हूँ।
 </string>
+    <string name="dark_mode">डार्क मोड</string>
+    <string name="change_language">भाषा बदलें</string>
+    <string name="sound">ध्वनि</string>
+    <string name="keypad_sound">कीपैड ध्वनि</string>
+    <string name="soundnvibration">ध्वनि और वाइब्रेशन</string>
+    <string name="calleridoverlay">कॉलर आईडी ओवरले</string>
+    <string name="sim_preferences">सिम प्राथमिकताएँ</string>
+    <string name="accessibility">सुगम्यता</string>
+    <string name="call_back_screen">कॉल बैक स्क्रीन</string>
+    <string name="legal">कानूनी</string>
+    <string name="close">बंद करें</string>
+    <string name="choose_accent_color">एक्सेंट रंग चुनें</string>
+    <string name="dynamic_system">डायनामिक (सिस्टम)</string>
+    <string name="caller_id_disable">कॉलर आईडी निष्क्रिय है!</string>
+    <string name="caller_id_disable_desc">डिफ़ॉल्ट कॉलर आईडी ऐप के रूप में सेट करने के लिए टैप करें।</string>
+    <string name="delete_contact">संपर्क हटाएं</string>
+    <string name="delete_contact_confirmation">%1$s को हटाएं? यह वापस नहीं किया जा सकता।</string>
+    <string name="delete">हटाएं</string>
+    <string name="call_history">कॉल इतिहास</string>
+    <string name="permission_subtitle">बेहतर कॉलिंग अनुभव देने के लिए हमें कुछ अनुमतियों की आवश्यकता है।</string>
+    <string name="permission_subtitle_desc">आपके संपर्क सुरक्षित हैं और किसी के साथ साझा नहीं किए जाएंगे।</string>
+    <string name="continue_btn">जारी रखें</string>
+    <string name="calls_with_contact_placeholder">%1$s के साथ कॉल\nयहाँ दिखाई देंगी</string>
+    <string name="this_contact">इस संपर्क</string>
+    <string name="total">कुल</string>
+    <string name="incoming">आने वाली</string>
+    <string name="outgoing">जाने वाली</string>
+    <string name="missed">मिस्ड</string>
+    <string name="perm_four">फोन स्थिति</string>
+    <string name="perm_four_desc">आने वाली, जाने वाली और मिस्ड कॉल को सटीक रूप से पहचानें।</string>
+    <string name="perm_five">सूचनाएँ</string>
+    <string name="perm_five_desc">ऐप से महत्वपूर्ण अपडेट और अलर्ट देने के लिए सूचनाओं का उपयोग किया जाता है।</string>
+    <string name="filter_chip_all">सभी</string>
+    <string name="filter_chip_incoming">आने वाली</string>
+    <string name="filter_chip_outgoing">जाने वाली</string>
+    <string name="filter_chip_missed">मिस्ड</string>
+    <string name="filter_chip_rejected">अस्वीकृत</string>
 </resources>

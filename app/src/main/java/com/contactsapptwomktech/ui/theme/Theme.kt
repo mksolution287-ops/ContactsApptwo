@@ -199,7 +199,7 @@ private fun buildColorScheme(seed: Color, dark: Boolean): ColorScheme {
 //}
 @Composable
 fun ContactsAppTheme(
-    settings: ThemeSettings = ThemeSettings(),
+    settings: ThemeSettings,
     content: @Composable () -> Unit
 ) {
     val systemDark = isSystemInDarkTheme()

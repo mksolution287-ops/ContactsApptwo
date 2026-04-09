@@ -7,6 +7,10 @@ import android.os.Bundle
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import com.contactsapptwomktech.data.viewmodel.SettingsViewModel
 import com.contactsapptwomktech.ui.theme.ContactsAppTheme
 
 // ── Intent extras ────────────────────────────────────────────────────────
@@ -14,10 +18,10 @@ const val EXTRA_NUMBER       = "extra_number"
 const val EXTRA_NAME         = "extra_name"
 const val EXTRA_PHOTO_URI    = "extra_photo_uri"
 const val EXTRA_DURATION_SEC = "extra_duration_sec"
-const val EXTRA_CALL_TYPE    = "extra_call_type" // "incoming" | "outgoing" | "missed"
+const val EXTRA_CALL_TYPE    = "extra_call_type"
 
 class PostCallOverlayActivity : ComponentActivity() {
-
+    private val settingsViewModel: SettingsViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -40,8 +44,12 @@ class PostCallOverlayActivity : ComponentActivity() {
         val callType    = intent.getStringExtra(EXTRA_CALL_TYPE)    ?: "incoming"
         val isWaUser    = isWhatsAppInstalled() && isWhatsAppContact(number)
 
+
         setContent {
-            ContactsAppTheme {
+            val themeSettings by settingsViewModel.themeSettings.collectAsState()
+            ContactsAppTheme(
+                settings = themeSettings
+            ) {
                 PostCallOverlayScreen(
                     number      = number,
                     name        = name,
@@ -61,18 +69,12 @@ class PostCallOverlayActivity : ComponentActivity() {
     }
 
     // ── WhatsApp detection ────────────────────────────────────────────────
-
     private fun isWhatsAppInstalled(): Boolean {
         return try {
             packageManager.getPackageInfo("com.whatsapp", PackageManager.GET_ACTIVITIES)
             true
         } catch (e: PackageManager.NameNotFoundException) { false }
     }
-
-    /**
-     * Queries WhatsApp's contact provider to check if this number is registered.
-     * Falls back to true (show button) if query fails — better UX than silently hiding.
-     */
     private fun isWhatsAppContact(number: String): Boolean {
         return try {
             val uri = Uri.parse("content://com.whatsapp.provider.contact/wa_contacts")
@@ -127,8 +129,6 @@ class PostCallOverlayActivity : ComponentActivity() {
     }
 
     private fun launchBlockFlow(number: String) {
-        // Wire to your BlockRepository / system block dialog here
-        // e.g. TelecomManager.createManageBlockedNumbersIntent()
         finish()
     }
 }

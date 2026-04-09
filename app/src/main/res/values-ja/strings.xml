@@ -181,4 +181,42 @@
     <string name="permission_consent">
 続行することで、プライバシーポリシーと利用規約に同意したことになります。
 </string>
+
+    <string name="dark_mode">ダークモード</string>
+    <string name="change_language">言語を変更</string>
+    <string name="sound">サウンド</string>
+    <string name="keypad_sound">キーパッド音</string>
+    <string name="soundnvibration">サウンドとバイブレーション</string>
+    <string name="calleridoverlay">発信者IDオーバーレイ</string>
+    <string name="sim_preferences">SIM設定</string>
+    <string name="accessibility">ユーザー補助</string>
+    <string name="call_back_screen">折り返し通話画面</string>
+    <string name="legal">法的情報</string>
+    <string name="close">閉じる</string>
+    <string name="choose_accent_color">アクセントカラーを選択</string>
+    <string name="dynamic_system">ダイナミック（システム）</string>
+    <string name="caller_id_disable">発信者IDが無効です！</string>
+    <string name="caller_id_disable_desc">デフォルトの発信者IDアプリとして設定するにはタップしてください。</string>
+    <string name="delete_contact">連絡先を削除</string>
+    <string name="delete_contact_confirmation">%1$sを削除しますか？この操作は元に戻せません。</string>
+    <string name="delete">削除</string>
+    <string name="call_history">通話履歴</string>
+    <string name="permission_subtitle">最適な通話体験のために、いくつかの権限が必要です。</string>
+    <string name="permission_subtitle_desc">連絡先は安全に保護され、誰とも共有されません。</string>
+    <string name="continue_btn">続行</string>
+    <string name="calls_with_contact_placeholder">%1$sとの通話は\nここに表示されます</string>
+    <string name="this_contact">この連絡先</string>
+    <string name="total">合計</string>
+    <string name="incoming">着信</string>
+    <string name="outgoing">発信</string>
+    <string name="missed">不在着信</string>
+    <string name="perm_four">電話の状態</string>
+    <string name="perm_four_desc">着信・発信・不在着信を正確に検出します。</string>
+    <string name="perm_five">通知</string>
+    <string name="perm_five_desc">通知は、アプリからの重要な更新やアラートを提供するために使用されます。</string>
+    <string name="filter_chip_all">すべて</string>
+    <string name="filter_chip_incoming">着信</string>
+    <string name="filter_chip_outgoing">発信</string>
+    <string name="filter_chip_missed">不在着信</string>
+    <string name="filter_chip_rejected">拒否</string>
 </resources>

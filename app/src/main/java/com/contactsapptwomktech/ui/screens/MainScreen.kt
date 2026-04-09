@@ -40,11 +40,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.contactsapptwomktech.R
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.contactsapptwomktech.data.viewmodel.ContactsViewModel
 import com.contactsapptwomktech.data.viewmodel.OnboardingViewModel
 import com.contactsapptwomktech.data.viewmodel.SettingsViewModel
@@ -138,7 +140,6 @@ fun MainScreen(
     // Observe onboarding state to decide the start destination
     val onboardingDone   by onboardingViewModel.onboardingDone.collectAsState()
     val selectedLanguage by onboardingViewModel.selectedLanguage.collectAsState()
-
     val context = LocalContext.current
 
     // Log screen view whenever current route changes
@@ -370,7 +371,10 @@ fun MainScreen(
                     ContactDetailScreen(
                         contactId = contactId,
                         viewModel = rootViewModel,
-                        onBack    = { navController.popBackStack() }
+                        onBack    = { navController.popBackStack() },
+                        onCallHistory = { id ->
+                            navController.navigate(Screen.CallHistory.createRoute(id))
+                        }
                     )
                 }
 
@@ -387,6 +391,22 @@ fun MainScreen(
                         viewModel = settingsViewModel,
                         onboardingViewModel = onboardingViewModel,
                         onBack    = { navController.popBackStack() }
+                    )
+                }
+
+                composable(
+                    route = Screen.CallHistory.route,
+                    arguments = listOf(
+                        navArgument("contactId") {
+                            type = NavType.LongType
+                        }
+                    )
+                ) { backStackEntry ->
+                    val contactId = backStackEntry.arguments?.getLong("contactId") ?: return@composable
+
+                    ContactCallHistoryScreen(
+                        contactId = contactId,
+                        onBack = { navController.popBackStack() }
                     )
                 }
             }

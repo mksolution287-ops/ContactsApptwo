@@ -61,7 +61,6 @@ class CallLogRepository(private val context: Context) {
             }
         }
 
-
         entries
     }
 }

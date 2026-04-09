@@ -642,6 +642,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.contactsapptwomktech.R
 import com.contactsapptwomktech.data.model.Contact
@@ -649,6 +650,9 @@ import com.contactsapptwomktech.data.viewmodel.ContactsViewModel
 import com.contactsapptwomktech.ui.components.ContactAvatar
 import com.contactsapptwomktech.utils.DialTonePlayer
 import com.contactsapptwomktech.utils.IntentUtils
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import com.contactsapptwomktech.data.viewmodel.SettingsViewModel
 
 private val dialpadKeys = listOf(
     Triple("1", "", ""),
@@ -669,14 +673,17 @@ private val dialpadKeys = listOf(
 @Composable
 fun DialpadScreen(
     onSettingsClick: () -> Unit,
-    viewModel: ContactsViewModel = viewModel()
+    settingsViewModel: SettingsViewModel = viewModel(),
+    viewModel: ContactsViewModel = viewModel()          // renamed for clarity
 ) {
     val context = LocalContext.current
 
     var dialedNumber by remember { mutableStateOf("") }
     var showDialpad by remember { mutableStateOf(true) }
 
-    // Update search query in ViewModel whenever user types
+    // This will reactively update when user toggles the setting
+    val keypadSoundEnabled by settingsViewModel.keypadSoundEnabled.collectAsState()
+
     LaunchedEffect(dialedNumber) {
         viewModel.setSearchQuery(dialedNumber)
     }
@@ -686,17 +693,14 @@ fun DialpadScreen(
     }
 
     DisposableEffect(Unit) {
-        onDispose {
-            DialTonePlayer.release()
-        }
+        onDispose { DialTonePlayer.release() }
     }
 
     val allFiltered by viewModel.filteredContacts.collectAsState()
 
-    // ── Decide what to show ─────────────────────────────────────────────
     val contactsToShow: List<Contact> = when {
-        dialedNumber.isNotEmpty() -> allFiltered                     // Search mode
-        else -> allFiltered.filter { it.isFavorite }                 // Empty state → Favorites
+        dialedNumber.isNotEmpty() -> allFiltered
+        else -> allFiltered.filter { it.isFavorite }
     }
 
     Scaffold(
@@ -756,26 +760,20 @@ fun DialpadScreen(
         }
     ) { paddingValues ->
 
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-        ) {
+        Box(modifier = Modifier.fillMaxSize().padding(paddingValues)) {
 
-            // ── Contacts List (Favorites when empty, Search results when typing) ──
+            // Contacts List
             if (contactsToShow.isNotEmpty()) {
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
                     contentPadding = PaddingValues(top = 8.dp, bottom = 88.dp)
                 ) {
-                    // Header when showing Favorites
                     if (dialedNumber.isEmpty()) {
                         item {
                             Text(
-                                text = "Favorites",
+                                text = stringResource(R.string.favorites_title),
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.SemiBold,
-                                color = MaterialTheme.colorScheme.onSurface,
                                 modifier = Modifier.padding(start = 20.dp, top = 16.dp, bottom = 8.dp)
                             )
                         }
@@ -786,43 +784,22 @@ fun DialpadScreen(
                             contact = contact,
                             query = dialedNumber,
                             onCallClick = {
-                                val number = contact.phoneNumbers.firstOrNull()?.number
-                                    ?: return@ContactRow
-                                IntentUtils.makeCall(
-                                    context,
-                                    number,
-                                    context.getString(R.string.error_no_phone_app)
-                                )
+                                val number = contact.phoneNumbers.firstOrNull()?.number ?: return@ContactRow
+                                IntentUtils.makeCall(context, number, context.getString(R.string.error_no_phone_app))
                             }
                         )
                     }
                 }
-            }
-            // True empty state (no favorites and nothing typed)
-            else if (dialedNumber.isEmpty()) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
+            } else if (dialedNumber.isEmpty()) {
+                // No favorites empty state
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Icon(
-                            imageVector = Icons.Outlined.Star,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
-                            modifier = Modifier.size(72.dp)
-                        )
+                        Icon(Icons.Outlined.Star, null, tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(0.5f), modifier = Modifier.size(72.dp))
                         Spacer(Modifier.height(16.dp))
-                        Text(
-                            text = "No favorites yet",
-                            style = MaterialTheme.typography.titleLarge,
-                            fontWeight = FontWeight.Medium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
+                        Text(stringResource(R.string.no_favorites), style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Medium)
                         Spacer(Modifier.height(8.dp))
                         Text(
-                            text = "Star some contacts from the Contacts tab\nto see them here quickly",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
+                            stringResource(R.string.no_favorites_message),
                             textAlign = TextAlign.Center,
                             modifier = Modifier.padding(horizontal = 48.dp)
                         )
@@ -830,11 +807,8 @@ fun DialpadScreen(
                 }
             }
 
-            // ── Bottom Dialpad Sheet ───────────────────────────────────────
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.BottomCenter
-            ) {
+            // Bottom Dialpad
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
                 AnimatedVisibility(
                     visible = showDialpad,
                     enter = slideInVertically(tween(300)) { it } + fadeIn(tween(250)),
@@ -843,30 +817,36 @@ fun DialpadScreen(
                     Surface(
                         shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
                         color = MaterialTheme.colorScheme.surface,
-                        tonalElevation = 0.dp,
                         shadowElevation = 12.dp
                     ) {
                         DialpadContent(
                             dialedNumber = dialedNumber,
+                            keypadSoundEnabled = keypadSoundEnabled,
                             onDigitAppend = { digit ->
-                                if (dialedNumber.length < 15) dialedNumber += digit
+                                if (dialedNumber.length < 15) {
+                                    dialedNumber += digit
+                                    // Always use the latest value from state
+                                    if (keypadSoundEnabled) {
+                                        DialTonePlayer.playTone(digit.first())
+                                    }
+                                }
                             },
                             onLongPressZero = {
-                                if (dialedNumber.isNotEmpty() && dialedNumber.length < 15)
-                                    dialedNumber = dialedNumber.dropLast(1) + "+"
+                                if (dialedNumber.length < 15) {
+                                    if (dialedNumber.isNotEmpty()) dialedNumber = dialedNumber.dropLast(1)
+                                    dialedNumber += "+"
+                                    if (keypadSoundEnabled) {
+                                        DialTonePlayer.playTone('+')
+                                    }
+                                }
                             },
                             onBackspace = {
-                                if (dialedNumber.isNotEmpty())
-                                    dialedNumber = dialedNumber.dropLast(1)
+                                if (dialedNumber.isNotEmpty()) dialedNumber = dialedNumber.dropLast(1)
                             },
                             onLongBackspace = { dialedNumber = "" },
                             onCall = {
                                 if (dialedNumber.isNotEmpty()) {
-                                    IntentUtils.makeCall(
-                                        context,
-                                        dialedNumber,
-                                        context.getString(R.string.error_no_phone_app)
-                                    )
+                                    IntentUtils.makeCall(context, dialedNumber, context.getString(R.string.error_no_phone_app))
                                     showDialpad = false
                                     dialedNumber = ""
                                     viewModel.setSearchQuery("")
@@ -888,6 +868,7 @@ fun DialpadScreen(
 @Composable
 private fun DialpadContent(
     dialedNumber    : String,
+    keypadSoundEnabled: Boolean,
     onDigitAppend   : (String) -> Unit,
     onLongPressZero : () -> Unit,
     onBackspace     : () -> Unit,

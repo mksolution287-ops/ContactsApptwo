@@ -181,4 +181,41 @@
     <string name="permission_consent">
 Al continuar, acepto la política de privacidad y los términos y condiciones.
 </string>
+    <string name="dark_mode">Modo oscuro</string>
+    <string name="change_language">Cambiar idioma</string>
+    <string name="sound">Sonido</string>
+    <string name="keypad_sound">Sonido del teclado</string>
+    <string name="soundnvibration">Sonido y vibración</string>
+    <string name="calleridoverlay">Superposición de identificador de llamadas</string>
+    <string name="sim_preferences">Preferencias de SIM</string>
+    <string name="accessibility">Accesibilidad</string>
+    <string name="call_back_screen">Pantalla de devolución de llamada</string>
+    <string name="legal">Legal</string>
+    <string name="close">Cerrar</string>
+    <string name="choose_accent_color">Elegir color de acento</string>
+    <string name="dynamic_system">Dinámico (Sistema)</string>
+    <string name="caller_id_disable">¡Identificador de llamadas desactivado!</string>
+    <string name="caller_id_disable_desc">Toca para establecerla como app predeterminada de identificador de llamadas.</string>
+    <string name="delete_contact">Eliminar contacto</string>
+    <string name="delete_contact_confirmation">¿Eliminar a %1$s? Esta acción no se puede deshacer.</string>
+    <string name="delete">Eliminar</string>
+    <string name="call_history">Historial de llamadas</string>
+    <string name="permission_subtitle">Necesitamos algunos permisos para brindarte la mejor experiencia de llamadas.</string>
+    <string name="permission_subtitle_desc">Tus contactos están seguros y no se compartirán con nadie.</string>
+    <string name="continue_btn">Continuar</string>
+    <string name="calls_with_contact_placeholder">Las llamadas con %1$s\naparecerán aquí</string>
+    <string name="this_contact">este contacto</string>
+    <string name="total">Total</string>
+    <string name="incoming">Entrantes</string>
+    <string name="outgoing">Salientes</string>
+    <string name="missed">Perdidas</string>
+    <string name="perm_four">Estado del teléfono</string>
+    <string name="perm_four_desc">Detecta con precisión llamadas entrantes, salientes y perdidas.</string>
+    <string name="perm_five">Notificaciones</string>
+    <string name="perm_five_desc">Las notificaciones se utilizan para proporcionar actualizaciones y alertas importantes de la app.</string>
+    <string name="filter_chip_all">Todas</string>
+    <string name="filter_chip_incoming">Entrantes</string>
+    <string name="filter_chip_outgoing">Salientes</string>
+    <string name="filter_chip_missed">Perdidas</string>
+    <string name="filter_chip_rejected">Rechazadas</string>
 </resources>

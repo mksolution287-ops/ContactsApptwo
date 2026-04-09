@@ -181,4 +181,41 @@
     <string name="permission_consent">
 继续操作即表示我同意隐私政策和条款与条件。
 </string>
+    <string name="dark_mode">深色模式</string>
+    <string name="change_language">更改语言</string>
+    <string name="sound">声音</string>
+    <string name="keypad_sound">拨号键音</string>
+    <string name="soundnvibration">声音和振动</string>
+    <string name="calleridoverlay">来电显示悬浮窗</string>
+    <string name="sim_preferences">SIM 卡偏好设置</string>
+    <string name="accessibility">无障碍</string>
+    <string name="call_back_screen">回拨界面</string>
+    <string name="legal">法律信息</string>
+    <string name="close">关闭</string>
+    <string name="choose_accent_color">选择强调色</string>
+    <string name="dynamic_system">动态（系统）</string>
+    <string name="caller_id_disable">来电显示已禁用！</string>
+    <string name="caller_id_disable_desc">点击设置为默认来电显示应用。</string>
+    <string name="delete_contact">删除联系人</string>
+    <string name="delete_contact_confirmation">删除 %1$s？此操作无法撤销。</string>
+    <string name="delete">删除</string>
+    <string name="call_history">通话记录</string>
+    <string name="permission_subtitle">为了给您提供最佳通话体验，我们需要一些权限。</string>
+    <string name="permission_subtitle_desc">您的联系人信息是安全的，不会与任何人共享。</string>
+    <string name="continue_btn">继续</string>
+    <string name="calls_with_contact_placeholder">与 %1$s 的通话\n将显示在这里</string>
+    <string name="this_contact">此联系人</string>
+    <string name="total">总计</string>
+    <string name="incoming">呼入</string>
+    <string name="outgoing">呼出</string>
+    <string name="missed">未接</string>
+    <string name="perm_four">电话状态</string>
+    <string name="perm_four_desc">准确检测来电、去电和未接来电。</string>
+    <string name="perm_five">通知</string>
+    <string name="perm_five_desc">通知用于提供来自应用的重要更新和提醒。</string>
+    <string name="filter_chip_all">全部</string>
+    <string name="filter_chip_incoming">呼入</string>
+    <string name="filter_chip_outgoing">呼出</string>
+    <string name="filter_chip_missed">未接</string>
+    <string name="filter_chip_rejected">已拒接</string>
 </resources>

@@ -28,10 +28,6 @@
     <string name="perm_two_desc">Dial numbers directly from the app</string>
     <string name="perm_three">Call History</string>
     <string name="perm_three_desc">Show your recent calls and call log</string>
-    <string name="perm_four">Phone State</string>
-    <string name="perm_four_desc">Detect incoming, outgoing, and missed calls accurately.</string>
-    <string name="perm_five">Notification</string>
-    <string name="perm_five_desc">Notifications are used to provide important updates and alerts from the app.</string>
 
 
     <string name="permissions_needed">A few permissions needed</string>
@@ -147,7 +143,7 @@
     <string name="language">Set Language</string>
     <string name="sim_settings">SIM settings</string>
     <string name="sim_settings_desc">Manage SIM cards and default calling SIM</string>
-    <string name="call_settings">Call settings</string>
+<!--    <string name="call_settings">Call settings</string>-->
     <string name="call_settings_desc">Manage calling options</string>
     <string name="default_apps">Default apps</string>
     <string name="default_apps_desc">Change default calling app</string>
@@ -187,4 +183,45 @@
     By tapping Agree &amp; continue, you accept our Privacy Policy and Terms &amp; Conditions.
     </string>
 
+    <string name="call_settings">Call Settings</string>
+    <string name="dark_mode">Dark Mode</string>
+    <string name="change_language">Change Language</string>
+    <string name="sound">Sound</string>
+    <string name="keypad_sound">Keypad Sound</string>
+    <string name="soundnvibration">Sound &amp; Vibration</string>
+    <string name="calleridoverlay">Caller ID Overlay</string>
+    <string name="sim_preferences">Sim Preferences</string>
+    <string name="accessibility">Accessibility</string>
+    <string name="call_back_screen">Callback Screen</string>
+    <string name="legal">Legal</string>
+<!--    <string name="change_language">Change Language</string>-->
+<!--    <string name="dark_mode">Dark Mode</string>-->
+    <string name="close">Close</string>
+    <string name="choose_accent_color">Choose Accent Color</string>
+    <string name="dynamic_system">Dynamic (System)</string>
+    <string name="caller_id_disable">Caller ID Disabled!</string>
+    <string name="caller_id_disable_desc">Tap to set as default Caller ID app.</string>
+    <string name="delete_contact">Delete Contact</string>
+    <string name="delete_contact_confirmation">Delete %1$s? This cannot be undone.</string>
+    <string name="delete">Delete</string>
+    <string name="call_history">Call History</string>
+    <string name="permission_subtitle">We need a few permissions to give you the best calling experience.</string>
+    <string name="permission_subtitle_desc">Your contacts are safe and will not be shared with anyone</string>
+    <string name="continue_btn">Continue</string>
+    <string name="calls_with_contact_placeholder">Calls with %1$s\nwill appear here</string>
+    <string name="this_contact">this contact</string>
+    <string name="total">Total</string>
+    <string name="incoming">Incoming</string>
+    <string name="outgoing">Outgoing</string>
+    <string name="missed">Missed</string>
+    <string name="perm_four">Phone State</string>
+    <string name="perm_four_desc">Detect incoming, outgoing, and missed calls accurately.</string>
+    <string name="perm_five">Notification</string>
+    <string name="perm_five_desc">Notifications are used to provide important updates and alerts from the app.</string>
+    <string name="filter_chip_all">All</string>
+    <string name="filter_chip_incoming">Incoming</string>
+    <string name="filter_chip_outgoing">Outgoing</string>
+    <string name="filter_chip_missed">Missed</string>
+    <string name="filter_chip_rejected">Rejected</string>
+    <string name="call">Call</string>
 </resources>
