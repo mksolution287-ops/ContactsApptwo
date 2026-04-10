@@ -67,28 +67,11 @@ class CallDetectionService : Service() {
         )
     }
 
-//    private suspend fun fetchLastCallAndShowOverlay() {
-//        val repo   = CallLogRepository(applicationContext)
-//        val latest = repo.fetchCallLogs(limit = 1).firstOrNull() ?: return
-//
-//        val intent = Intent(applicationContext, PostCallOverlayActivity::class.java).apply {
-//            flags = Intent.FLAG_ACTIVITY_NEW_TASK or
-//                    Intent.FLAG_ACTIVITY_SINGLE_TOP or
-//                    Intent.FLAG_ACTIVITY_CLEAR_TOP
-//            putExtra(EXTRA_NUMBER,       latest.number)
-//            putExtra(EXTRA_NAME,         latest.contactName)
-//            putExtra(EXTRA_PHOTO_URI,    latest.photoUri)
-//            putExtra(EXTRA_DURATION_SEC, latest.duration)
-//            putExtra(EXTRA_CALL_TYPE, when (latest.callType.value) {
-//                1 -> "incoming"
-//                2 -> "outgoing"
-//                3 -> "missed"
-//                else -> "incoming"
-//            })
-//        }
-//        startActivity(intent)
-//    }
 private suspend fun fetchLastCallAndShowOverlay() {
+
+    val prefs = getSharedPreferences("theme_settings", MODE_PRIVATE)
+    if (!prefs.getBoolean("callback_screen_enabled", true)) return  // ← add this
+
     val repo = CallLogRepository(applicationContext)
     val latest = repo.fetchCallLogs(limit = 1).firstOrNull() ?: return
 

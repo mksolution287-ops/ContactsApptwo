@@ -2,6 +2,8 @@ package com.contactsapptwomktech.ui.screens
 
 import android.content.Context
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.slideInVertically
@@ -17,6 +19,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -25,6 +28,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -39,6 +43,7 @@ import androidx.compose.material.icons.outlined.Phone
 import androidx.compose.material.icons.outlined.PhoneDisabled
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.StarBorder
+import androidx.compose.material.icons.outlined.SwipeLeft
 import androidx.compose.material.icons.outlined.Voicemail
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -65,6 +70,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -93,6 +99,7 @@ import com.contactsapptwomktech.utils.IntentUtils
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
+import kotlinx.coroutines.delay
 
 // ── Filter chip definitions ────────────────────────────────────────────────
 
@@ -110,7 +117,6 @@ fun RecentsScreen(
     onSettingsClick : () -> Unit
 ) {
     val context = LocalContext.current
-
     val permissionState = rememberPermissionState(android.Manifest.permission.READ_CALL_LOG) { granted ->
         if (granted) viewModel.loadCallLog()
     }
@@ -118,6 +124,11 @@ fun RecentsScreen(
     val prefs   = remember { context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE) }
     var showPermissionDialog by remember {
         mutableStateOf(!prefs.getBoolean("permissions_asked", false))
+    }
+
+    // At the top of RecentsScreen, next to your other prefs/state:
+    var showSwipeHint by remember {
+        mutableStateOf(!prefs.getBoolean("swipe_hint_shown", false))
     }
 
 // Show dialog
@@ -360,6 +371,17 @@ fun RecentsScreen(
                         modifier       = Modifier.padding(paddingValues),
                         contentPadding = PaddingValues(bottom = 88.dp)
                     ) {
+                        // First-install swipe gesture tutorial — shown once, on the first item
+                        if (showSwipeHint && logs.isNotEmpty()) {
+                            item(key = "swipe_hint") {
+                                SwipeGestureHint(
+                                    onDismissed = {
+                                        prefs.edit().putBoolean("swipe_hint_shown", true).apply()
+                                        showSwipeHint = false
+                                    }
+                                )
+                            }
+                        }
                         grouped.forEach { (dateLabel, entries) ->
                             item {
                                 Text(
@@ -525,4 +547,64 @@ private fun callTypeColor(type: CallType): Color = when (type) {
     CallType.OUTGOING                  -> OutgoingBlue
     CallType.MISSED, CallType.REJECTED -> MissedCallRed
     else                               -> MaterialTheme.colorScheme.onSurfaceVariant
+}
+
+@Composable
+fun SwipeGestureHint(
+    onDismissed: () -> Unit
+) {
+    // Drives the hand sliding left then right (–60dp → 0dp → 60dp)
+    val offsetX = remember { Animatable(-60f) }
+    // Alpha for the whole overlay
+    val alpha = remember { Animatable(0f) }
+
+    LaunchedEffect(Unit) {
+        // Fade in
+        alpha.animateTo(1f, tween(300))
+
+        // Swipe left  →  right  →  left  (two cycles)
+        repeat(2) {
+            offsetX.animateTo(60f, tween(500, easing = FastOutSlowInEasing))
+            offsetX.animateTo(-60f, tween(500, easing = FastOutSlowInEasing))
+        }
+
+        // Pause briefly so user can register the hint
+        delay(300)
+
+        // Fade out
+        alpha.animateTo(0f, tween(400))
+
+        onDismissed()
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(72.dp)                       // matches one contact row
+            .alpha(alpha.value)
+            .background(
+                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.08f),
+                shape = RoundedCornerShape(12.dp)
+            )
+            .padding(horizontal = 20.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Row(
+            modifier = Modifier.offset(x = offsetX.value.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Outlined.SwipeLeft,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(28.dp)
+            )
+            Text(
+                text = "Swipe to call or message",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.primary
+            )
+        }
+    }
 }

@@ -48,6 +48,12 @@ class AppCallScreeningService : CallScreeningService() {
             true
         }
 
+        // Add this check before the overlayIntent block
+        val prefs = getSharedPreferences("theme_settings", MODE_PRIVATE)
+        val overlayEnabled = prefs.getBoolean("caller_id_overlay_enabled", false)
+
+        if (!overlayEnabled) return  //
+
         // ── 4. Launch overlay service with the number ──────────────────────
         val overlayIntent = Intent(this, CallerIdOverlayService::class.java).apply {
             putExtra(CallerIdOverlayService.EXTRA_PHONE_NUMBER, phoneNumber)

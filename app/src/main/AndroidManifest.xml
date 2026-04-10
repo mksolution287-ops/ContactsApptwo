@@ -19,6 +19,7 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_PHONE_CALL" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
@@ -51,17 +52,25 @@
         </service>
 
 
+<!--        <service-->
+<!--            android:name="com.contactsapptwomktech.service.CallDetectionService"-->
+<!--            android:foregroundServiceType="phoneCall"-->
+<!--            android:exported="false" />-->
         <service
             android:name="com.contactsapptwomktech.service.CallDetectionService"
-            android:foregroundServiceType="phoneCall"
+            android:foregroundServiceType="dataSync"
             android:exported="false" />
 
         <!-- 2. Service declaration — paste inside <application> -->
 
+<!--        <service-->
+<!--            android:name=".service.CallerIdOverlayService"-->
+<!--            android:exported="false"-->
+<!--            android:foregroundServiceType="phoneCall" />-->
         <service
             android:name=".service.CallerIdOverlayService"
             android:exported="false"
-            android:foregroundServiceType="phoneCall" />
+            android:foregroundServiceType="dataSync" />
 
         <activity
             android:name="com.contactsapptwomktech.ui.overlay.PostCallOverlayActivity"
