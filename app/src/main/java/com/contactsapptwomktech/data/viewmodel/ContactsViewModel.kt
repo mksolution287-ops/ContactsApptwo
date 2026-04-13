@@ -122,6 +122,7 @@ val filteredContacts: StateFlow<List<Contact>> = combine(
         val state = _contactsState.value
         return if (state is UiState.Success) state.data.find { it.id == id } else null
     }
+
     /**
      * Returns a Flow that emits the contact whenever the contacts list changes
      * (e.g. after a favourite toggle). Used by ContactDetailScreen to stay reactive.
@@ -152,4 +153,29 @@ val filteredContacts: StateFlow<List<Contact>> = combine(
             contactsRepo.setFavorite(contactId, newFav)
         }
     }
+
+    /**
+     * Returns the contact ID for a given phone number.
+     * Used when navigating to Call History from Recents screen (inline History button).
+     */
+    fun getContactIdByNumber(phoneNumber: String): Long? {
+        val state = _contactsState.value
+        if (state !is UiState.Success) return null
+
+        val normalizedInput = normalizeNumber(phoneNumber)
+
+        return state.data.firstOrNull { contact ->
+            contact.phoneNumbers.any { phone ->
+                normalizeNumber(phone.number) == normalizedInput
+            }
+        }?.id
+    }
+
+    /**
+     * Helper to normalize phone numbers (same logic used in ContactCallHistoryScreen)
+     */
+    private fun normalizeNumber(number: String): String {
+        return number.filter { it.isDigit() }.takeLast(10)
+    }
+
 }

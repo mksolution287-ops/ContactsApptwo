@@ -15,7 +15,10 @@ enum class AppLanguage(
     GERMAN   ("de",    "German",   "Deutsch",   "🇩🇪"),
     KOREAN   ("ko",    "Korean",   "한국어",       "🇰🇷"),
     JAPANESE ("ja",    "Japanese", "日本語",       "🇯🇵"),
-    MANDARIN ("zh-CN", "Mandarin", "普通话",       "🇨🇳");
+    MANDARIN ("zh-CN", "Mandarin", "普通话",       "🇨🇳"),
+    PORTUGUESE ("pt", "Portuguese", "Português", "🇵🇹"),
+    TURKISH    ("tr", "Turkish",    "Türkçe",    "🇹🇷"),
+    RUSSIAN    ("ru", "Russian",    "Русский",   "🇷🇺");
 
     companion object {
         fun fromCode(code: String): AppLanguage =

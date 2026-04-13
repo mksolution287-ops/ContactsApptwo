@@ -324,6 +324,9 @@ fun MainScreen(
                         },
                         onSettingsClick  = {
                             navController.navigate(Screen.Settings.route)
+                        },
+                        onOpenContactHistory = { phoneNumber ->
+                            navController.navigate(Screen.CallHistory.createRouteByNumber(phoneNumber))
                         }
                     )
                 }
@@ -394,15 +397,44 @@ fun MainScreen(
                     )
                 }
 
+//                composable(
+//                    route = Screen.CallHistory.route,
+//                    arguments = listOf(
+//                        navArgument("contactId") {
+//                            type = NavType.LongType
+//                        }
+//                    )
+//                ) { backStackEntry ->
+//                    val contactId = backStackEntry.arguments?.getLong("contactId") ?: return@composable
+//
+//                    ContactCallHistoryScreen(
+//                        contactId = contactId,
+//                        onBack = { navController.popBackStack() }
+//                    )
+//                }
+                // Replace the old CallHistory composable with this:
+
                 composable(
                     route = Screen.CallHistory.route,
                     arguments = listOf(
-                        navArgument("contactId") {
-                            type = NavType.LongType
+                        navArgument("identifier") {
+                            type = NavType.StringType
+                        },
+                        navArgument("isNumber") {
+                            type = NavType.BoolType
+                            defaultValue = false
                         }
                     )
                 ) { backStackEntry ->
-                    val contactId = backStackEntry.arguments?.getLong("contactId") ?: return@composable
+                    val identifier = backStackEntry.arguments?.getString("identifier") ?: ""
+                    val isNumber = backStackEntry.arguments?.getBoolean("isNumber") ?: false
+
+                    val contactId: Long = if (isNumber) {
+                        // Find contact by phone number
+                        rootViewModel.getContactIdByNumber(identifier) ?: 0L
+                    } else {
+                        identifier.toLongOrNull() ?: 0L
+                    }
 
                     ContactCallHistoryScreen(
                         contactId = contactId,

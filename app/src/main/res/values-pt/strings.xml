@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App -->
+    <string name="app_name">Contatos</string>
+
+    <!-- Navigation Labels -->
+    <string name="nav_contacts">Contatos</string>
+    <string name="nav_recents">Recentes</string>
+    <string name="nav_favorites">Favoritos</string>
+    <string name="nav_settings">Configurações</string>
+
+    <!-- Contacts Screen -->
+    <string name="contacts_title">Contatos</string>
+    <string name="search_contacts_hint">Pesquisar contatos…</string>
+    <string name="no_contacts_found">Nenhum contato encontrado</string>
+    <string name="no_contacts_message">Sua lista de contatos está vazia.\nAdicione um novo contato para começar.</string>
+    <string name="contact_count">%d contatos</string>
+    <string name="loading_contacts">Carregando contatos…</string>
+    <string name="permission_required">Permissão necessária</string>
+    <string name="contacts_permission_message">A permissão de contatos é necessária para exibir seus contatos.</string>
+    <string name="grant_permission">Conceder permissão</string>
+    <string name="contacts_subtitle">Suas pessoas, a um toque de distância</string>
+
+    <!-- Permission Screen -->
+    <string name="perm_one">Ler contatos</string>
+    <string name="perm_one_desc">Exibir e pesquisar sua lista de contatos</string>
+    <string name="perm_two">Fazer chamadas</string>
+    <string name="perm_two_desc">Discar números diretamente do aplicativo</string>
+    <string name="perm_three">Histórico de chamadas</string>
+    <string name="perm_three_desc">Mostrar suas chamadas recentes e histórico</string>
+
+    <string name="permissions_needed">Algumas permissões são necessárias</string>
+    <string name="permissions_needed_desc">Elas são necessárias para o funcionamento do app. Nunca compartilhamos seus dados.</string>
+    <string name="grant_permissions">Conceder permissões</string>
+    <string name="skip_now">Pular por agora</string>
+
+    <!-- Onboarding Screen -->
+    <string name="onboarding_1_title">Todos os seus contatos</string>
+    <string name="onboarding_1_subtitle">em um só lugar</string>
+    <string name="onboarding_1_desc">Navegue, pesquise e gerencie todos os contatos do seu dispositivo — organizados e sempre acessíveis.</string>
+
+    <string name="onboarding_2_title">Discar e encontrar</string>
+    <string name="onboarding_2_subtitle">instantaneamente</string>
+    <string name="onboarding_2_desc">Digite no teclado e veja contatos correspondentes em tempo real. Ligue para qualquer pessoa com um toque.</string>
+
+    <string name="onboarding_3_title">Favoritos e recentes</string>
+    <string name="onboarding_3_subtitle">sempre visíveis</string>
+    <string name="onboarding_3_desc">Fixe seus contatos mais usados e revise seu histórico — o mais importante sempre no topo.</string>
+
+    <string name="skip_text">Pular</string>
+    <string name="get_started">Começar</string>
+    <string name="next">Próximo</string>
+
+    <!-- Recents Screen -->
+    <string name="recents_title">Recentes</string>
+    <string name="no_recent_calls">Nenhuma chamada recente</string>
+    <string name="no_recents_message">Seu histórico está vazio.\nFaça uma chamada para vê-lo aqui.</string>
+    <string name="call_log_permission_message">Permissão de chamadas necessária para exibir o histórico.</string>
+    <string name="clear_all_recents">Limpar tudo</string>
+    <string name="call_duration">Duração: %s</string>
+    <string name="call_type_incoming">Recebida</string>
+    <string name="call_type_outgoing">Realizada</string>
+    <string name="call_type_missed">Perdida</string>
+    <string name="call_type_rejected">Rejeitada</string>
+    <string name="call_type_voicemail">Correio de voz</string>
+    <string name="call_type_unknown">Desconhecida</string>
+    <string name="today">Hoje</string>
+    <string name="yesterday">Ontem</string>
+
+    <!-- Favorites Screen -->
+    <string name="favorites_title">Favoritos</string>
+    <string name="no_favorites">Nenhum favorito ainda</string>
+    <string name="no_favorites_message">Marque um contato como favorito\npara adicioná-lo aqui.</string>
+
+    <!-- Contact Detail Screen -->
+    <string name="contact_detail_title">Contato</string>
+    <string name="action_call">Ligar</string>
+    <string name="action_message">Mensagem</string>
+    <string name="action_email">Email</string>
+    <string name="action_video">Vídeo</string>
+    <string name="action_add_favorite">Adicionar aos favoritos</string>
+    <string name="action_remove_favorite">Remover dos favoritos</string>
+    <string name="action_edit">Editar contato</string>
+    <string name="action_delete">Excluir contato</string>
+    <string name="action_share">Compartilhar contato</string>
+
+    <string name="section_phone">Telefone</string>
+    <string name="section_email">Email</string>
+    <string name="section_address">Endereço</string>
+    <string name="section_notes">Notas</string>
+
+    <string name="phone_mobile">Celular</string>
+    <string name="phone_home">Casa</string>
+    <string name="phone_work">Trabalho</string>
+    <string name="phone_other">Outro</string>
+
+    <string name="copy_to_clipboard">Copiado para a área de transferência</string>
+
+    <!-- Actions -->
+    <string name="add_contact">Adicionar contato</string>
+    <string name="fab_add_contact_description">Adicionar novo contato</string>
+
+    <!-- Dialogs -->
+    <string name="confirm_delete_title">Excluir contato</string>
+    <string name="confirm_delete_message">Tem certeza que deseja excluir %s?</string>
+    <string name="dialog_yes">Sim</string>
+    <string name="dialog_no">Não</string>
+    <string name="dialog_cancel">Cancelar</string>
+    <string name="dialog_ok">OK</string>
+
+    <!-- Errors -->
+    <string name="error_loading_contacts">Falha ao carregar contatos.</string>
+    <string name="error_loading_call_log">Falha ao carregar histórico de chamadas.</string>
+    <string name="error_no_phone_app">Nenhum app de telefone encontrado.</string>
+
+    <!-- Bottom nav -->
+    <string name="nav_dialpad">Teclado</string>
+
+    <!-- Dialpad -->
+    <string name="dialpad_title">Teclado</string>
+    <string name="dialpad_call_button">Fazer chamada</string>
+
+    <string name="privacy_policy">Política de Privacidade</string>
+    <string name="terms_conditions">Termos e Condições</string>
+
+    <string name="call_settings">Configurações de chamada</string>
+    <string name="dark_mode">Modo escuro</string>
+    <string name="change_language">Alterar idioma</string>
+
+    <string name="close">Fechar</string>
+    <string name="delete">Excluir</string>
+    <string name="call_history">Histórico de chamadas</string>
+
+    <string name="total">Total</string>
+    <string name="incoming">Recebidas</string>
+    <string name="outgoing">Realizadas</string>
+    <string name="missed">Perdidas</string>
+    <string name="back_button_description">Voltar</string>
+    <string name="search_button_description">Pesquisar</string>
+    <string name="more_options_description">Mais opções</string>
+    <string name="contact_avatar_description">Avatar do contato para %s</string>
+    <string name="call_type_icon_description">Tipo de chamada: %s</string>
+    <string name="action_call_back">Ligar de volta</string>
+    <string name="settings">Configurações</string>
+    <string name="about">Sobre</string>
+
+    <string name="confirm_clear_history_title">Limpar histórico de chamadas</string>
+    <string name="confirm_clear_history_message">Tem certeza de que deseja limpar todas as chamadas recentes?</string>
+
+    <string name="error_no_messaging_app">Nenhum aplicativo de mensagens encontrado neste dispositivo.</string>
+    <string name="error_no_email_app">Nenhum aplicativo de e-mail encontrado.</string>
+
+    <!-- Accessibility -->
+    <string name="cd_search_clear">Limpar pesquisa</string>
+    <string name="cd_toggle_favorite">Alternar favorito</string>
+    <string name="cd_contact_photo">Foto do contato</string>
+    <string name="cd_call_icon">Ícone de chamada</string>
+
+    <!-- Sort & Filter -->
+    <string name="sort_by">Ordenar por</string>
+    <string name="sort_first_name">Primeiro nome</string>
+    <string name="sort_last_name">Sobrenome</string>
+    <string name="filter_all">Todos</string>
+    <string name="filter_with_phone">Com telefone</string>
+
+    <!-- Theme -->
+    <string name="theme">Tema</string>
+    <string name="accent_color">Cor de destaque</string>
+    <string name="system">Sistema</string>
+    <string name="light">Claro</string>
+    <string name="dark">Escuro</string>
+    <string name="language">Definir idioma</string>
+    <string name="sim_settings">Configurações do SIM</string>
+    <string name="sim_settings_desc">Gerenciar cartões SIM e SIM padrão para chamadas</string>
+    <string name="call_settings_desc">Gerenciar opções de chamada</string>
+    <string name="default_apps">Aplicativos padrão</string>
+    <string name="default_apps_desc">Alterar aplicativo de chamadas padrão</string>
+
+    <string name="dialpad_backspace">Apagar dígito</string>
+
+    <string name="overlay_permission_title">Permitir exibição sobre outros aplicativos</string>
+    <string name="overlay_permission_desc">Esta permissão nos permite mostrar ações rápidas úteis após o término de uma chamada, mesmo quando a tela está bloqueada ou você está usando outro aplicativo.</string>
+    <string name="open_settings">Abrir configurações</string>
+    <string name="why_do_we_need_this">Por que precisamos disso?</string>
+    <string name="why_do_we_need_this_desc">Para mostrar a tela pós-chamada (ações rápidas como ligar de volta, WhatsApp, SMS) mesmo quando o telefone está bloqueado ou você está usando outro aplicativo.</string>
+
+    <!-- Labels -->
+    <string name="call_back">Ligar de volta</string>
+    <string name="quick_sms">SMS rápido</string>
+    <string name="add_to_contacts">Adicionar aos contatos</string>
+    <string name="block_spam">Bloquear / Spam</string>
+    <string name="dismiss_btn">Fechar</string>
+    <string name="msg_whatsapp">Mensagem no WhatsApp</string>
+
+    <string name="onboarding_4_title">Gestos inteligentes</string>
+    <string name="onboarding_4_subtitle">Ações rápidas</string>
+    <string name="onboarding_4_desc">Deslize para a direita para ligar, deslize para a esquerda para mensagem rápida.</string>
+
+    <string name="privacy_policy_desc">Leia nossa política de privacidade</string>
+
+
+    <string name="terms_conditions_desc">Leia os termos e condições</string>
+    <string name="permission_consent">
+Ao tocar em Concordar e continuar, você aceita nossa Política de Privacidade e Termos e Condições.
+</string>
+
+    <string name="sound">Som</string>
+    <string name="keypad_sound">Som do teclado</string>
+    <string name="soundnvibration">Som e vibração</string>
+    <string name="calleridoverlay">Sobreposição de ID de chamada</string>
+    <string name="sim_preferences">Preferências de SIM</string>
+    <string name="accessibility">Acessibilidade</string>
+    <string name="call_back_screen">Tela de retorno de chamada</string>
+    <string name="legal">Legal</string>
+
+    <string name="choose_accent_color">Escolher cor de destaque</string>
+    <string name="dynamic_system">Dinâmico (Sistema)</string>
+    <string name="caller_id_disable">ID de chamada desativado!</string>
+    <string name="caller_id_disable_desc">Toque para definir como aplicativo padrão de ID de chamada.</string>
+
+    <string name="delete_contact">Excluir contato</string>
+    <string name="delete_contact_confirmation">Excluir %1$s? Isso não pode ser desfeito.</string>
+
+    <string name="permission_subtitle">Precisamos de algumas permissões para oferecer a melhor experiência de chamadas.</string>
+    <string name="permission_subtitle_desc">Seus contatos estão seguros e não serão compartilhados com ninguém</string>
+
+    <string name="continue_btn">Continuar</string>
+
+    <string name="calls_with_contact_placeholder">Chamadas com %1$s\naparecerão aqui</string>
+    <string name="this_contact">este contato</string>
+
+    <string name="perm_four">Estado do telefone</string>
+    <string name="perm_four_desc">Detectar chamadas recebidas, efetuadas e perdidas com precisão.</string>
+    <string name="perm_five">Notificação</string>
+    <string name="perm_five_desc">As notificações são usadas para fornecer atualizações e alertas importantes do aplicativo.</string>
+
+    <string name="filter_chip_all">Todas</string>
+    <string name="filter_chip_incoming">Recebidas</string>
+    <string name="filter_chip_outgoing">Efetuadas</string>
+    <string name="filter_chip_missed">Perdidas</string>
+    <string name="filter_chip_rejected">Rejeitadas</string>
+    <string name="call">Ligar</string>
+</resources>

@@ -61,7 +61,7 @@ fun LanguageSelectScreen(
             )
 
             IconButton(
-                onClick = { onLanguageChosen(selected) } // ✅ always valid now
+                onClick = { onLanguageChosen(selected) }
             ) {
                 Icon(
                     imageVector = Icons.Default.Check,

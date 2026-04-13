@@ -110,148 +110,303 @@ class CallerIdOverlayService : Service() {
         Handler(Looper.getMainLooper()).postDelayed({ removeOverlay() }, 8000)
     }
 
+//    private fun buildOverlayView(phoneNumber: String, isIncoming: Boolean): View {
+//        // ── Contact lookup ─────────────────────────────────────────────────────
+//        // Uses PhoneLookup.CONTENT_FILTER_URI — same as ContactsRepository —
+//        // which handles country-code normalisation internally.
+//        val contactName: String? = lookupContactName(phoneNumber)
+//        val isSpam = false
+//
+//        val displayName = contactName ?: phoneNumber.ifEmpty { "Unknown Number" }
+//
+//        val avatarInitial = when {
+//            contactName != null && contactName.isNotEmpty() -> contactName[0].uppercaseChar().toString()
+//            phoneNumber.isNotEmpty() -> "#"
+//            else -> "?"
+//        }
+//        val avatarColor = when {
+//            isSpam       -> Color.parseColor("#C62828")
+//            contactName != null -> Color.parseColor("#1B8C3C")
+//            else         -> Color.parseColor("#455A64")
+//        }
+//
+//        // ── Root card ──────────────────────────────────────────────────────────
+//        val root = LinearLayout(this).apply {
+//            orientation = LinearLayout.HORIZONTAL
+//            setPadding(dp(14), dp(12), dp(14), dp(12))
+//            clipChildren = false
+//            background = GradientDrawable().apply {
+//                shape = GradientDrawable.RECTANGLE
+//                cornerRadius = dp(16).toFloat()
+//                setColor(Color.parseColor("#1A1A1A"))
+//                setStroke(dp(1), Color.parseColor("#333333"))
+//            }
+//            elevation = dp(10).toFloat()
+//        }
+//
+//        val wrapper = FrameLayout(this).apply {
+//            val m = dp(10)
+//            setPadding(m, m, m, 0)
+//        }
+//
+//        // ── Avatar ─────────────────────────────────────────────────────────────
+//        val avatar = TextView(this).apply {
+//            text = avatarInitial
+//            textSize = 20f
+//            setTextColor(Color.WHITE)
+//            gravity = Gravity.CENTER
+//            background = GradientDrawable().apply {
+//                shape = GradientDrawable.OVAL
+//                setColor(avatarColor)
+//            }
+//            layoutParams = LinearLayout.LayoutParams(dp(46), dp(46)).also {
+//                it.marginEnd = dp(12)
+//                it.gravity = Gravity.CENTER_VERTICAL
+//            }
+//        }
+//
+//        // ── Info column ────────────────────────────────────────────────────────
+//        val infoCol = LinearLayout(this).apply {
+//            orientation = LinearLayout.VERTICAL
+//            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f).also {
+//                it.gravity = Gravity.CENTER_VERTICAL
+//            }
+//        }
+//
+//        infoCol.addView(TextView(this).apply {
+//            text = if (isIncoming) "▼  Incoming Call" else "▲  Outgoing Call"
+//            textSize = 10.5f
+//            setTextColor(Color.parseColor("#AAAAAA"))
+//            letterSpacing = 0.08f
+//        })
+//
+//        infoCol.addView(TextView(this).apply {
+//            text = displayName
+//            textSize = 16f
+//            setTextColor(Color.WHITE)
+//            setTypeface(null, android.graphics.Typeface.BOLD)
+//            maxLines = 1
+//            ellipsize = android.text.TextUtils.TruncateAt.END
+//        })
+//
+//        // Raw number line — only when a contact name was resolved
+//        infoCol.addView(TextView(this).apply {
+//            text = phoneNumber
+//            textSize = 12f
+//            setTextColor(Color.parseColor("#888888"))
+//            visibility = if (contactName != null && phoneNumber.isNotEmpty()) View.VISIBLE else View.GONE
+//        })
+//
+//        // Tag chip
+//        val tagText = when {
+//            isSpam -> "⚠  Likely Spam"
+//            contactName != null -> "✓  Saved Contact"
+//            phoneNumber.isEmpty() -> "•  Dialling…"
+//            else -> "?  Unknown Number"
+//        }
+//        val tagColor = when {
+//            isSpam -> Color.parseColor("#FF5252")
+//            contactName != null -> Color.parseColor("#4CAF50")
+//            phoneNumber.isEmpty() -> Color.parseColor("#90A4AE")
+//            else -> Color.parseColor("#FFA726")
+//        }
+//        val tagBg = when {
+//            isSpam -> Color.parseColor("#1A0000")
+//            contactName != null -> Color.parseColor("#0A1F0A")
+//            phoneNumber.isEmpty() -> Color.parseColor("#0D1214")
+//            else -> Color.parseColor("#1F1600")
+//        }
+//
+//        infoCol.addView(TextView(this).apply {
+//            text = tagText
+//            textSize = 11f
+//            setTextColor(tagColor)
+//            setPadding(dp(7), dp(2), dp(7), dp(2))
+//            background = GradientDrawable().apply {
+//                shape = GradientDrawable.RECTANGLE
+//                cornerRadius = dp(4).toFloat()
+//                setColor(tagBg)
+//            }
+//            layoutParams = LinearLayout.LayoutParams(
+//                LinearLayout.LayoutParams.WRAP_CONTENT,
+//                LinearLayout.LayoutParams.WRAP_CONTENT
+//            ).also { it.topMargin = dp(4) }
+//        })
+//
+//        // ── Close button ───────────────────────────────────────────────────────
+//        val closeBtn = TextView(this).apply {
+//            text = "✕"
+//            textSize = 14f
+//            setTextColor(Color.parseColor("#777777"))
+//            gravity = Gravity.CENTER
+//            layoutParams = LinearLayout.LayoutParams(dp(32), dp(32)).also {
+//                it.gravity = Gravity.CENTER_VERTICAL
+//            }
+//            setOnClickListener { removeOverlay() }
+//        }
+//
+//        root.addView(avatar)
+//        root.addView(infoCol)
+//        root.addView(closeBtn)
+//        wrapper.addView(root)
+//        return wrapper
+//    }
+
     private fun buildOverlayView(phoneNumber: String, isIncoming: Boolean): View {
-        // ── Contact lookup ─────────────────────────────────────────────────────
-        // Uses PhoneLookup.CONTENT_FILTER_URI — same as ContactsRepository —
-        // which handles country-code normalisation internally.
         val contactName: String? = lookupContactName(phoneNumber)
-        val isSpam = false
-
         val displayName = contactName ?: phoneNumber.ifEmpty { "Unknown Number" }
+        val subLabel = if (contactName != null && phoneNumber.isNotEmpty()) phoneNumber else ""
 
-        val avatarInitial = when {
-            contactName != null && contactName.isNotEmpty() -> contactName[0].uppercaseChar().toString()
-            phoneNumber.isNotEmpty() -> "#"
-            else -> "?"
-        }
-        val avatarColor = when {
-            isSpam       -> Color.parseColor("#C62828")
-            contactName != null -> Color.parseColor("#1B8C3C")
-            else         -> Color.parseColor("#455A64")
-        }
-
-        // ── Root card ──────────────────────────────────────────────────────────
+        // ── Root card (green gradient background) ──────────────────────────────
         val root = LinearLayout(this).apply {
-            orientation = LinearLayout.HORIZONTAL
-            setPadding(dp(14), dp(12), dp(14), dp(12))
+            orientation = LinearLayout.VERTICAL
             clipChildren = false
+            clipToPadding = false
             background = GradientDrawable().apply {
                 shape = GradientDrawable.RECTANGLE
-                cornerRadius = dp(16).toFloat()
-                setColor(Color.parseColor("#1A1A1A"))
-                setStroke(dp(1), Color.parseColor("#333333"))
+                cornerRadius = dp(24).toFloat()
+                colors = intArrayOf(
+                    Color.parseColor("#22C55E"),
+                    Color.parseColor("#16A34A")
+                )
+                orientation = GradientDrawable.Orientation.TL_BR
             }
-            elevation = dp(10).toFloat()
+            elevation = dp(12).toFloat()
         }
 
-        val wrapper = FrameLayout(this).apply {
-            val m = dp(10)
-            setPadding(m, m, m, 0)
+        // ── Top section: avatar + info + close ────────────────────────────────
+        val topRow = FrameLayout(this).apply {
+            setPadding(dp(20), dp(28), dp(20), dp(22))
         }
 
-        // ── Avatar ─────────────────────────────────────────────────────────────
-        val avatar = TextView(this).apply {
-            text = avatarInitial
+        val rowInner = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER_VERTICAL
+        }
+
+        // Avatar circle (white circle with person icon)
+        val avatarBg = FrameLayout(this).apply {
+            background = GradientDrawable().apply {
+                shape = GradientDrawable.OVAL
+                setColor(Color.WHITE)
+            }
+            layoutParams = LinearLayout.LayoutParams(dp(70), dp(70)).also {
+                it.marginEnd = dp(18)
+            }
+        }
+
+        // Person icon drawn with two shapes: head + body
+        val personIcon = object : android.view.View(this) {
+            override fun onDraw(canvas: android.graphics.Canvas) {
+                val paint = android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG).apply {
+                    color = Color.parseColor("#22C55E")
+                    style = android.graphics.Paint.Style.FILL
+                }
+                val cx = width / 2f
+                // head
+                canvas.drawCircle(cx, height * 0.35f, width * 0.22f, paint)
+                // body (ellipse)
+                val oval = android.graphics.RectF(
+                    cx - width * 0.38f, height * 0.58f,
+                    cx + width * 0.38f, height * 1.1f
+                )
+                canvas.drawOval(oval, paint)
+            }
+        }.apply {
+            layoutParams = FrameLayout.LayoutParams(dp(70), dp(70))
+        }
+        avatarBg.addView(personIcon)
+
+        // Info column
+        val infoCol = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+        }
+
+        infoCol.addView(TextView(this).apply {
+            text = displayName
             textSize = 20f
+            setTextColor(Color.WHITE)
+            setTypeface(null, android.graphics.Typeface.BOLD)
+            maxLines = 2
+            ellipsize = android.text.TextUtils.TruncateAt.END
+        })
+
+        if (subLabel.isNotEmpty()) {
+            infoCol.addView(TextView(this).apply {
+                text = subLabel
+                textSize = 14f
+                setTextColor(Color.parseColor("#E0FFE0"))
+                setPadding(0, dp(4), 0, 0)
+            })
+        }
+
+        // Close button (top-right)
+        val closeBtn = TextView(this).apply {
+            text = "✕"
+            textSize = 16f
             setTextColor(Color.WHITE)
             gravity = Gravity.CENTER
             background = GradientDrawable().apply {
                 shape = GradientDrawable.OVAL
-                setColor(avatarColor)
+                setColor(android.graphics.Color.argb(0x2D, 0xFF, 0xFF, 0xFF))
             }
-            layoutParams = LinearLayout.LayoutParams(dp(46), dp(46)).also {
-                it.marginEnd = dp(12)
-                it.gravity = Gravity.CENTER_VERTICAL
-            }
-        }
-
-        // ── Info column ────────────────────────────────────────────────────────
-        val infoCol = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f).also {
-                it.gravity = Gravity.CENTER_VERTICAL
-            }
-        }
-
-        infoCol.addView(TextView(this).apply {
-            text = if (isIncoming) "▼  Incoming Call" else "▲  Outgoing Call"
-            textSize = 10.5f
-            setTextColor(Color.parseColor("#AAAAAA"))
-            letterSpacing = 0.08f
-        })
-
-        infoCol.addView(TextView(this).apply {
-            text = displayName
-            textSize = 16f
-            setTextColor(Color.WHITE)
-            setTypeface(null, android.graphics.Typeface.BOLD)
-            maxLines = 1
-            ellipsize = android.text.TextUtils.TruncateAt.END
-        })
-
-        // Raw number line — only when a contact name was resolved
-        infoCol.addView(TextView(this).apply {
-            text = phoneNumber
-            textSize = 12f
-            setTextColor(Color.parseColor("#888888"))
-            visibility = if (contactName != null && phoneNumber.isNotEmpty()) View.VISIBLE else View.GONE
-        })
-
-        // Tag chip
-        val tagText = when {
-            isSpam -> "⚠  Likely Spam"
-            contactName != null -> "✓  Saved Contact"
-            phoneNumber.isEmpty() -> "•  Dialling…"
-            else -> "?  Unknown Number"
-        }
-        val tagColor = when {
-            isSpam -> Color.parseColor("#FF5252")
-            contactName != null -> Color.parseColor("#4CAF50")
-            phoneNumber.isEmpty() -> Color.parseColor("#90A4AE")
-            else -> Color.parseColor("#FFA726")
-        }
-        val tagBg = when {
-            isSpam -> Color.parseColor("#1A0000")
-            contactName != null -> Color.parseColor("#0A1F0A")
-            phoneNumber.isEmpty() -> Color.parseColor("#0D1214")
-            else -> Color.parseColor("#1F1600")
-        }
-
-        infoCol.addView(TextView(this).apply {
-            text = tagText
-            textSize = 11f
-            setTextColor(tagColor)
-            setPadding(dp(7), dp(2), dp(7), dp(2))
-            background = GradientDrawable().apply {
-                shape = GradientDrawable.RECTANGLE
-                cornerRadius = dp(4).toFloat()
-                setColor(tagBg)
-            }
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            ).also { it.topMargin = dp(4) }
-        })
-
-        // ── Close button ───────────────────────────────────────────────────────
-        val closeBtn = TextView(this).apply {
-            text = "✕"
-            textSize = 14f
-            setTextColor(Color.parseColor("#777777"))
-            gravity = Gravity.CENTER
-            layoutParams = LinearLayout.LayoutParams(dp(32), dp(32)).also {
-                it.gravity = Gravity.CENTER_VERTICAL
+            layoutParams = FrameLayout.LayoutParams(dp(34), dp(34)).also {
+                it.gravity = Gravity.TOP or Gravity.END
             }
             setOnClickListener { removeOverlay() }
         }
 
-        root.addView(avatar)
-        root.addView(infoCol)
-        root.addView(closeBtn)
-        wrapper.addView(root)
+        rowInner.addView(avatarBg)
+        rowInner.addView(infoCol)
+        topRow.addView(rowInner, FrameLayout.LayoutParams(
+            FrameLayout.LayoutParams.MATCH_PARENT,
+            FrameLayout.LayoutParams.WRAP_CONTENT
+        ))
+        topRow.addView(closeBtn)
+        root.addView(topRow)
+
+        // ── Bottom strip: "Mobile" label ──────────────────────────────────────
+        val bottomStrip = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            setPadding(dp(22), dp(12), dp(22), dp(12))
+            background = GradientDrawable().apply {
+                shape = GradientDrawable.RECTANGLE
+                // Rounded only on bottom corners
+                cornerRadii = floatArrayOf(0f, 0f, 0f, 0f, dp(24).toFloat(), dp(24).toFloat(), dp(24).toFloat(), dp(24).toFloat())
+                setColor(android.graphics.Color.argb(0x2D, 0xFF, 0xFF, 0xFF))
+            }
+        }
+
+        bottomStrip.addView(TextView(this).apply {
+            text = when {
+                isIncoming -> "Mobile"
+                else -> "Mobile"
+            }
+            textSize = 15f
+            setTextColor(Color.WHITE)
+            setTypeface(null, android.graphics.Typeface.BOLD)
+        })
+
+        root.addView(View(this).apply {
+            setBackgroundColor(Color.parseColor("#33FFFFFF"))
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, dp(1)
+            )
+        })
+        root.addView(bottomStrip)
+
+        // ── Outer wrapper with margin ──────────────────────────────────────────
+        val wrapper = FrameLayout(this).apply {
+            val m = dp(10)
+            setPadding(m, m, m, 0)
+        }
+        wrapper.addView(root, FrameLayout.LayoutParams(
+            FrameLayout.LayoutParams.MATCH_PARENT,
+            FrameLayout.LayoutParams.WRAP_CONTENT
+        ))
         return wrapper
     }
-
     private fun removeOverlay() {
         overlayView?.let { view ->
             TranslateAnimation(0f, 0f, 0f, -300f).apply {

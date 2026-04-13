@@ -219,4 +219,5 @@
     <string name="filter_chip_outgoing">जाने वाली</string>
     <string name="filter_chip_missed">मिस्ड</string>
     <string name="filter_chip_rejected">अस्वीकृत</string>
+    <string name="call">कॉल</string>
 </resources>

@@ -89,7 +89,7 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     private val _callerIdOverlayEnabled = MutableStateFlow(false)
     val callerIdOverlayEnabled: StateFlow<Boolean> = _callerIdOverlayEnabled.asStateFlow()
 
-    private val _keypadSoundEnabled = MutableStateFlow(true)
+    private val _keypadSoundEnabled = MutableStateFlow(false)
     val keypadSoundEnabled: StateFlow<Boolean> = _keypadSoundEnabled.asStateFlow()
 
     private val _callbackScreenEnabled = MutableStateFlow(true)
@@ -99,7 +99,7 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
         // Load non-theme settings
         _callerIdEnabled.value = prefs.getBoolean("caller_id_enabled", false)
         _callerIdOverlayEnabled.value = prefs.getBoolean("caller_id_overlay_enabled", false)
-        _keypadSoundEnabled.value = prefs.getBoolean("keypad_sound_enabled", true)
+        _keypadSoundEnabled.value = prefs.getBoolean("keypad_sound_enabled", false)
         _callbackScreenEnabled.value = prefs.getBoolean("callback_screen_enabled", true)
     }
 

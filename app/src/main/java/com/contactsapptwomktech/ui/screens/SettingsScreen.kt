@@ -8,10 +8,13 @@ import android.os.Build
 import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -298,35 +301,145 @@ fun SettingsScreen(
 //    }
 
     // LANGUAGE DIALOG
+//    if (showLanguageDialog) {
+//        AlertDialog(
+//            onDismissRequest = { showLanguageDialog = false },
+//            title = { Text(stringResource(R.string.change_language), fontWeight = FontWeight.Bold) },
+//            text = {
+//                Column {
+//                    AppLanguage.entries.forEach { language ->
+//                        Row(
+//                            Modifier
+//                                .fillMaxWidth()
+//                                .clickable {
+//                                    onboardingViewModel.saveLanguage(language)
+//                                    LocaleHelper.saveLanguage(context, language.code)
+//                                    showLanguageDialog = false
+//                                    activity?.recreate()
+//                                }
+//                                .padding(10.dp),
+//                            horizontalArrangement = Arrangement.SpaceBetween
+//                        ) {
+//                            Text("${language.flag} ${language.nativeName}")
+//                            if (selectedLanguage == language) Icon(Icons.Default.Check, null)
+//                        }
+//                    }
+//                }
+//            },
+//            confirmButton = {
+//                TextButton(onClick = { showLanguageDialog = false }) { Text(stringResource(R.string.close)) }
+//            }
+//        )
+//    }
+    // LANGUAGE DIALOG
     if (showLanguageDialog) {
-        AlertDialog(
+        Dialog(
             onDismissRequest = { showLanguageDialog = false },
-            title = { Text(stringResource(R.string.change_language), fontWeight = FontWeight.Bold) },
-            text = {
-                Column {
-                    AppLanguage.entries.forEach { language ->
-                        Row(
-                            Modifier
-                                .fillMaxWidth()
-                                .clickable {
-                                    onboardingViewModel.saveLanguage(language)
-                                    LocaleHelper.saveLanguage(context, language.code)
-                                    showLanguageDialog = false
-                                    activity?.recreate()
+            properties = DialogProperties(usePlatformDefaultWidth = false)
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color(0xFF000000))
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .statusBarsPadding()
+                        .padding(horizontal = 16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    // ── Header ──────────────────────────────────────────────
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 12.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = stringResource(R.string.change_language),
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.SemiBold,
+                            color = Color.White
+                        )
+//                        IconButton(
+//                            onClick = { showLanguageDialog = false }
+//                        ) {
+//                            Icon(
+//                                imageVector = Icons.Default.Check,
+//                                contentDescription = "Confirm",
+//                                tint = Color(0xFF34C759),
+//                                modifier = Modifier.size(28.dp)
+//                            )
+//                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    // ── Language List ────────────────────────────────────────
+                    LazyColumn(
+                        modifier = Modifier.weight(1f),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        contentPadding = PaddingValues(vertical = 8.dp)
+                    ) {
+                        items(AppLanguage.entries.toList()) { language ->
+                            val isSelected = selectedLanguage == language
+                            val bgColor by animateColorAsState(
+                                targetValue = if (isSelected) Color(0xFF1C1C1E) else Color(0xFF2C2C2E),
+                                animationSpec = tween(150)
+                            )
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clip(RoundedCornerShape(14.dp))
+                                    .background(bgColor)
+                                    .clickable {
+                                        onboardingViewModel.saveLanguage(language)
+                                        LocaleHelper.saveLanguage(context, language.code)
+                                        showLanguageDialog = false
+                                        activity?.recreate()
+                                    }
+                                    .padding(horizontal = 20.dp, vertical = 18.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .size(24.dp)
+                                        .clip(CircleShape)
+                                        .border(
+                                            width = 2.dp,
+                                            color = if (isSelected) Color(0xFF34C759) else Color(0xFF8E8E93),
+                                            shape = CircleShape
+                                        )
+                                        .background(
+                                            if (isSelected) Color(0xFF34C759) else Color.Transparent
+                                        ),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    if (isSelected) {
+                                        Box(
+                                            modifier = Modifier
+                                                .size(10.dp)
+                                                .clip(CircleShape)
+                                                .background(Color.White)
+                                        )
+                                    }
                                 }
-                                .padding(10.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text("${language.flag} ${language.nativeName}")
-                            if (selectedLanguage == language) Icon(Icons.Default.Check, null)
+                                Spacer(modifier = Modifier.width(16.dp))
+                                Text(
+                                    text = "${language.flag} ${language.nativeName}",
+                                    style = MaterialTheme.typography.titleMedium,
+                                    fontSize = 17.sp,
+                                    fontWeight = FontWeight.Normal,
+                                    color = Color.White
+                                )
+                            }
                         }
                     }
                 }
-            },
-            confirmButton = {
-                TextButton(onClick = { showLanguageDialog = false }) { Text(stringResource(R.string.close)) }
             }
-        )
+        }
     }
 
     // THEME DIALOG

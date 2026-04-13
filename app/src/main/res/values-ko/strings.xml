@@ -218,4 +218,6 @@
     <string name="filter_chip_outgoing">발신</string>
     <string name="filter_chip_missed">부재중</string>
     <string name="filter_chip_rejected">거절됨</string>
+    <string name="call">통화</string>
+
 </resources>

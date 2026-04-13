@@ -218,4 +218,5 @@ Al continuar, acepto la política de privacidad y los términos y condiciones.
     <string name="filter_chip_outgoing">Salientes</string>
     <string name="filter_chip_missed">Perdidas</string>
     <string name="filter_chip_rejected">Rechazadas</string>
+    <string name="call">Llamar</string>
 </resources>

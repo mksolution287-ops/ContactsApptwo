@@ -56,6 +56,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import com.contactsapptwomktech.data.viewmodel.SettingsViewModel
 import androidx.compose.foundation.clickable
+import androidx.compose.material.icons.filled.Clear
+import androidx.compose.ui.res.painterResource
 
 private val dialpadKeys = listOf(
     Triple("1", "", ""),
@@ -84,8 +86,10 @@ fun DialpadScreen(
     var dialedNumber by remember { mutableStateOf("") }
     var showDialpad by remember { mutableStateOf(true) }
 
-    // This will reactively update when user toggles the setting
-    val keypadSoundEnabled by settingsViewModel.keypadSoundEnabled.collectAsState()
+//    // This will reactively update when user toggles the setting
+//    val keypadSoundEnabled by settingsViewModel.keypadSoundEnabled.collectAsState()
+    val keypadSoundEnabledState by settingsViewModel.keypadSoundEnabled.collectAsState()
+    val keypadSoundEnabled by rememberUpdatedState(keypadSoundEnabledState)
 
     LaunchedEffect(dialedNumber) {
         viewModel.setSearchQuery(dialedNumber)
@@ -617,7 +621,7 @@ private fun BackspaceButton(
         contentAlignment = Alignment.Center
     ) {
         Icon(
-            imageVector        = Icons.AutoMirrored.Outlined.ArrowBack,
+            painter        = painterResource(R.drawable.clear),
             contentDescription = stringResource(R.string.dialpad_backspace),
             tint               = if (enabled) MaterialTheme.colorScheme.onSurface
             else         MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.3f),

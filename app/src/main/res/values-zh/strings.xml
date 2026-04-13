@@ -218,4 +218,6 @@
     <string name="filter_chip_outgoing">呼出</string>
     <string name="filter_chip_missed">未接</string>
     <string name="filter_chip_rejected">已拒接</string>
+    <string name="call">通话</string>
+
 </resources>

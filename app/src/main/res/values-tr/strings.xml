@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App -->
+    <string name="app_name">Kişiler</string>
+
+    <!-- Navigation Labels -->
+    <string name="nav_contacts">Kişiler</string>
+    <string name="nav_recents">Son Aramalar</string>
+    <string name="nav_favorites">Favoriler</string>
+    <string name="nav_settings">Ayarlar</string>
+
+    <!-- Contacts Screen -->
+    <string name="contacts_title">Kişiler</string>
+    <string name="search_contacts_hint">Kişileri ara…</string>
+    <string name="no_contacts_found">Kişi bulunamadı</string>
+    <string name="no_contacts_message">Kişi listeniz boş.\nBaşlamak için yeni bir kişi ekleyin.</string>
+    <string name="contact_count">%d kişi</string>
+    <string name="loading_contacts">Kişiler yükleniyor…</string>
+    <string name="permission_required">İzin gerekli</string>
+    <string name="contacts_permission_message">Kişileri göstermek için izin gereklidir.</string>
+    <string name="grant_permission">İzin ver</string>
+    <string name="contacts_subtitle">Kişileriniz bir dokunuş uzağınızda</string>
+
+    <!-- Permission Screen -->
+    <string name="perm_one">Kişileri oku</string>
+    <string name="perm_one_desc">Kişi listenizi görüntüleme ve arama</string>
+    <string name="perm_two">Arama yapma</string>
+    <string name="perm_two_desc">Uygulamadan doğrudan arama yapın</string>
+    <string name="perm_three">Arama geçmişi</string>
+    <string name="perm_three_desc">Son aramaları ve kayıtları göster</string>
+
+    <string name="permissions_needed">Bazı izinler gerekli</string>
+    <string name="permissions_needed_desc">Uygulamanın düzgün çalışması için gereklidir. Verileriniz paylaşılmaz.</string>
+    <string name="grant_permissions">İzinleri ver</string>
+    <string name="skip_now">Şimdilik atla</string>
+
+    <!-- Onboarding Screen -->
+    <string name="onboarding_1_title">Tüm kişileriniz</string>
+    <string name="onboarding_1_subtitle">tek bir yerde</string>
+    <string name="onboarding_1_desc">Cihazınızdaki tüm kişileri kolayca görüntüleyin, arayın ve yönetin.</string>
+
+    <string name="onboarding_2_title">Arama ve keşif</string>
+    <string name="onboarding_2_subtitle">anında</string>
+    <string name="onboarding_2_desc">Numarayı yazın ve eşleşen kişiler anında görünsün. Tek dokunuşla arayın.</string>
+
+    <string name="onboarding_3_title">Favoriler ve son aramalar</string>
+    <string name="onboarding_3_subtitle">her zaman görünür</string>
+    <string name="onboarding_3_desc">Sık aradığınız kişileri sabitleyin ve geçmişinizi hızlıca görüntüleyin.</string>
+
+    <string name="skip_text">Atla</string>
+    <string name="get_started">Başla</string>
+    <string name="next">İleri</string>
+
+    <!-- Recents Screen -->
+    <string name="recents_title">Son Aramalar</string>
+    <string name="no_recent_calls">Son arama yok</string>
+    <string name="no_recents_message">Arama geçmişiniz boş.\nBir arama yaparak burada görüntüleyin.</string>
+    <string name="call_log_permission_message">Arama geçmişi için izin gerekli.</string>
+    <string name="clear_all_recents">Tümünü temizle</string>
+    <string name="call_duration">Süre: %s</string>
+    <string name="call_type_incoming">Gelen</string>
+    <string name="call_type_outgoing">Giden</string>
+    <string name="call_type_missed">Cevapsız</string>
+    <string name="call_type_rejected">Reddedilen</string>
+    <string name="call_type_voicemail">Sesli mesaj</string>
+    <string name="call_type_unknown">Bilinmeyen</string>
+    <string name="today">Bugün</string>
+    <string name="yesterday">Dün</string>
+
+    <!-- Favorites Screen -->
+    <string name="favorites_title">Favoriler</string>
+    <string name="no_favorites">Henüz favori yok</string>
+    <string name="no_favorites_message">Bir kişiyi favorilere eklemek için işaretleyin.</string>
+
+    <!-- Contact Detail Screen -->
+    <string name="contact_detail_title">Kişi</string>
+    <string name="action_call">Ara</string>
+    <string name="action_message">Mesaj</string>
+    <string name="action_email">E-posta</string>
+    <string name="action_video">Video</string>
+    <string name="action_add_favorite">Favorilere ekle</string>
+    <string name="action_remove_favorite">Favorilerden çıkar</string>
+    <string name="action_edit">Kişiyi düzenle</string>
+    <string name="action_delete">Kişiyi sil</string>
+    <string name="action_share">Kişiyi paylaş</string>
+
+    <string name="section_phone">Telefon</string>
+    <string name="section_email">E-posta</string>
+    <string name="section_address">Adres</string>
+    <string name="section_notes">Notlar</string>
+
+    <string name="phone_mobile">Mobil</string>
+    <string name="phone_home">Ev</string>
+    <string name="phone_work">İş</string>
+    <string name="phone_other">Diğer</string>
+
+    <string name="copy_to_clipboard">Panoya kopyalandı</string>
+
+    <!-- Actions -->
+    <string name="add_contact">Kişi ekle</string>
+    <string name="fab_add_contact_description">Yeni kişi ekle</string>
+
+    <!-- Dialogs -->
+    <string name="confirm_delete_title">Kişiyi sil</string>
+    <string name="confirm_delete_message">%s kişisini silmek istediğinizden emin misiniz?</string>
+    <string name="dialog_yes">Evet</string>
+    <string name="dialog_no">Hayır</string>
+    <string name="dialog_cancel">İptal</string>
+    <string name="dialog_ok">Tamam</string>
+
+    <!-- Errors -->
+    <string name="error_loading_contacts">Kişiler yüklenemedi.</string>
+    <string name="error_loading_call_log">Arama geçmişi yüklenemedi.</string>
+    <string name="error_no_phone_app">Telefon uygulaması bulunamadı.</string>
+
+    <!-- Bottom nav -->
+    <string name="nav_dialpad">Tuş Takımı</string>
+
+    <!-- Dialpad -->
+    <string name="dialpad_title">Tuş Takımı</string>
+    <string name="dialpad_call_button">Ara</string>
+
+    <string name="privacy_policy">Gizlilik Politikası</string>
+    <string name="terms_conditions">Şartlar ve Koşullar</string>
+
+    <string name="call_settings">Arama Ayarları</string>
+    <string name="dark_mode">Karanlık Mod</string>
+    <string name="change_language">Dili Değiştir</string>
+
+    <string name="close">Kapat</string>
+    <string name="delete">Sil</string>
+    <string name="call_history">Arama Geçmişi</string>
+
+    <string name="total">Toplam</string>
+    <string name="incoming">Gelen</string>
+    <string name="outgoing">Giden</string>
+    <string name="missed">Cevapsız</string>
+
+    <string name="back_button_description">Geri</string>
+    <string name="search_button_description">Ara</string>
+    <string name="more_options_description">Daha fazla seçenek</string>
+    <string name="contact_avatar_description">%s için kişi avatarı</string>
+    <string name="call_type_icon_description">Arama türü: %s</string>
+    <string name="action_call_back">Geri ara</string>
+    <string name="settings">Ayarlar</string>
+    <string name="about">Hakkında</string>
+
+    <string name="confirm_clear_history_title">Arama geçmişini temizle</string>
+    <string name="confirm_clear_history_message">Tüm son aramaları temizlemek istediğinizden emin misiniz?</string>
+
+    <string name="error_no_messaging_app">Bu cihazda mesajlaşma uygulaması bulunamadı.</string>
+    <string name="error_no_email_app">E-posta uygulaması bulunamadı.</string>
+
+    <!-- Accessibility -->
+    <string name="cd_search_clear">Aramayı temizle</string>
+    <string name="cd_toggle_favorite">Favoriyi değiştir</string>
+    <string name="cd_contact_photo">Kişi fotoğrafı</string>
+    <string name="cd_call_icon">Arama simgesi</string>
+
+    <!-- Sort & Filter -->
+    <string name="sort_by">Sırala</string>
+    <string name="sort_first_name">Ad</string>
+    <string name="sort_last_name">Soyad</string>
+    <string name="filter_all">Tümü</string>
+    <string name="filter_with_phone">Telefonu olanlar</string>
+
+    <!-- Theme -->
+    <string name="theme">Tema</string>
+    <string name="accent_color">Vurgu rengi</string>
+    <string name="system">Sistem</string>
+    <string name="light">Açık</string>
+    <string name="dark">Koyu</string>
+    <string name="language">Dil ayarla</string>
+    <string name="sim_settings">SIM ayarları</string>
+    <string name="sim_settings_desc">SIM kartları ve varsayılan arama SIM’ini yönet</string>
+    <string name="call_settings_desc">Arama seçeneklerini yönet</string>
+    <string name="default_apps">Varsayılan uygulamalar</string>
+    <string name="default_apps_desc">Varsayılan arama uygulamasını değiştir</string>
+
+    <string name="dialpad_backspace">Rakam sil</string>
+
+    <string name="overlay_permission_title">Diğer uygulamaların üzerinde gösterime izin ver</string>
+    <string name="overlay_permission_desc">Bu izin, ekran kilitliyken veya başka bir uygulama kullanırken bile arama sonrası hızlı işlemleri göstermemizi sağlar.</string>
+    <string name="open_settings">Ayarları aç</string>
+    <string name="why_do_we_need_this">Buna neden ihtiyacımız var?</string>
+    <string name="why_do_we_need_this_desc">Telefon kilitliyken veya başka bir uygulama kullanırken bile arama sonrası ekranını (Geri ara, WhatsApp, SMS gibi hızlı işlemler) göstermek için.</string>
+
+    <!-- Labels -->
+    <string name="call_back">Geri ara</string>
+    <string name="quick_sms">Hızlı SMS</string>
+    <string name="add_to_contacts">Kişilere ekle</string>
+    <string name="block_spam">Engelle / Spam</string>
+    <string name="dismiss_btn">Kapat</string>
+    <string name="msg_whatsapp">WhatsApp ile mesaj gönder</string>
+
+    <string name="onboarding_4_title">Akıllı hareketler</string>
+    <string name="onboarding_4_subtitle">Hızlı işlemler</string>
+    <string name="onboarding_4_desc">Aramak için sağa kaydırın, hızlı mesaj için sola kaydırın.</string>
+
+    <string name="privacy_policy_desc">Gizlilik politikasını oku</string>
+
+    <string name="terms_conditions_desc">Şartlar ve koşulları oku</string>
+    <string name="permission_consent">
+"Kabul et ve devam et" seçeneğine dokunarak Gizlilik Politikamızı ve Şartlar ve Koşulları kabul etmiş olursunuz.
+</string>
+
+    <string name="sound">Ses</string>
+    <string name="keypad_sound">Tuş sesi</string>
+    <string name="soundnvibration">Ses ve titreşim</string>
+    <string name="calleridoverlay">Arayan kimliği katmanı</string>
+    <string name="sim_preferences">SIM tercihleri</string>
+    <string name="accessibility">Erişilebilirlik</string>
+    <string name="call_back_screen">Geri arama ekranı</string>
+    <string name="legal">Yasal</string>
+
+    <string name="choose_accent_color">Vurgu rengini seç</string>
+    <string name="dynamic_system">Dinamik (Sistem)</string>
+    <string name="caller_id_disable">Arayan kimliği devre dışı!</string>
+    <string name="caller_id_disable_desc">Varsayılan arayan kimliği uygulaması olarak ayarlamak için dokunun.</string>
+
+    <string name="delete_contact">Kişiyi sil</string>
+    <string name="delete_contact_confirmation">%1$s silinsin mi? Bu işlem geri alınamaz.</string>
+    <string name="permission_subtitle">En iyi arama deneyimi için bazı izinlere ihtiyacımız var.</string>
+    <string name="permission_subtitle_desc">Kişileriniz güvende ve kimseyle paylaşılmayacaktır</string>
+
+    <string name="continue_btn">Devam et</string>
+
+    <string name="calls_with_contact_placeholder">%1$s ile yapılan aramalar\nburada görünecek</string>
+    <string name="this_contact">bu kişi</string>
+
+    <string name="perm_four">Telefon durumu</string>
+    <string name="perm_four_desc">Gelen, giden ve cevapsız aramaları doğru şekilde tespit eder.</string>
+    <string name="perm_five">Bildirim</string>
+    <string name="perm_five_desc">Bildirimler, uygulamadan önemli güncellemeler ve uyarılar sağlamak için kullanılır.</string>
+
+    <string name="filter_chip_all">Tümü</string>
+    <string name="filter_chip_incoming">Gelen</string>
+    <string name="filter_chip_outgoing">Giden</string>
+    <string name="filter_chip_missed">Cevapsız</string>
+    <string name="filter_chip_rejected">Reddedilen</string>
+
+    <string name="call">Ara</string>
+</resources>
