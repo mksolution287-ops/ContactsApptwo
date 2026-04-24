@@ -8,11 +8,11 @@ plugins {
 }
 
 android {
-    namespace 'com.callerinfo'
+    namespace 'com.callerinfocom'
     compileSdk 36
 
     defaultConfig {
-        applicationId "com.callerinfo"
+        applicationId "com.callerinfocom"
         minSdk 26
         targetSdk 36
         versionCode 1

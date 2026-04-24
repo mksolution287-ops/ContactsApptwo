@@ -26,6 +26,25 @@
     },
     {
       "client_info": {
+        "mobilesdk_app_id": "1:504159059070:android:5c947eca9fdcf6b5dd6c2f",
+        "android_client_info": {
+          "package_name": "com.callerinfocom"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAEkpOUSjhuFRxTbhyCJlzZzgxt5tShZTA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:504159059070:android:6edd32b159c2c8eadd6c2f",
         "android_client_info": {
           "package_name": "com.contactcolor.callerinfo"

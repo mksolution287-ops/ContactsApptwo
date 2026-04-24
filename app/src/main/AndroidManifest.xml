@@ -42,7 +42,7 @@
             tools:replace="android:resource" />
 
         <activity
-            android:name="com.callerinfo.MainActivity"
+            android:name="com.callerinfocom.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.ContactsApp">
             <intent-filter>
@@ -52,7 +52,7 @@
         </activity>
 
         <service
-            android:name="com.callerinfo.service.AppCallScreeningService"
+            android:name="com.callerinfocom.service.AppCallScreeningService"
             android:exported="true"
             android:permission="android.permission.BIND_SCREENING_SERVICE">
             <intent-filter>
@@ -60,12 +60,8 @@
             </intent-filter>
         </service>
 
-<!--        <service-->
-<!--            android:name="com.contactsapptwomktech.service.CallDetectionService"-->
-<!--            android:foregroundServiceType="phoneCall"-->
-<!--            android:exported="false" />-->
         <service
-            android:name="com.callerinfo.service.CallDetectionService"
+            android:name="com.callerinfocom.service.CallDetectionService"
             android:foregroundServiceType="specialUse"
             android:exported="false">
             <property
@@ -73,10 +69,6 @@
                 android:value="call_monitoring" />
         </service>
 
-<!--        <service-->
-<!--            android:name=".service.CallerIdOverlayService"-->
-<!--            android:exported="false"-->
-<!--            android:foregroundServiceType="phoneCall" />-->
         <service
             android:name=".service.CallerIdOverlayService"
             android:exported="false"
@@ -87,14 +79,14 @@
         </service>
 
         <activity
-            android:name="com.callerinfo.ui.overlay.PostCallOverlayActivity"
+            android:name="com.callerinfocom.ui.overlay.PostCallOverlayActivity"
             android:exported="false"
             android:showOnLockScreen="true"
             android:turnScreenOn="true"
             android:theme="@style/Theme.ContactsApp" />
 
         <receiver
-            android:name="com.callerinfo.reciever.BootReceiver"
+            android:name="com.callerinfocom.reciever.BootReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
