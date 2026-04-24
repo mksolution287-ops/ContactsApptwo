@@ -238,6 +238,6 @@
     <string name="filter_chip_outgoing">Giden</string>
     <string name="filter_chip_missed">Cevapsız</string>
     <string name="filter_chip_rejected">Reddedilen</string>
-
+    <string name="edit_contact">Kişiyi düzenle</string>
     <string name="call">Ara</string>
 </resources>

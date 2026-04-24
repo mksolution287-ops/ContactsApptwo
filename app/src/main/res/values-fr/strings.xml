@@ -220,4 +220,5 @@ En continuant, j’accepte la politique de confidentialité et les conditions g�
     <string name="filter_chip_missed">Manqués</string>
     <string name="filter_chip_rejected">Rejetés</string>
     <string name="call">Appeler</string>
+    <string name="edit_contact">Modifier le contact</string>
 </resources>

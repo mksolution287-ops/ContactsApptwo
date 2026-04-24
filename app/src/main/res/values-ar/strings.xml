@@ -219,4 +219,5 @@
     <string name="filter_chip_missed">الفائتة</string>
     <string name="filter_chip_rejected">المرفوضة</string>
     <string name="call">اتصال</string>
+    <string name="edit_contact">تحرير جهة الاتصال</string>
 </resources>

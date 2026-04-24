@@ -219,4 +219,5 @@ Indem ich fortfahre, akzeptiere ich die Datenschutzerklärung und die Allgemeine
     <string name="filter_chip_missed">Verpasst</string>
     <string name="filter_chip_rejected">Abgelehnt</string>
     <string name="call">Anrufen</string>
+    <string name="edit_contact">Kontakt bearbeiten</string>
 </resources>

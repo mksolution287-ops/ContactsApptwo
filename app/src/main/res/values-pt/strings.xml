@@ -240,4 +240,5 @@ Ao tocar em Concordar e continuar, você aceita nossa Política de Privacidade e
     <string name="filter_chip_missed">Perdidas</string>
     <string name="filter_chip_rejected">Rejeitadas</string>
     <string name="call">Ligar</string>
+    <string name="edit_contact">Editar contato</string>
 </resources>

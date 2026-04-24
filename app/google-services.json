@@ -7,6 +7,44 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:504159059070:android:281d78b262f0f90cdd6c2f",
+        "android_client_info": {
+          "package_name": "com.callerinfo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAEkpOUSjhuFRxTbhyCJlzZzgxt5tShZTA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:504159059070:android:6edd32b159c2c8eadd6c2f",
+        "android_client_info": {
+          "package_name": "com.contactcolor.callerinfo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAEkpOUSjhuFRxTbhyCJlzZzgxt5tShZTA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:504159059070:android:9ce9e6b3ccc6826add6c2f",
         "android_client_info": {
           "package_name": "com.contactsapptwomktech"

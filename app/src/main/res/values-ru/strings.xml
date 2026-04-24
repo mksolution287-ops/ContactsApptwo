@@ -239,4 +239,5 @@
     <string name="filter_chip_missed">Пропущенные</string>
     <string name="filter_chip_rejected">Отклонённые</string>
     <string name="call">Позвонить</string>
+    <string name="edit_contact">Редактировать контакт</string>
 </resources>

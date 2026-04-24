@@ -3,16 +3,16 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'com.google.devtools.ksp'
     id 'kotlin-parcelize'
-    id 'com.google.gms.google-services'          // ← Add this
-    id 'com.google.firebase.crashlytics'         // ← Add this
+    id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
 }
 
 android {
-    namespace 'com.contactsapptwomktech'
+    namespace 'com.callerinfo'
     compileSdk 36
 
     defaultConfig {
-        applicationId "com.contactsapptwomktech"
+        applicationId "com.callerinfo"
         minSdk 26
         targetSdk 36
         versionCode 1
@@ -42,6 +42,12 @@ android {
 
     buildFeatures {
         compose true
+    }
+
+    bundle {
+        language {
+            enableSplit = false
+        }
     }
 
     composeOptions {
@@ -97,6 +103,17 @@ dependencies {
 
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-crashlytics'
+//    implementation 'androidx.compose.foundation:foundation-android:1.10.6'
+    implementation 'androidx.compose.foundation:foundation'
+
+    //for google ads
+    implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation("com.google.android.gms:play-services-ads:23.0.0")
+    implementation("androidx.cardview:cardview:1.0.0")
+    implementation("com.google.android.material:material:1.13.0")
+//    implementation("androidx.activity:activity:1.13.0")
+    implementation("androidx.constraintlayout:constraintlayout:2.2.1")
+    implementation 'com.google.firebase:firebase-config:23.0.1'//for ads
 
     // Testing
     testImplementation 'junit:junit:4.13.2'

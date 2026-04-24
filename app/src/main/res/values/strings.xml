@@ -166,6 +166,7 @@
     <string name="call_back">Call back</string>
     <string name="quick_sms">Quick SMS</string>
     <string name="add_to_contacts">Add to Contacts</string>
+    <string name="edit_contact">Edit Contact</string>
     <string name="block_spam">Block / Spam</string>
     <string name="dismiss_btn">Dismiss</string>
     <string name="msg_whatsapp">Message on Whatsapp</string>
