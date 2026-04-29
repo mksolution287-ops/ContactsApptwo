@@ -5,8 +5,10 @@ import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -14,6 +16,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInput
@@ -25,9 +28,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.callerinfocom.ui.components.NativeAdCard
 import kotlin.math.roundToInt
 import com.callerinfocom.R
+import com.callerinfocom.ui.components.AppInstallNativeAdCard
 
 @Composable
 fun PostCallOverlayScreen(
@@ -37,7 +40,7 @@ fun PostCallOverlayScreen(
     durationSec    : Long,
     callType       : String,
     isWhatsAppUser : Boolean,
-    isContactSaved: Boolean,
+    isContactSaved : Boolean,
     onDismiss      : () -> Unit,
     onCallBack     : () -> Unit,
     onSms          : () -> Unit,
@@ -45,7 +48,6 @@ fun PostCallOverlayScreen(
     onAddContact   : () -> Unit,
     onBlock        : () -> Unit
 ) {
-    // Drag-to-dismiss state
     var dragOffsetPx by remember { mutableStateOf(0f) }
     val animatedOffset by animateFloatAsState(
         targetValue   = dragOffsetPx,
@@ -53,30 +55,32 @@ fun PostCallOverlayScreen(
         label         = "drag_offset"
     )
 
-
-
-    // Scrim + sheet anchored at bottom
+    // Full-screen scrim
     Box(
-        modifier = Modifier
+        modifier         = Modifier
             .fillMaxSize()
-            .background(Color.Black.copy(alpha = 0.6f)),
+            .background(Color.Black.copy(alpha = 0.55f)),
         contentAlignment = Alignment.BottomCenter
     ) {
         AnimatedVisibility(
             visible = true,
-            enter   = slideInVertically(tween(360, easing = FastOutSlowInEasing)) { it }
-                    + fadeIn(tween(260))
+            enter   = slideInVertically(tween(380, easing = FastOutSlowInEasing)) { it } + fadeIn(tween(280))
         ) {
+            // ── The entire sheet is one verticalScroll column ─────────
+            // This guarantees the ad CTA button is NEVER clipped,
+            // no matter how tall the content or how small the screen.
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
+                    // Max height = 92% of screen so scrim is always visible
+                    .fillMaxHeight(0.92f)
                     .offset { IntOffset(0, animatedOffset.roundToInt()) }
-                    .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
+                    .clip(RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp))
                     .background(MaterialTheme.colorScheme.surface)
                     .pointerInput(Unit) {
                         detectVerticalDragGestures(
                             onDragEnd = {
-                                if (dragOffsetPx > 120f) onDismiss()
+                                if (dragOffsetPx > 100f) onDismiss()
                                 else dragOffsetPx = 0f
                             }
                         ) { _, delta ->
@@ -84,8 +88,26 @@ fun PostCallOverlayScreen(
                                 dragOffsetPx = (dragOffsetPx + delta).coerceAtMost(400f)
                         }
                     }
+                    // verticalScroll wraps everything — hero + actions + ad
+                    .verticalScroll(rememberScrollState())
             ) {
-                // ── Hero section (dark) ───────────────────────────────
+                // ── Drag pill ─────────────────────────────────────────
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color(0xFF1A1A2E))
+                        .padding(top = 12.dp, bottom = 0.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Box(
+                        Modifier
+                            .width(40.dp).height(4.dp)
+                            .clip(RoundedCornerShape(2.dp))
+                            .background(Color.White.copy(alpha = 0.25f))
+                    )
+                }
+
+                // ── Hero ──────────────────────────────────────────────
                 HeroSection(
                     name        = name,
                     number      = number,
@@ -94,37 +116,37 @@ fun PostCallOverlayScreen(
                     isWaUser    = isWhatsAppUser
                 )
 
-                // ── Action section ────────────────────────────────────
+                // ── Actions ───────────────────────────────────────────
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 20.dp),
+                        .padding(horizontal = 16.dp, vertical = 18.dp),
                     verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
                     // Row 1: Call back + Quick SMS
                     Row(
-                        modifier            = Modifier.fillMaxWidth(),
+                        modifier              = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
                         PrimaryButton(
-                            modifier    = Modifier.weight(1f),
-                            label       = stringResource(R.string.call_back),
-                            icon        = Icons.Default.Call,
+                            modifier       = Modifier.weight(1f),
+                            label          = stringResource(R.string.call_back),
+                            icon           = Icons.Default.Call,
                             containerColor = MaterialTheme.colorScheme.primary,
                             contentColor   = MaterialTheme.colorScheme.onPrimary,
-                            onClick     = onCallBack
+                            onClick        = onCallBack
                         )
                         PrimaryButton(
-                            modifier    = Modifier.weight(1f),
-                            label       = stringResource(R.string.quick_sms),
-                            icon        = Icons.Default.Message,
+                            modifier       = Modifier.weight(1f),
+                            label          = stringResource(R.string.quick_sms),
+                            icon           = Icons.Default.Message,
                             containerColor = MaterialTheme.colorScheme.secondaryContainer,
                             contentColor   = MaterialTheme.colorScheme.onSecondaryContainer,
-                            onClick     = onSms
+                            onClick        = onSms
                         )
                     }
 
-                    // Row 2: WhatsApp (conditional full-width)
+                    // Row 2: WhatsApp
                     if (isWhatsAppUser) {
                         WhatsAppButton(onClick = onWhatsApp)
                     }
@@ -134,23 +156,27 @@ fun PostCallOverlayScreen(
                         thickness = 0.5.dp
                     )
 
-                    // Row 3: Add contact + Block/Report
+                    // Row 3: Add / Edit contact + Block
                     Row(
-                        modifier            = Modifier.fillMaxWidth(),
+                        modifier              = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
                         SecondaryIconButton(
                             modifier = Modifier.weight(1f),
-                            label = if (isContactSaved) stringResource(R.string.edit_contact) else stringResource(R.string.add_to_contacts),
-                            icon = if (isContactSaved) Icons.Default.Edit else Icons.Default.PersonAdd,
-                            onClick = onAddContact
+                            label    = if (isContactSaved)
+                                stringResource(R.string.edit_contact)
+                            else
+                                stringResource(R.string.add_to_contacts),
+                            icon     = if (isContactSaved) Icons.Default.Edit
+                            else Icons.Default.PersonAdd,
+                            onClick  = onAddContact
                         )
                         SecondaryIconButton(
-                            modifier     = Modifier.weight(1f),
-                            label        = stringResource(R.string.block_spam),
-                            icon         = Icons.Default.Block,
-                            onClick      = onBlock,
-                            isDangerous  = true
+                            modifier    = Modifier.weight(1f),
+                            label       = stringResource(R.string.block_spam),
+                            icon        = Icons.Default.Block,
+                            onClick     = onBlock,
+                            isDangerous = true
                         )
                     }
 
@@ -174,15 +200,27 @@ fun PostCallOverlayScreen(
                         Text(stringResource(R.string.dismiss_btn))
                     }
                 }
-                NativeAdCard(
-                    modifier = Modifier.requiredWidth(LocalConfiguration.current.screenWidthDp.dp)
+
+                // ── Ad — full width, never clipped ────────────────────
+                // requiredWidth is removed; fillMaxWidth inside a
+                // verticalScroll column works correctly.
+                HorizontalDivider(
+                    color     = MaterialTheme.colorScheme.outlineVariant,
+                    thickness = 0.5.dp
+                )
+                AppInstallNativeAdCard(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        // Bottom padding so the CTA button clears the
+                        // system nav bar / gesture handle
+                        .padding(bottom = 16.dp)
                 )
             }
         }
     }
 }
 
-// ── Hero section ─────────────────────────────────────────────────────────
+// ── Hero section ──────────────────────────────────────────────────────────
 
 @Composable
 private fun HeroSection(
@@ -192,30 +230,20 @@ private fun HeroSection(
     callType    : String,
     isWaUser    : Boolean
 ) {
-    val heroBg = Color(0xFF1A1A2E)
-
     Column(
-        modifier            = Modifier
+        modifier = Modifier
             .fillMaxWidth()
-            .background(heroBg)
-            .padding(horizontal = 20.dp, vertical = 24.dp),
+            .background(
+                Brush.verticalGradient(
+                    listOf(Color(0xFF1A1A2E), Color(0xFF16213E))
+                )
+            )
+            .padding(horizontal = 20.dp, vertical = 20.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        // Drag pill
-        Box(
-            Modifier
-                .width(36.dp).height(4.dp)
-                .clip(RoundedCornerShape(2.dp))
-                .background(Color.White.copy(alpha = 0.2f))
-        )
-
-        Spacer(Modifier.height(4.dp))
-
-        // Avatar
         AvatarCircle(name = name, size = 72)
 
-        // Name / number
         Text(
             text       = name ?: number,
             fontSize   = 22.sp,
@@ -232,7 +260,6 @@ private fun HeroSection(
             )
         }
 
-        // Chips row
         Row(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment     = Alignment.CenterVertically
@@ -241,7 +268,6 @@ private fun HeroSection(
             if (isWaUser) WaChip()
         }
 
-        // Duration
         Row(
             verticalAlignment     = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(5.dp)
@@ -294,32 +320,29 @@ private fun CallTypeChip(callType: String) {
     }
     Surface(color = bg, shape = RoundedCornerShape(20.dp)) {
         Text(
-            text     = label,
-            fontSize = 11.sp,
+            text       = label,
+            fontSize   = 11.sp,
             fontWeight = FontWeight.Medium,
-            color    = fg,
-            modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
+            color      = fg,
+            modifier   = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
         )
     }
 }
 
 @Composable
 private fun WaChip() {
-    Surface(
-        color = Color(0x2625D366),
-        shape = RoundedCornerShape(20.dp)
-    ) {
+    Surface(color = Color(0x2625D366), shape = RoundedCornerShape(20.dp)) {
         Text(
-            text     = "WhatsApp",
-            fontSize = 11.sp,
+            text       = "WhatsApp",
+            fontSize   = 11.sp,
             fontWeight = FontWeight.Medium,
-            color    = Color(0xFF4ADE80),
-            modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
+            color      = Color(0xFF4ADE80),
+            modifier   = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
         )
     }
 }
 
-// ── Action buttons ────────────────────────────────────────────────────────
+// ── Buttons ───────────────────────────────────────────────────────────────
 
 @Composable
 private fun PrimaryButton(
@@ -357,27 +380,15 @@ private fun WhatsAppButton(onClick: () -> Unit) {
             contentColor   = waGreen
         )
     ) {
-        // WhatsApp icon via Canvas (no external dep needed)
-//        WhatsAppIcon(size = 18.dp)
         Icon(
-            painter           = painterResource(R.drawable.ic_whatsapp),
+            painter            = painterResource(R.drawable.ic_whatsapp),
             contentDescription = null,
-            tint              = Color.Unspecified, // preserve original green
-            modifier          = Modifier.size(20.dp)
+            tint               = Color.Unspecified,
+            modifier           = Modifier.size(20.dp)
         )
         Spacer(Modifier.width(8.dp))
         Text(stringResource(R.string.msg_whatsapp), fontSize = 14.sp, color = Color(0xFF15803D))
     }
-}
-
-@Composable
-private fun WhatsAppIcon(size: androidx.compose.ui.unit.Dp) {
-    // Simple phone-in-bubble SVG path via Canvas
-    androidx.compose.foundation.Canvas(modifier = Modifier.size(size)) {
-        val r = this.size.minDimension / 2f
-        drawCircle(color = Color(0xFF25D366), radius = r)
-    }
-    // (for a proper icon, add the WhatsApp SVG path via your asset or a vector drawable)
 }
 
 @Composable
@@ -394,10 +405,10 @@ private fun SecondaryIconButton(
         MaterialTheme.colorScheme.onSurfaceVariant
 
     OutlinedButton(
-        onClick        = onClick,
-        modifier       = modifier.height(68.dp),
-        shape          = RoundedCornerShape(12.dp),
-        colors         = ButtonDefaults.outlinedButtonColors(contentColor = contentColor)
+        onClick  = onClick,
+        modifier = modifier.height(68.dp),
+        shape    = RoundedCornerShape(12.dp),
+        colors   = ButtonDefaults.outlinedButtonColors(contentColor = contentColor)
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Icon(icon, contentDescription = label, modifier = Modifier.size(20.dp))
@@ -410,7 +421,7 @@ private fun SecondaryIconButton(
 // ── Helpers ───────────────────────────────────────────────────────────────
 
 private fun formatDuration(sec: Long): String = when {
-    sec <= 0  -> "0 sec"
-    sec < 60  -> "$sec sec"
-    else      -> "${sec / 60} min ${sec % 60} sec"
+    sec <= 0 -> "0 sec"
+    sec < 60 -> "$sec sec"
+    else     -> "${sec / 60} min ${sec % 60} sec"
 }

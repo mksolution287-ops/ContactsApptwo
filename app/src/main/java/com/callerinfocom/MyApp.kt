@@ -12,7 +12,6 @@ class MyApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
-
         // Initialize AdMob
         MobileAds.initialize(this) {
             AdManager.init(this)

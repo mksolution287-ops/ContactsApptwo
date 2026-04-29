@@ -52,6 +52,7 @@ import com.callerinfocom.ui.theme.AppThemeMode
 import com.callerinfocom.utils.AdManager
 import com.callerinfocom.utils.LocaleHelper
 import com.callerinfocom.R
+import com.callerinfocom.ui.components.BannerAd
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -175,7 +176,8 @@ fun SettingsScreen(
                     }
                 }
             )
-        }
+        },
+        bottomBar = { BannerAd() }
     ) { innerPadding ->
 
         Column(

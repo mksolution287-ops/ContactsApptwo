@@ -223,6 +223,9 @@ object AdManager {
             .ifBlank { TEST_BANNER_ID }
     }
 
+    fun getAppInstallNativeAdUnitId(): String =
+        Firebase.remoteConfig.getString(KEY_NATIVE_AD_UNIT).ifBlank { TEST_NATIVE_ID }
+
     // ── Preload interstitial ──────────────────────────────────────────────
 //    fun preloadInterstitial(context: Context) {
 //        val config = Firebase.remoteConfig

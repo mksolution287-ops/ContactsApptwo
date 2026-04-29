@@ -157,15 +157,7 @@ fun MainScreen(
             logScreenView(route)
         }
     }
-    // ── Determine start destination ────────────────────────────────────────
-    // • Language already chosen + onboarding done  → go straight to Contacts
-    // • Language already chosen + onboarding NOT done → skip Splash, go to Onboarding
-    // • Nothing chosen yet → show Splash → Language
-//    val startDestination = when {
-//        onboardingDone               -> Screen.Recents.route
-//        selectedLanguage != null     -> Screen.Permission.route   // language set, finish onboarding
-//        else                         -> Screen.Splash.route
-//    }
+
     val startDestination = when {
         selectedLanguage != null -> Screen.Recents.route
         else                     -> Screen.Splash.route

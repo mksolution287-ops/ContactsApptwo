@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -44,7 +45,7 @@ fun SplashScreen(onFinished: () -> Unit) {
     val iconAlpha   = remember { Animatable(0f) }
     val textAlpha   = remember { Animatable(0f) }
     val textOffsetY = remember { Animatable(24f) }
-    val progress    = remember { Animatable(0f) }        // ← New: Progress animation
+    val progress    = remember { Animatable(0f) }
 
     LaunchedEffect(Unit) {
         // Icon pops in
@@ -84,7 +85,7 @@ fun SplashScreen(onFinished: () -> Unit) {
                     .size(96.dp)
                     .scale(iconScale.value)
                     .alpha(iconAlpha.value)
-                    .clip(CircleShape)
+                    .clip(RoundedCornerShape(20.dp))
                     .background(
                         Brush.radialGradient(
                             colors = listOf(
@@ -96,7 +97,7 @@ fun SplashScreen(onFinished: () -> Unit) {
                 contentAlignment = Alignment.Center
             ) {
                 Image(
-                    painter = painterResource(R.drawable.contacts2logo),
+                    painter = painterResource(R.drawable.img),
                     contentDescription = "App logo",
                     modifier = Modifier.fillMaxSize()
                 )

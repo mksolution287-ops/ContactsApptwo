@@ -148,7 +148,7 @@ class MainActivity : ComponentActivity() {
 
             crashlytics.setCustomKey("device_manufacturer", manufacturer)
             crashlytics.setCustomKey("device_model", model)
-            crashlytics.setCustomKey("device_name", deviceName)        // Most useful
+            crashlytics.setCustomKey("device_name", deviceName)
             crashlytics.setCustomKey("android_version", Build.VERSION.RELEASE)
             crashlytics.setCustomKey("sdk_version", Build.VERSION.SDK_INT.toString())
 

@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import java.util.Locale
 import com.callerinfocom.data.model.AppLanguage
+import com.callerinfocom.ui.components.AppInstallNativeAdCard
 import com.callerinfocom.ui.components.NativeAdCard
 
 @Composable
@@ -102,7 +103,8 @@ fun LanguageSelectScreen(
                 )
             }
         }
-        NativeAdCard(modifier = Modifier.requiredWidth(LocalConfiguration.current.screenWidthDp.dp).navigationBarsPadding())
+//        NativeAdCard(modifier = Modifier.requiredWidth(LocalConfiguration.current.screenWidthDp.dp).navigationBarsPadding())
+        AppInstallNativeAdCard(modifier = Modifier.requiredWidth(LocalConfiguration.current.screenWidthDp.dp).navigationBarsPadding())
     }
 }
 
