@@ -85,8 +85,6 @@ fun CustomBottomBar(
     currentRoute : String?,
     onItemClick  : (String) -> Unit
 ) {
-    val screenHeight = androidx.compose.ui.platform.LocalConfiguration.current.screenHeightDp.dp
-    val barHeight    = screenHeight * 0.08f
 
     Box(
         modifier = Modifier.wrapContentHeight()

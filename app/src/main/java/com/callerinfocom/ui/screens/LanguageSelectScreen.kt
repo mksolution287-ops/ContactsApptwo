@@ -1,5 +1,6 @@
 package com.callerinfocom.ui.screens
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -38,6 +39,10 @@ fun LanguageSelectScreen(
     }
 
     val languages = AppLanguage.entries
+
+    BackHandler {
+        onLanguageChosen(selected)
+    }
 
     Column(
         modifier = Modifier
