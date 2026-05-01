@@ -52,6 +52,7 @@ import com.callerinfocom.ui.theme.AppThemeMode
 import com.callerinfocom.utils.AdManager
 import com.callerinfocom.utils.LocaleHelper
 import com.callerinfocom.R
+import com.callerinfocom.ui.components.AppInstallNativeAdCard
 import com.callerinfocom.ui.components.BannerAd
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -90,6 +91,11 @@ fun SettingsScreen(
         viewModel.setCallerIdEnabled(granted)
         prefs.edit().putBoolean("caller_id_enabled", granted).apply()
     }
+
+    val bottomInset = WindowInsets.navigationBars
+        .asPaddingValues()
+        .calculateBottomPadding()
+
 
     // ── Trigger native system Caller ID dialog ────────────────────────────────
     fun requestCallerIdRole() {
@@ -402,8 +408,8 @@ fun SettingsScreen(
                             }
                         }
                     }
-                    NativeAdCard(
-                        modifier = Modifier.requiredWidth(LocalConfiguration.current.screenWidthDp.dp)
+                    AppInstallNativeAdCard(
+                        modifier = Modifier.requiredWidth(LocalConfiguration.current.screenWidthDp.dp).padding(bottomInset)
                     )
                 }
             }

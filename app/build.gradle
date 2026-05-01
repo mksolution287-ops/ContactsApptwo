@@ -115,6 +115,8 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout:2.2.1")
     implementation 'com.google.firebase:firebase-config:23.0.1'//for ads
 
+    implementation "androidx.lifecycle:lifecycle-process:2.8.7"
+
     // Testing
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.2.1'
