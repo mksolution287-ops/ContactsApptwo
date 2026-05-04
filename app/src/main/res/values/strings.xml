@@ -225,4 +225,6 @@
     <string name="filter_chip_missed">Missed</string>
     <string name="filter_chip_rejected">Rejected</string>
     <string name="call">Call</string>
+
+    <string name="swipe_hint">Swipe to call or message</string>
 </resources>

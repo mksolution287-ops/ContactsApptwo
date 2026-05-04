@@ -71,31 +71,34 @@
 //    Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(context)
 //
 ///**
-// * Dialog should stay open only when runtime permissions are missing.
-// * Overlay-only denial is NOT a blocker — we still try to get it, but
-// * we don't hold the dialog open just because it's missing.
+// * ALL permissions are satisfied — runtime granted AND overlay granted.
+// * Only when both are true can the dialog safely dismiss on first composition.
 // */
-//private fun shouldKeepDialogOpen(context: android.content.Context): Boolean =
-//    getMissingRuntimePermissions(context).isNotEmpty()
+//private fun allPermissionsGranted(context: android.content.Context): Boolean =
+//    getMissingRuntimePermissions(context).isEmpty() && isOverlayGranted(context)
 //
 //@Composable
 //fun RequiredPermissionsDialog(onDismiss: () -> Unit) {
 //    val context        = LocalContext.current
 //    val lifecycleOwner = LocalLifecycleOwner.current
 //
-//    // Dismiss immediately on first composition if nothing is actually blocking
-//    if (!shouldKeepDialogOpen(context)) {
-//        Log.d(TAG, "=== First composition: nothing blocking → immediate dismiss ===")
+//    // ── CRITICAL FIX ──────────────────────────────────────────────────────
+//    // Only dismiss immediately if BOTH runtime AND overlay are already granted.
+//    // Previously this only checked runtime, so after runtime was granted the
+//    // dialog would recompose, hit this guard, and dismiss before the overlay
+//    // settings LaunchedEffect had a chance to fire.
+//    if (allPermissionsGranted(context)) {
+//        Log.d(TAG, "=== First composition: all permissions granted → immediate dismiss ===")
 //        LaunchedEffect(Unit) { onDismiss() }
 //        return
 //    }
 //
-//    var overlaySettingsOpened  by remember { mutableStateOf(false) }
-//    var pollingOverlay         by remember { mutableStateOf(false) }
-//    var showFallbackDialog     by remember { mutableStateOf(false) }
-//    var waitingForAppSettings  by remember { mutableStateOf(false) }
+//    var overlaySettingsOpened by remember { mutableStateOf(false) }
+//    var pollingOverlay        by remember { mutableStateOf(false) }
+//    var showFallbackDialog    by remember { mutableStateOf(false) }
+//    var waitingForAppSettings by remember { mutableStateOf(false) }
 //
-//    var runtimeGranted by remember { mutableStateOf(!shouldKeepDialogOpen(context)) }
+//    var runtimeGranted by remember { mutableStateOf(getMissingRuntimePermissions(context).isEmpty()) }
 //    var overlayGranted by remember { mutableStateOf(isOverlayGranted(context)) }
 //
 //    Log.d(TAG, "=== Composition ===  runtimeGranted=$runtimeGranted  " +
@@ -190,7 +193,6 @@
 //                Log.d(TAG, "  after overlay grant: runtimeGranted=$runtimeGranted  " +
 //                        "missingRuntime=$nowMissing")
 //
-//                // Overlay was a bonus — only keep dialog open if runtime is still missing
 //                if (runtimeGranted) {
 //                    Log.d(TAG, "  → ALL granted, dismissing ✓")
 //                    onDismiss()
@@ -224,7 +226,7 @@
 //                    runtimeGranted = nowMissing.isEmpty()
 //                    Log.d(TAG, "  overlay denied on return  runtimeGranted=$runtimeGranted  " +
 //                            "missingRuntime=$nowMissing")
-//                    // Only keep dialog open if runtime is still missing
+//                    // Runtime was already granted — overlay is optional, so dismiss
 //                    if (runtimeGranted) {
 //                        Log.d(TAG, "  → runtime OK, overlay was optional → dismissing ✓")
 //                        onDismiss()
@@ -478,12 +480,6 @@ data class PermissionItem(
     val isGranted: Boolean = false
 )
 
-/**
- * Permissions we actually request AND that the user can grant manually.
- * ANSWER_PHONE_CALLS is intentionally excluded — it is a privileged permission
- * that is never grantable via the Settings UI and always appears denied even
- * after the user grants everything visible, causing a false "still missing" loop.
- */
 private fun getRequestablPermissions(): List<String> = buildList {
     add(Manifest.permission.READ_CONTACTS)
     add(Manifest.permission.READ_CALL_LOG)
@@ -491,7 +487,6 @@ private fun getRequestablPermissions(): List<String> = buildList {
     add(Manifest.permission.POST_NOTIFICATIONS)
     add(Manifest.permission.READ_PHONE_STATE)
     add(Manifest.permission.CALL_PHONE)
-    // ANSWER_PHONE_CALLS deliberately omitted — privileged, not user-grantable
 }
 
 private fun getMissingRuntimePermissions(context: android.content.Context): List<String> =
@@ -502,23 +497,20 @@ private fun getMissingRuntimePermissions(context: android.content.Context): List
 private fun isOverlayGranted(context: android.content.Context): Boolean =
     Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(context)
 
-/**
- * ALL permissions are satisfied — runtime granted AND overlay granted.
- * Only when both are true can the dialog safely dismiss on first composition.
- */
 private fun allPermissionsGranted(context: android.content.Context): Boolean =
     getMissingRuntimePermissions(context).isEmpty() && isOverlayGranted(context)
+
+// Convenience: suppress app-open ad in one line
+private fun suppressAppOpenAd(context: android.content.Context) {
+    context.getSharedPreferences("settings", android.content.Context.MODE_PRIVATE)
+        .edit().putBoolean("skip_app_open_ad", true).apply()
+}
 
 @Composable
 fun RequiredPermissionsDialog(onDismiss: () -> Unit) {
     val context        = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
 
-    // ── CRITICAL FIX ──────────────────────────────────────────────────────
-    // Only dismiss immediately if BOTH runtime AND overlay are already granted.
-    // Previously this only checked runtime, so after runtime was granted the
-    // dialog would recompose, hit this guard, and dismiss before the overlay
-    // settings LaunchedEffect had a chance to fire.
     if (allPermissionsGranted(context)) {
         Log.d(TAG, "=== First composition: all permissions granted → immediate dismiss ===")
         LaunchedEffect(Unit) { onDismiss() }
@@ -555,22 +547,25 @@ fun RequiredPermissionsDialog(onDismiss: () -> Unit) {
         Log.d(TAG, "  overlayGranted     : $overlayGranted")
 
         when {
-            // All runtime granted + overlay granted → done
+            // All runtime + overlay granted → done, no ad suppression needed
             runtimeGranted && overlayGranted -> {
                 Log.d(TAG, "  → ALL granted, dismissing ✓")
                 onDismiss()
             }
-            // All runtime granted, overlay still needed → open overlay settings
+            // Runtime granted, overlay still needed → suppress app-open ad now
+            // because regardless of what the user does on the overlay screen,
+            // runtime is already fully granted and we don't want the ad to fire.
             runtimeGranted && !overlayGranted -> {
-                Log.d(TAG, "  → runtime OK, overlay missing → opening overlay settings")
+                Log.d(TAG, "  → runtime OK, overlay missing → suppressing app-open ad, opening overlay settings")
+                suppressAppOpenAd(context)
                 overlaySettingsOpened = true
             }
-            // Runtime denied, overlay already fine → skip overlay, go to fallback
+            // Runtime denied, overlay already fine → fallback dialog
             !runtimeGranted && overlayGranted -> {
                 Log.d(TAG, "  → runtime denied, overlay OK → fallback dialog")
                 showFallbackDialog = true
             }
-            // Both missing → try overlay first, fallback will handle remaining runtime
+            // Both missing → open overlay settings first
             else -> {
                 Log.d(TAG, "  → runtime denied + overlay missing → overlay settings first")
                 overlaySettingsOpened = true
@@ -626,7 +621,9 @@ fun RequiredPermissionsDialog(onDismiss: () -> Unit) {
                         "missingRuntime=$nowMissing")
 
                 if (runtimeGranted) {
-                    Log.d(TAG, "  → ALL granted, dismissing ✓")
+                    // Runtime was already granted before overlay screen — suppress app-open ad
+                    Log.d(TAG, "  → ALL granted, suppressing app-open ad and dismissing ✓")
+                    suppressAppOpenAd(context)
                     onDismiss()
                 } else {
                     Log.d(TAG, "  → runtime still missing → fallback dialog")
@@ -646,8 +643,7 @@ fun RequiredPermissionsDialog(onDismiss: () -> Unit) {
 
             if (event != Lifecycle.Event.ON_RESUME) return@LifecycleEventObserver
 
-            // Path 1: returned from overlay settings (poll handles granted case;
-            //         we only act here if user came back without granting)
+            // Path 1: returned from overlay settings without granting
             if (pollingOverlay) {
                 val stillDenied = !isOverlayGranted(context)
                 Log.d(TAG, "  [overlay path] stillDenied=$stillDenied")
@@ -658,9 +654,11 @@ fun RequiredPermissionsDialog(onDismiss: () -> Unit) {
                     runtimeGranted = nowMissing.isEmpty()
                     Log.d(TAG, "  overlay denied on return  runtimeGranted=$runtimeGranted  " +
                             "missingRuntime=$nowMissing")
-                    // Runtime was already granted — overlay is optional, so dismiss
                     if (runtimeGranted) {
-                        Log.d(TAG, "  → runtime OK, overlay was optional → dismissing ✓")
+                        // Runtime fully granted, overlay denied/skipped →
+                        // suppress app-open ad and dismiss
+                        Log.d(TAG, "  → runtime OK, overlay skipped → suppressing app-open ad and dismissing ✓")
+                        suppressAppOpenAd(context)
                         onDismiss()
                     } else {
                         Log.d(TAG, "  → runtime still missing → fallback dialog")
@@ -681,9 +679,10 @@ fun RequiredPermissionsDialog(onDismiss: () -> Unit) {
                 Log.d(TAG, "  [app-settings path] runtimeGranted=$runtimeGranted  " +
                         "overlayGranted=$overlayGranted  missingRuntime=$nowMissing")
 
-                // Dismiss as long as runtime is cleared (overlay denial is non-blocking)
                 if (runtimeGranted) {
-                    Log.d(TAG, "  → runtime granted (overlay=$overlayGranted) → dismissing ✓")
+                    // Runtime granted from app settings — suppress app-open ad and dismiss
+                    Log.d(TAG, "  → runtime granted (overlay=$overlayGranted) → suppressing app-open ad and dismissing ✓")
+                    suppressAppOpenAd(context)
                     onDismiss()
                 } else {
                     Log.d(TAG, "  → runtime still missing after app settings → keep fallback")

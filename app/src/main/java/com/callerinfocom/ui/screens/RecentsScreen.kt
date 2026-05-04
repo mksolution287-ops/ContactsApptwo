@@ -770,7 +770,7 @@ fun SwipeGestureHint(onDismissed: () -> Unit) {
                 modifier           = Modifier.size(28.dp)
             )
             Text(
-                text  = "Swipe to call or message",
+                text  = stringResource(R.string.swipe_hint),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.primary
             )
