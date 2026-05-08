@@ -227,4 +227,29 @@
     <string name="call">Call</string>
 
     <string name="swipe_hint">Swipe to call or message</string>
+    <!-- Long-press shortcut -->
+    <string name="shortcut_uninstall_short">Uninstall</string>
+    <string name="shortcut_uninstall_long">Uninstall this app</string>
+
+    <!-- Retention screen (screen 1) -->
+    <string name="uninstall_retention_title">We\'re truly sorry!</string>
+    <string name="uninstall_retention_subtitle">Anything you\'re unhappy about?</string>
+    <string name="uninstall_retention_reason_storage">The app may take up too much space or slow down the device.</string>
+    <string name="uninstall_retention_reason_contacts">Contacts were not updating automatically</string>
+    <string name="uninstall_retention_reason_ui">UI is confusing or hard to use</string>
+    <string name="uninstall_retention_try">Try</string>
+    <string name="uninstall_retention_keep">Don\'t uninstall yet</string>
+    <string name="uninstall_retention_proceed">Still want to uninstall</string>
+
+    <!-- Feedback screen (screen 2) -->
+    <string name="uninstall_feedback_title">Why do you uninstall?</string>
+    <string name="uninstall_feedback_reason_1">Not happy with the contact feature</string>
+    <string name="uninstall_feedback_reason_2">Loading contacts takes too long</string>
+    <string name="uninstall_feedback_reason_3">Not as feature-rich as expected</string>
+    <string name="uninstall_feedback_reason_4">User interface is complicated</string>
+    <string name="uninstall_feedback_reason_5">Too many ads</string>
+    <string name="uninstall_feedback_reason_6">Another app that suits me more</string>
+    <string name="uninstall_feedback_select_required">Please select the reason why you uninstalling</string>
+    <string name="uninstall_feedback_cancel">Cancel</string>
+    <string name="uninstall_feedback_uninstall">Uninstall</string>
 </resources>

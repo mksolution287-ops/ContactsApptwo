@@ -241,4 +241,28 @@ Ao tocar em Concordar e continuar, você aceita nossa Política de Privacidade e
     <string name="filter_chip_rejected">Rejeitadas</string>
     <string name="call">Ligar</string>
     <string name="edit_contact">Editar contato</string>
+
+    <string name="swipe_hint">Deslize para ligar ou enviar mensagem</string>
+    <string name="shortcut_uninstall_short">Desinstalar</string>
+    <string name="shortcut_uninstall_long">Desinstalar este aplicativo</string>
+
+    <string name="uninstall_retention_title">Lamentamos muito!</string>
+    <string name="uninstall_retention_subtitle">Há algo que o incomoda?</string>
+    <string name="uninstall_retention_reason_storage">O aplicativo pode ocupar muito espaço ou deixar o dispositivo lento.</string>
+    <string name="uninstall_retention_reason_contacts">Os contatos não estavam sendo atualizados automaticamente</string>
+    <string name="uninstall_retention_reason_ui">A interface é confusa ou difícil de usar</string>
+    <string name="uninstall_retention_try">Tentar</string>
+    <string name="uninstall_retention_keep">Não desinstalar ainda</string>
+    <string name="uninstall_retention_proceed">Ainda quero desinstalar</string>
+
+    <string name="uninstall_feedback_title">Por que você está desinstalando?</string>
+    <string name="uninstall_feedback_reason_1">Não estou satisfeito com o recurso de contatos</string>
+    <string name="uninstall_feedback_reason_2">Carregar contatos demora muito</string>
+    <string name="uninstall_feedback_reason_3">Não possui tantos recursos quanto esperado</string>
+    <string name="uninstall_feedback_reason_4">A interface é complicada</string>
+    <string name="uninstall_feedback_reason_5">Muitos anúncios</string>
+    <string name="uninstall_feedback_reason_6">Outro aplicativo combina mais comigo</string>
+    <string name="uninstall_feedback_select_required">Selecione o motivo da desinstalação</string>
+    <string name="uninstall_feedback_cancel">Cancelar</string>
+    <string name="uninstall_feedback_uninstall">Desinstalar</string>
 </resources>

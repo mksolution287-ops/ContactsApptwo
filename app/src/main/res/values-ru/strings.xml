@@ -240,4 +240,29 @@
     <string name="filter_chip_rejected">Отклонённые</string>
     <string name="call">Позвонить</string>
     <string name="edit_contact">Редактировать контакт</string>
+
+    <string name="swipe_hint">Проведите для звонка или сообщения</string>
+    <string name="shortcut_uninstall_short">Удалить</string>
+    <string name="shortcut_uninstall_long">Удалить это приложение</string>
+
+    <string name="uninstall_retention_title">Нам очень жаль!</string>
+    <string name="uninstall_retention_subtitle">Есть ли что-то, что вам не нравится?</string>
+    <string name="uninstall_retention_reason_storage">Приложение может занимать слишком много места или замедлять устройство.</string>
+    <string name="uninstall_retention_reason_contacts">Контакты не обновлялись автоматически</string>
+    <string name="uninstall_retention_reason_ui">Интерфейс запутанный или сложный в использовании</string>
+    <string name="uninstall_retention_try">Попробовать</string>
+    <string name="uninstall_retention_keep">Пока не удалять</string>
+    <string name="uninstall_retention_proceed">Все равно удалить</string>
+
+    <string name="uninstall_feedback_title">Почему вы удаляете приложение?</string>
+    <string name="uninstall_feedback_reason_1">Не устраивает функция контактов</string>
+    <string name="uninstall_feedback_reason_2">Загрузка контактов занимает слишком много времени</string>
+    <string name="uninstall_feedback_reason_3">Функций меньше, чем ожидалось</string>
+    <string name="uninstall_feedback_reason_4">Интерфейс слишком сложный</string>
+    <string name="uninstall_feedback_reason_5">Слишком много рекламы</string>
+    <string name="uninstall_feedback_reason_6">Есть другое приложение, которое подходит мне больше</string>
+    <string name="uninstall_feedback_select_required">Пожалуйста, выберите причину удаления</string>
+    <string name="uninstall_feedback_cancel">Отмена</string>
+    <string name="uninstall_feedback_uninstall">Удалить</string>
+
 </resources>

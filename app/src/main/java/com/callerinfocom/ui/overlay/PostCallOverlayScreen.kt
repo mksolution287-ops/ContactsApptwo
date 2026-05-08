@@ -1,36 +1,467 @@
+//package com.callerinfocom.ui.overlay
+//
+//import androidx.compose.animation.*
+//import androidx.compose.animation.core.*
+//import androidx.compose.foundation.background
+//import androidx.compose.foundation.gestures.detectVerticalDragGestures
+//import androidx.compose.foundation.layout.*
+//import androidx.compose.foundation.rememberScrollState
+//import androidx.compose.foundation.shape.CircleShape
+//import androidx.compose.foundation.shape.RoundedCornerShape
+//import androidx.compose.foundation.verticalScroll
+//import androidx.compose.material.icons.Icons
+//import androidx.compose.material.icons.filled.*
+//import androidx.compose.material3.*
+//import androidx.compose.runtime.*
+//import androidx.compose.ui.Alignment
+//import androidx.compose.ui.Modifier
+//import androidx.compose.ui.draw.clip
+//import androidx.compose.ui.graphics.Brush
+//import androidx.compose.ui.graphics.Color
+//import androidx.compose.ui.graphics.vector.ImageVector
+//import androidx.compose.ui.input.pointer.pointerInput
+//import androidx.compose.ui.platform.LocalConfiguration
+//import androidx.compose.ui.res.painterResource
+//import androidx.compose.ui.res.stringResource
+//import androidx.compose.ui.text.font.FontWeight
+//import androidx.compose.ui.text.style.TextOverflow
+//import androidx.compose.ui.unit.IntOffset
+//import androidx.compose.ui.unit.dp
+//import androidx.compose.ui.unit.sp
+//import kotlin.math.roundToInt
+//import com.callerinfocom.R
+//import com.callerinfocom.ui.components.AppInstallNativeAdCard
+//
+//@Composable
+//fun PostCallOverlayScreen(
+//    number         : String,
+//    name           : String?,
+//    photoUri       : String?,
+//    durationSec    : Long,
+//    callType       : String,
+//    isWhatsAppUser : Boolean,
+//    isContactSaved : Boolean,
+//    onDismiss      : () -> Unit,
+//    onCallBack     : () -> Unit,
+//    onSms          : () -> Unit,
+//    onWhatsApp     : () -> Unit,
+//    onAddContact   : () -> Unit,
+//    onBlock        : () -> Unit
+//) {
+//    var dragOffsetPx by remember { mutableStateOf(0f) }
+//    val animatedOffset by animateFloatAsState(
+//        targetValue   = dragOffsetPx,
+//        animationSpec = spring(stiffness = Spring.StiffnessMedium),
+//        label         = "drag_offset"
+//    )
+//
+//    // Full-screen scrim
+//    Box(
+//        modifier         = Modifier
+//            .fillMaxSize()
+//            .background(Color.Black.copy(alpha = 0.55f)),
+//        contentAlignment = Alignment.BottomCenter
+//    ) {
+//        AnimatedVisibility(
+//            visible = true,
+//            enter   = slideInVertically(tween(380, easing = FastOutSlowInEasing)) { it } + fadeIn(tween(280))
+//        ) {
+//            // ── The entire sheet is one verticalScroll column ─────────
+//            // This guarantees the ad CTA button is NEVER clipped,
+//            // no matter how tall the content or how small the screen.
+//            Column(
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    // Max height = 92% of screen so scrim is always visible
+//                    .fillMaxHeight(0.92f)
+//                    .offset { IntOffset(0, animatedOffset.roundToInt()) }
+//                    .clip(RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp))
+//                    .background(MaterialTheme.colorScheme.surface)
+//                    .pointerInput(Unit) {
+//                        detectVerticalDragGestures(
+//                            onDragEnd = {
+//                                if (dragOffsetPx > 100f) onDismiss()
+//                                else dragOffsetPx = 0f
+//                            }
+//                        ) { _, delta ->
+//                            if (delta > 0)
+//                                dragOffsetPx = (dragOffsetPx + delta).coerceAtMost(400f)
+//                        }
+//                    }
+//                    // verticalScroll wraps everything — hero + actions + ad
+//                    .verticalScroll(rememberScrollState())
+//            ) {
+//                // ── Drag pill ─────────────────────────────────────────
+//                Box(
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        .background(Color(0xFF1A1A2E))
+//                        .padding(top = 12.dp, bottom = 0.dp),
+//                    contentAlignment = Alignment.Center
+//                ) {
+//                    Box(
+//                        Modifier
+//                            .width(40.dp).height(4.dp)
+//                            .clip(RoundedCornerShape(2.dp))
+//                            .background(Color.White.copy(alpha = 0.25f))
+//                    )
+//                }
+//
+//                // ── Hero ──────────────────────────────────────────────
+//                HeroSection(
+//                    name        = name,
+//                    number      = number,
+//                    durationSec = durationSec,
+//                    callType    = callType,
+//                    isWaUser    = isWhatsAppUser
+//                )
+//
+//                // ── Actions ───────────────────────────────────────────
+//                Column(
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        .padding(horizontal = 16.dp, vertical = 18.dp),
+//                    verticalArrangement = Arrangement.spacedBy(10.dp)
+//                ) {
+//                    // Row 1: Call back + Quick SMS
+//                    Row(
+//                        modifier              = Modifier.fillMaxWidth(),
+//                        horizontalArrangement = Arrangement.spacedBy(10.dp)
+//                    ) {
+//                        PrimaryButton(
+//                            modifier       = Modifier.weight(1f),
+//                            label          = stringResource(R.string.call_back),
+//                            icon           = Icons.Default.Call,
+//                            containerColor = MaterialTheme.colorScheme.primary,
+//                            contentColor   = MaterialTheme.colorScheme.onPrimary,
+//                            onClick        = onCallBack
+//                        )
+//                        PrimaryButton(
+//                            modifier       = Modifier.weight(1f),
+//                            label          = stringResource(R.string.quick_sms),
+//                            icon           = Icons.Default.Message,
+//                            containerColor = MaterialTheme.colorScheme.secondaryContainer,
+//                            contentColor   = MaterialTheme.colorScheme.onSecondaryContainer,
+//                            onClick        = onSms
+//                        )
+//                    }
+//
+//                    // Row 2: WhatsApp
+//                    if (isWhatsAppUser) {
+//                        WhatsAppButton(onClick = onWhatsApp)
+//                    }
+//
+//                    HorizontalDivider(
+//                        color     = MaterialTheme.colorScheme.outlineVariant,
+//                        thickness = 0.5.dp
+//                    )
+//
+//                    // Row 3: Add / Edit contact + Block
+//                    Row(
+//                        modifier              = Modifier.fillMaxWidth(),
+//                        horizontalArrangement = Arrangement.spacedBy(10.dp)
+//                    ) {
+//                        SecondaryIconButton(
+//                            modifier = Modifier.weight(1f),
+//                            label    = if (isContactSaved)
+//                                stringResource(R.string.edit_contact)
+//                            else
+//                                stringResource(R.string.add_to_contacts),
+//                            icon     = if (isContactSaved) Icons.Default.Edit
+//                            else Icons.Default.PersonAdd,
+//                            onClick  = onAddContact
+//                        )
+//                        SecondaryIconButton(
+//                            modifier    = Modifier.weight(1f),
+//                            label       = stringResource(R.string.block_spam),
+//                            icon        = Icons.Default.Block,
+//                            onClick     = onBlock,
+//                            isDangerous = true
+//                        )
+//                    }
+//
+//                    HorizontalDivider(
+//                        color     = MaterialTheme.colorScheme.outlineVariant,
+//                        thickness = 0.5.dp
+//                    )
+//
+//                    // Dismiss
+//                    OutlinedButton(
+//                        onClick  = onDismiss,
+//                        modifier = Modifier.fillMaxWidth(),
+//                        shape    = RoundedCornerShape(12.dp)
+//                    ) {
+//                        Icon(
+//                            imageVector        = Icons.Default.Close,
+//                            contentDescription = null,
+//                            modifier           = Modifier.size(16.dp)
+//                        )
+//                        Spacer(Modifier.width(8.dp))
+//                        Text(stringResource(R.string.dismiss_btn))
+//                    }
+//                }
+//
+//                // ── Ad — full width, never clipped ────────────────────
+//                // requiredWidth is removed; fillMaxWidth inside a
+//                // verticalScroll column works correctly.
+//                HorizontalDivider(
+//                    color     = MaterialTheme.colorScheme.outlineVariant,
+//                    thickness = 0.5.dp
+//                )
+//                AppInstallNativeAdCard(
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        // Bottom padding so the CTA button clears the
+//                        // system nav bar / gesture handle
+//                        .padding(bottom = 16.dp)
+//                )
+//            }
+//        }
+//    }
+//}
+//
+//// ── Hero section ──────────────────────────────────────────────────────────
+//
+//@Composable
+//private fun HeroSection(
+//    name        : String?,
+//    number      : String,
+//    durationSec : Long,
+//    callType    : String,
+//    isWaUser    : Boolean
+//) {
+//    Column(
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .background(
+//                Brush.verticalGradient(
+//                    listOf(Color(0xFF1A1A2E), Color(0xFF16213E))
+//                )
+//            )
+//            .padding(horizontal = 20.dp, vertical = 20.dp),
+//        horizontalAlignment = Alignment.CenterHorizontally,
+//        verticalArrangement = Arrangement.spacedBy(8.dp)
+//    ) {
+//        AvatarCircle(name = name, size = 72)
+//
+//        Text(
+//            text       = name ?: number,
+//            fontSize   = 22.sp,
+//            fontWeight = FontWeight.SemiBold,
+//            color      = Color(0xFFF1F5F9),
+//            maxLines   = 1,
+//            overflow   = TextOverflow.Ellipsis
+//        )
+//        if (name != null) {
+//            Text(
+//                text     = number,
+//                fontSize = 14.sp,
+//                color    = Color(0xFF94A3B8)
+//            )
+//        }
+//
+//        Row(
+//            horizontalArrangement = Arrangement.spacedBy(8.dp),
+//            verticalAlignment     = Alignment.CenterVertically
+//        ) {
+//            CallTypeChip(callType)
+//            if (isWaUser) WaChip()
+//        }
+//
+//        Row(
+//            verticalAlignment     = Alignment.CenterVertically,
+//            horizontalArrangement = Arrangement.spacedBy(5.dp)
+//        ) {
+//            Icon(
+//                imageVector        = Icons.Default.AccessTime,
+//                contentDescription = null,
+//                tint               = Color(0xFF64748B),
+//                modifier           = Modifier.size(14.dp)
+//            )
+//            Text(
+//                text     = "Duration  ${formatDuration(durationSec)}",
+//                fontSize = 13.sp,
+//                color    = Color(0xFF94A3B8)
+//            )
+//        }
+//    }
+//}
+//
+//@Composable
+//private fun AvatarCircle(name: String?, size: Int) {
+//    val initials = name
+//        ?.split(" ")
+//        ?.mapNotNull { it.firstOrNull()?.uppercaseChar() }
+//        ?.take(2)
+//        ?.joinToString("") ?: "#"
+//
+//    Box(
+//        modifier         = Modifier
+//            .size(size.dp)
+//            .clip(CircleShape)
+//            .background(Color(0xFF2D2D50)),
+//        contentAlignment = Alignment.Center
+//    ) {
+//        Text(
+//            text       = initials,
+//            fontSize   = (size * 0.33f).sp,
+//            fontWeight = FontWeight.Medium,
+//            color      = Color(0xFFA5B4FC)
+//        )
+//    }
+//}
+//
+//@Composable
+//private fun CallTypeChip(callType: String) {
+//    val (label, bg, fg) = when (callType) {
+//        "missed"   -> Triple(stringResource(R.string.call_type_missed),   Color(0x30E24B4A), Color(0xFFF09595))
+//        "outgoing" -> Triple(stringResource(R.string.call_type_outgoing), Color(0x301D9E75), Color(0xFF5DCAA5))
+//        else       -> Triple(stringResource(R.string.call_type_incoming), Color(0x30378ADD), Color(0xFF85B7EB))
+//    }
+//    Surface(color = bg, shape = RoundedCornerShape(20.dp)) {
+//        Text(
+//            text       = label,
+//            fontSize   = 11.sp,
+//            fontWeight = FontWeight.Medium,
+//            color      = fg,
+//            modifier   = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
+//        )
+//    }
+//}
+//
+//@Composable
+//private fun WaChip() {
+//    Surface(color = Color(0x2625D366), shape = RoundedCornerShape(20.dp)) {
+//        Text(
+//            text       = "WhatsApp",
+//            fontSize   = 11.sp,
+//            fontWeight = FontWeight.Medium,
+//            color      = Color(0xFF4ADE80),
+//            modifier   = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
+//        )
+//    }
+//}
+//
+//// ── Buttons ───────────────────────────────────────────────────────────────
+//
+//@Composable
+//private fun PrimaryButton(
+//    modifier       : Modifier,
+//    label          : String,
+//    icon           : ImageVector,
+//    containerColor : Color,
+//    contentColor   : Color,
+//    onClick        : () -> Unit
+//) {
+//    Button(
+//        onClick  = onClick,
+//        modifier = modifier.height(50.dp),
+//        shape    = RoundedCornerShape(12.dp),
+//        colors   = ButtonDefaults.buttonColors(
+//            containerColor = containerColor,
+//            contentColor   = contentColor
+//        )
+//    ) {
+//        Icon(icon, contentDescription = null, modifier = Modifier.size(16.dp))
+//        Spacer(Modifier.width(6.dp))
+//        Text(label, fontSize = 14.sp)
+//    }
+//}
+//
+//@Composable
+//private fun WhatsAppButton(onClick: () -> Unit) {
+//    val waGreen = Color(0xFF25D366)
+//    Button(
+//        onClick  = onClick,
+//        modifier = Modifier.fillMaxWidth().height(50.dp),
+//        shape    = RoundedCornerShape(12.dp),
+//        colors   = ButtonDefaults.buttonColors(
+//            containerColor = waGreen.copy(alpha = 0.12f),
+//            contentColor   = waGreen
+//        )
+//    ) {
+//        Icon(
+//            painter            = painterResource(R.drawable.ic_whatsapp),
+//            contentDescription = null,
+//            tint               = Color.Unspecified,
+//            modifier           = Modifier.size(20.dp)
+//        )
+//        Spacer(Modifier.width(8.dp))
+//        Text(stringResource(R.string.msg_whatsapp), fontSize = 14.sp, color = Color(0xFF15803D))
+//    }
+//}
+//
+//@Composable
+//private fun SecondaryIconButton(
+//    modifier    : Modifier,
+//    label       : String,
+//    icon        : ImageVector,
+//    onClick     : () -> Unit,
+//    isDangerous : Boolean = false
+//) {
+//    val contentColor = if (isDangerous)
+//        MaterialTheme.colorScheme.error
+//    else
+//        MaterialTheme.colorScheme.onSurfaceVariant
+//
+//    OutlinedButton(
+//        onClick  = onClick,
+//        modifier = modifier.height(68.dp),
+//        shape    = RoundedCornerShape(12.dp),
+//        colors   = ButtonDefaults.outlinedButtonColors(contentColor = contentColor)
+//    ) {
+//        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+//            Icon(icon, contentDescription = label, modifier = Modifier.size(20.dp))
+//            Spacer(Modifier.height(5.dp))
+//            Text(label, fontSize = 12.sp, maxLines = 1)
+//        }
+//    }
+//}
+//
+//// ── Helpers ───────────────────────────────────────────────────────────────
+//
+//private fun formatDuration(sec: Long): String = when {
+//    sec <= 0 -> "0 sec"
+//    sec < 60 -> "$sec sec"
+//    else     -> "${sec / 60} min ${sec % 60} sec"
+//}
+
 package com.callerinfocom.ui.overlay
 
-import androidx.compose.animation.*
-import androidx.compose.animation.core.*
+import android.text.format.DateFormat
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.detectVerticalDragGestures
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import kotlin.math.roundToInt
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.callerinfocom.R
+import com.callerinfocom.data.model.CallLogEntry
+import com.callerinfocom.data.model.CallType
 import com.callerinfocom.ui.components.AppInstallNativeAdCard
+import java.util.Date
+
+private val AccentGreen  = Color(0xFF22C55E)   // Avatar / accent text color (matches mockup)
+private val IncomingBlue = Color(0xFF3B82F6)   // Blue arrow for incoming calls
+private val MissedRed    = Color(0xFFEF4444)   // Red arrow for missed calls
 
 @Composable
 fun PostCallOverlayScreen(
@@ -41,6 +472,7 @@ fun PostCallOverlayScreen(
     callType       : String,
     isWhatsAppUser : Boolean,
     isContactSaved : Boolean,
+    callHistory    : List<CallLogEntry>,
     onDismiss      : () -> Unit,
     onCallBack     : () -> Unit,
     onSms          : () -> Unit,
@@ -48,380 +480,362 @@ fun PostCallOverlayScreen(
     onAddContact   : () -> Unit,
     onBlock        : () -> Unit
 ) {
-    var dragOffsetPx by remember { mutableStateOf(0f) }
-    val animatedOffset by animateFloatAsState(
-        targetValue   = dragOffsetPx,
-        animationSpec = spring(stiffness = Spring.StiffnessMedium),
-        label         = "drag_offset"
-    )
-
-    // Full-screen scrim
     Box(
-        modifier         = Modifier
+        modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black.copy(alpha = 0.55f)),
-        contentAlignment = Alignment.BottomCenter
+            .background(MaterialTheme.colorScheme.surface)
     ) {
-        AnimatedVisibility(
-            visible = true,
-            enter   = slideInVertically(tween(380, easing = FastOutSlowInEasing)) { it } + fadeIn(tween(280))
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .statusBarsPadding()
+                .navigationBarsPadding()
+                .verticalScroll(rememberScrollState())
         ) {
-            // ── The entire sheet is one verticalScroll column ─────────
-            // This guarantees the ad CTA button is NEVER clipped,
-            // no matter how tall the content or how small the screen.
-            Column(
+            // ── Top header row ────────────────────────────────────────
+            HeaderRow(
+                photoUri    = photoUri,
+                name        = name,
+                number      = number,
+                durationSec = durationSec,
+                callType    = callType,
+                onClose     = onDismiss
+            )
+
+            Spacer(Modifier.height(20.dp))
+
+            // ── Quick action row ──────────────────────────────────────
+            QuickActionRow(
+                isContactSaved = isContactSaved,
+                isWhatsAppUser = isWhatsAppUser,
+                onCall         = onCallBack,
+                onMessage      = onSms,
+                onAddContact   = onAddContact,
+                onWhatsApp     = onWhatsApp
+            )
+
+            Spacer(Modifier.height(28.dp))
+
+            // ── Call History section ──────────────────────────────────
+            Text(
+                text       = "Call History",
+                fontSize   = 22.sp,
+                fontWeight = FontWeight.Bold,
+                color      = MaterialTheme.colorScheme.onSurface,
+                modifier   = Modifier.padding(horizontal = 20.dp)
+            )
+
+            Spacer(Modifier.height(12.dp))
+
+            if (callHistory.isEmpty()) {
+                Text(
+                    text     = "No previous calls",
+                    fontSize = 14.sp,
+                    color    = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(horizontal = 20.dp, vertical = 8.dp)
+                )
+            } else {
+                callHistory.forEach { entry ->
+                    CallHistoryRow(entry = entry, onCallClick = { onCallBack() })
+                }
+            }
+
+            Spacer(Modifier.height(24.dp))
+
+            // ── Banner ad ─────────────────────────────────────────────
+            AppInstallNativeAdCard(
                 modifier = Modifier
                     .fillMaxWidth()
-                    // Max height = 92% of screen so scrim is always visible
-                    .fillMaxHeight(0.92f)
-                    .offset { IntOffset(0, animatedOffset.roundToInt()) }
-                    .clip(RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp))
-                    .background(MaterialTheme.colorScheme.surface)
-                    .pointerInput(Unit) {
-                        detectVerticalDragGestures(
-                            onDragEnd = {
-                                if (dragOffsetPx > 100f) onDismiss()
-                                else dragOffsetPx = 0f
-                            }
-                        ) { _, delta ->
-                            if (delta > 0)
-                                dragOffsetPx = (dragOffsetPx + delta).coerceAtMost(400f)
-                        }
-                    }
-                    // verticalScroll wraps everything — hero + actions + ad
-                    .verticalScroll(rememberScrollState())
-            ) {
-                // ── Drag pill ─────────────────────────────────────────
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(Color(0xFF1A1A2E))
-                        .padding(top = 12.dp, bottom = 0.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Box(
-                        Modifier
-                            .width(40.dp).height(4.dp)
-                            .clip(RoundedCornerShape(2.dp))
-                            .background(Color.White.copy(alpha = 0.25f))
-                    )
-                }
-
-                // ── Hero ──────────────────────────────────────────────
-                HeroSection(
-                    name        = name,
-                    number      = number,
-                    durationSec = durationSec,
-                    callType    = callType,
-                    isWaUser    = isWhatsAppUser
-                )
-
-                // ── Actions ───────────────────────────────────────────
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 18.dp),
-                    verticalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    // Row 1: Call back + Quick SMS
-                    Row(
-                        modifier              = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(10.dp)
-                    ) {
-                        PrimaryButton(
-                            modifier       = Modifier.weight(1f),
-                            label          = stringResource(R.string.call_back),
-                            icon           = Icons.Default.Call,
-                            containerColor = MaterialTheme.colorScheme.primary,
-                            contentColor   = MaterialTheme.colorScheme.onPrimary,
-                            onClick        = onCallBack
-                        )
-                        PrimaryButton(
-                            modifier       = Modifier.weight(1f),
-                            label          = stringResource(R.string.quick_sms),
-                            icon           = Icons.Default.Message,
-                            containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                            contentColor   = MaterialTheme.colorScheme.onSecondaryContainer,
-                            onClick        = onSms
-                        )
-                    }
-
-                    // Row 2: WhatsApp
-                    if (isWhatsAppUser) {
-                        WhatsAppButton(onClick = onWhatsApp)
-                    }
-
-                    HorizontalDivider(
-                        color     = MaterialTheme.colorScheme.outlineVariant,
-                        thickness = 0.5.dp
-                    )
-
-                    // Row 3: Add / Edit contact + Block
-                    Row(
-                        modifier              = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(10.dp)
-                    ) {
-                        SecondaryIconButton(
-                            modifier = Modifier.weight(1f),
-                            label    = if (isContactSaved)
-                                stringResource(R.string.edit_contact)
-                            else
-                                stringResource(R.string.add_to_contacts),
-                            icon     = if (isContactSaved) Icons.Default.Edit
-                            else Icons.Default.PersonAdd,
-                            onClick  = onAddContact
-                        )
-                        SecondaryIconButton(
-                            modifier    = Modifier.weight(1f),
-                            label       = stringResource(R.string.block_spam),
-                            icon        = Icons.Default.Block,
-                            onClick     = onBlock,
-                            isDangerous = true
-                        )
-                    }
-
-                    HorizontalDivider(
-                        color     = MaterialTheme.colorScheme.outlineVariant,
-                        thickness = 0.5.dp
-                    )
-
-                    // Dismiss
-                    OutlinedButton(
-                        onClick  = onDismiss,
-                        modifier = Modifier.fillMaxWidth(),
-                        shape    = RoundedCornerShape(12.dp)
-                    ) {
-                        Icon(
-                            imageVector        = Icons.Default.Close,
-                            contentDescription = null,
-                            modifier           = Modifier.size(16.dp)
-                        )
-                        Spacer(Modifier.width(8.dp))
-                        Text(stringResource(R.string.dismiss_btn))
-                    }
-                }
-
-                // ── Ad — full width, never clipped ────────────────────
-                // requiredWidth is removed; fillMaxWidth inside a
-                // verticalScroll column works correctly.
-                HorizontalDivider(
-                    color     = MaterialTheme.colorScheme.outlineVariant,
-                    thickness = 0.5.dp
-                )
-                AppInstallNativeAdCard(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        // Bottom padding so the CTA button clears the
-                        // system nav bar / gesture handle
-                        .padding(bottom = 16.dp)
-                )
-            }
+                    .padding(bottom = 16.dp)
+            )
         }
     }
 }
 
-// ── Hero section ──────────────────────────────────────────────────────────
+// ── Header ───────────────────────────────────────────────────────────────
 
 @Composable
-private fun HeroSection(
+private fun HeaderRow(
+    photoUri    : String?,
     name        : String?,
     number      : String,
     durationSec : Long,
     callType    : String,
-    isWaUser    : Boolean
+    onClose     : () -> Unit
 ) {
-    Column(
+    Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(
-                Brush.verticalGradient(
-                    listOf(Color(0xFF1A1A2E), Color(0xFF16213E))
-                )
-            )
-            .padding(horizontal = 20.dp, vertical = 20.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+            .padding(start = 20.dp, end = 12.dp, top = 16.dp, bottom = 4.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        AvatarCircle(name = name, size = 72)
+        // Avatar — show contact photo if available, otherwise green Person icon
+        Box(
+            modifier = Modifier
+                .size(60.dp)
+                .clip(CircleShape)
+                .background(AccentGreen),
+            contentAlignment = Alignment.Center
+        ) {
+            if (!photoUri.isNullOrBlank()) {
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(photoUri)
+                        .crossfade(true)
+                        .build(),
+                    contentDescription = name ?: number,
+                    contentScale       = ContentScale.Crop,
+                    modifier           = Modifier
+                        .size(60.dp)
+                        .clip(CircleShape)
+                )
+            } else {
+                Icon(
+                    imageVector        = Icons.Default.Person,
+                    contentDescription = null,
+                    tint               = Color.White,
+                    modifier           = Modifier.size(34.dp)
+                )
+            }
+        }
 
+        Spacer(Modifier.width(14.dp))
+
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text       = name ?: number,
+                fontSize   = 20.sp,
+                fontWeight = FontWeight.Bold,
+                color      = MaterialTheme.colorScheme.onSurface,
+                maxLines   = 1,
+                overflow   = TextOverflow.Ellipsis
+            )
+            Spacer(Modifier.height(4.dp))
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text     = formatHms(durationSec),
+                    fontSize = 13.sp,
+                    color    = AccentGreen
+                )
+                Spacer(Modifier.width(10.dp))
+                Text(
+                    text     = formatNowTime(),
+                    fontSize = 13.sp,
+                    color    = AccentGreen
+                )
+                Spacer(Modifier.width(10.dp))
+                Text(
+                    text     = callTypeLabel(callType),
+                    fontSize = 13.sp,
+                    color    = AccentGreen
+                )
+            }
+        }
+
+        IconButton(onClick = onClose) {
+            Icon(
+                imageVector        = Icons.Default.Close,
+                contentDescription = "Close",
+                tint               = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+    }
+}
+
+// ── Quick action row (4 circular buttons) ────────────────────────────────
+
+@Composable
+private fun QuickActionRow(
+    isContactSaved : Boolean,
+    isWhatsAppUser : Boolean,
+    onCall         : () -> Unit,
+    onMessage      : () -> Unit,
+    onAddContact   : () -> Unit,
+    onWhatsApp     : () -> Unit
+) {
+    Row(
+        modifier              = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 12.dp),
+        horizontalArrangement = Arrangement.SpaceAround,
+        verticalAlignment     = Alignment.Top
+    ) {
+        QuickActionItem(
+            icon    = Icons.Default.Call,
+            label   = "Call",
+            onClick = onCall
+        )
+        QuickActionItem(
+            icon    = Icons.Default.ChatBubbleOutline,
+            label   = "Message",
+            onClick = onMessage
+        )
+        QuickActionItem(
+            icon    = if (isContactSaved) Icons.Default.Edit else Icons.Default.PersonAddAlt1,
+            label   = if (isContactSaved) "Edit Contact" else "Add Contact",
+            onClick = onAddContact
+        )
+        if (isWhatsAppUser) {
+            QuickActionItem(
+                iconPainter         = R.drawable.ic_whatsapp,
+                label               = "WhatsApp",
+                circleColor         = Color(0xFF25D366),
+                useOriginalIconTint = true,
+                iconSize            = 26,
+                onClick             = onWhatsApp
+            )
+        }
+    }
+}
+
+@Composable
+private fun QuickActionItem(
+    icon                : ImageVector? = null,
+    iconPainter         : Int? = null,
+    label               : String,
+    circleColor         : Color = MaterialTheme.colorScheme.surfaceVariant,
+    useOriginalIconTint : Boolean = false,
+    iconSize            : Int = 22,
+    onClick             : () -> Unit
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier            = Modifier
+            .padding(vertical = 4.dp)
+    ) {
+        Box(
+            modifier = Modifier
+                .size(56.dp)
+                .clip(CircleShape)
+                .background(circleColor)
+                .clickable { onClick() },
+            contentAlignment = Alignment.Center
+        ) {
+            when {
+                iconPainter != null -> Icon(
+                    painter            = painterResource(iconPainter),
+                    contentDescription = label,
+                    tint               = if (useOriginalIconTint) Color.Unspecified
+                    else MaterialTheme.colorScheme.onSurface,
+                    modifier           = Modifier.size(iconSize.dp)
+                )
+                icon != null -> Icon(
+                    imageVector        = icon,
+                    contentDescription = label,
+                    tint               = MaterialTheme.colorScheme.onSurface,
+                    modifier           = Modifier.size(iconSize.dp)
+                )
+            }
+        }
+        Spacer(Modifier.height(8.dp))
         Text(
-            text       = name ?: number,
-            fontSize   = 22.sp,
-            fontWeight = FontWeight.SemiBold,
-            color      = Color(0xFFF1F5F9),
+            text       = label,
+            fontSize   = 13.sp,
+            fontWeight = FontWeight.Medium,
+            color      = MaterialTheme.colorScheme.onSurface,
             maxLines   = 1,
             overflow   = TextOverflow.Ellipsis
         )
-        if (name != null) {
-            Text(
-                text     = number,
-                fontSize = 14.sp,
-                color    = Color(0xFF94A3B8)
-            )
-        }
-
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment     = Alignment.CenterVertically
-        ) {
-            CallTypeChip(callType)
-            if (isWaUser) WaChip()
-        }
-
-        Row(
-            verticalAlignment     = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(5.dp)
-        ) {
-            Icon(
-                imageVector        = Icons.Default.AccessTime,
-                contentDescription = null,
-                tint               = Color(0xFF64748B),
-                modifier           = Modifier.size(14.dp)
-            )
-            Text(
-                text     = "Duration  ${formatDuration(durationSec)}",
-                fontSize = 13.sp,
-                color    = Color(0xFF94A3B8)
-            )
-        }
     }
 }
 
-@Composable
-private fun AvatarCircle(name: String?, size: Int) {
-    val initials = name
-        ?.split(" ")
-        ?.mapNotNull { it.firstOrNull()?.uppercaseChar() }
-        ?.take(2)
-        ?.joinToString("") ?: "#"
-
-    Box(
-        modifier         = Modifier
-            .size(size.dp)
-            .clip(CircleShape)
-            .background(Color(0xFF2D2D50)),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text       = initials,
-            fontSize   = (size * 0.33f).sp,
-            fontWeight = FontWeight.Medium,
-            color      = Color(0xFFA5B4FC)
-        )
-    }
-}
+// ── Call history row ─────────────────────────────────────────────────────
 
 @Composable
-private fun CallTypeChip(callType: String) {
-    val (label, bg, fg) = when (callType) {
-        "missed"   -> Triple(stringResource(R.string.call_type_missed),   Color(0x30E24B4A), Color(0xFFF09595))
-        "outgoing" -> Triple(stringResource(R.string.call_type_outgoing), Color(0x301D9E75), Color(0xFF5DCAA5))
-        else       -> Triple(stringResource(R.string.call_type_incoming), Color(0x30378ADD), Color(0xFF85B7EB))
-    }
-    Surface(color = bg, shape = RoundedCornerShape(20.dp)) {
-        Text(
-            text       = label,
-            fontSize   = 11.sp,
-            fontWeight = FontWeight.Medium,
-            color      = fg,
-            modifier   = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
-        )
-    }
-}
-
-@Composable
-private fun WaChip() {
-    Surface(color = Color(0x2625D366), shape = RoundedCornerShape(20.dp)) {
-        Text(
-            text       = "WhatsApp",
-            fontSize   = 11.sp,
-            fontWeight = FontWeight.Medium,
-            color      = Color(0xFF4ADE80),
-            modifier   = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
-        )
-    }
-}
-
-// ── Buttons ───────────────────────────────────────────────────────────────
-
-@Composable
-private fun PrimaryButton(
-    modifier       : Modifier,
-    label          : String,
-    icon           : ImageVector,
-    containerColor : Color,
-    contentColor   : Color,
-    onClick        : () -> Unit
+private fun CallHistoryRow(
+    entry       : CallLogEntry,
+    onCallClick : () -> Unit
 ) {
-    Button(
-        onClick  = onClick,
-        modifier = modifier.height(50.dp),
-        shape    = RoundedCornerShape(12.dp),
-        colors   = ButtonDefaults.buttonColors(
-            containerColor = containerColor,
-            contentColor   = contentColor
-        )
-    ) {
-        Icon(icon, contentDescription = null, modifier = Modifier.size(16.dp))
-        Spacer(Modifier.width(6.dp))
-        Text(label, fontSize = 14.sp)
-    }
-}
-
-@Composable
-private fun WhatsAppButton(onClick: () -> Unit) {
-    val waGreen = Color(0xFF25D366)
-    Button(
-        onClick  = onClick,
-        modifier = Modifier.fillMaxWidth().height(50.dp),
-        shape    = RoundedCornerShape(12.dp),
-        colors   = ButtonDefaults.buttonColors(
-            containerColor = waGreen.copy(alpha = 0.12f),
-            contentColor   = waGreen
-        )
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp, vertical = 10.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
-            painter            = painterResource(R.drawable.ic_whatsapp),
+            imageVector        = directionIcon(entry.callType),
             contentDescription = null,
-            tint               = Color.Unspecified,
+            tint               = directionTint(entry.callType),
             modifier           = Modifier.size(20.dp)
         )
-        Spacer(Modifier.width(8.dp))
-        Text(stringResource(R.string.msg_whatsapp), fontSize = 14.sp, color = Color(0xFF15803D))
-    }
-}
 
-@Composable
-private fun SecondaryIconButton(
-    modifier    : Modifier,
-    label       : String,
-    icon        : ImageVector,
-    onClick     : () -> Unit,
-    isDangerous : Boolean = false
-) {
-    val contentColor = if (isDangerous)
-        MaterialTheme.colorScheme.error
-    else
-        MaterialTheme.colorScheme.onSurfaceVariant
+        Spacer(Modifier.width(14.dp))
 
-    OutlinedButton(
-        onClick  = onClick,
-        modifier = modifier.height(68.dp),
-        shape    = RoundedCornerShape(12.dp),
-        colors   = ButtonDefaults.outlinedButtonColors(contentColor = contentColor)
-    ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Icon(icon, contentDescription = label, modifier = Modifier.size(20.dp))
-            Spacer(Modifier.height(5.dp))
-            Text(label, fontSize = 12.sp, maxLines = 1)
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text       = formatNumber(entry.number),
+                fontSize   = 16.sp,
+                fontWeight = FontWeight.Medium,
+                color      = MaterialTheme.colorScheme.onSurface,
+                maxLines   = 1,
+                overflow   = TextOverflow.Ellipsis
+            )
+            Spacer(Modifier.height(2.dp))
+            Text(
+                text     = formatTime(entry.date),
+                fontSize = 13.sp,
+                color    = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+
+        IconButton(onClick = onCallClick) {
+            Icon(
+                imageVector        = Icons.Default.Call,
+                contentDescription = "Call",
+                tint               = MaterialTheme.colorScheme.onSurface
+            )
         }
     }
 }
 
-// ── Helpers ───────────────────────────────────────────────────────────────
+// ── Helpers ──────────────────────────────────────────────────────────────
 
-private fun formatDuration(sec: Long): String = when {
-    sec <= 0 -> "0 sec"
-    sec < 60 -> "$sec sec"
-    else     -> "${sec / 60} min ${sec % 60} sec"
+private fun directionIcon(type: CallType): ImageVector = when (type) {
+    CallType.INCOMING -> Icons.Default.CallReceived
+    CallType.OUTGOING -> Icons.Default.CallMade
+    CallType.MISSED   -> Icons.Default.CallMissed
+    CallType.REJECTED -> Icons.Default.CallMissed
+    else              -> Icons.Default.Call
 }
+
+private fun directionTint(type: CallType): Color = when (type) {
+    CallType.INCOMING -> IncomingBlue
+    CallType.OUTGOING -> IncomingBlue
+    CallType.MISSED   -> MissedRed
+    CallType.REJECTED -> MissedRed
+    else              -> IncomingBlue
+}
+
+private fun callTypeLabel(callType: String): String = when (callType.lowercase()) {
+    "missed"   -> "Missed Call"
+    "outgoing" -> "Outgoing Call"
+    else       -> "Incoming Call"
+}
+
+/** Pretty-print a number like "+918827011244" → "+91 88270 11244" (best-effort). */
+private fun formatNumber(raw: String): String {
+    val digits = raw.filter { it.isDigit() || it == '+' }
+    if (digits.startsWith("+91") && digits.length >= 13) {
+        val cc   = digits.substring(0, 3)
+        val mid  = digits.substring(3, 8)
+        val tail = digits.substring(8)
+        return "$cc $mid $tail"
+    }
+    return raw
+}
+
+/** "00:03" style for short calls, "01:02:03" for hour-long. */
+private fun formatHms(sec: Long): String {
+    if (sec <= 0) return "00:00"
+    val h = sec / 3600
+    val m = (sec % 3600) / 60
+    val s = sec % 60
+    return if (h > 0) String.format("%02d:%02d:%02d", h, m, s)
+    else              String.format("%02d:%02d", m, s)
+}
+
+private fun formatNowTime(): String =
+    DateFormat.format("hh:mm a", Date()).toString()
+
+private fun formatTime(epochMs: Long): String =
+    DateFormat.format("hh:mm a", Date(epochMs)).toString()

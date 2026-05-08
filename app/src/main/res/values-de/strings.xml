@@ -220,4 +220,28 @@ Indem ich fortfahre, akzeptiere ich die Datenschutzerklärung und die Allgemeine
     <string name="filter_chip_rejected">Abgelehnt</string>
     <string name="call">Anrufen</string>
     <string name="edit_contact">Kontakt bearbeiten</string>
+
+    <string name="swipe_hint">Wischen, um anzurufen oder eine Nachricht zu senden</string>
+    <string name="shortcut_uninstall_short">Deinstallieren</string>
+    <string name="shortcut_uninstall_long">Diese App deinstallieren</string>
+
+    <string name="uninstall_retention_title">Es tut uns wirklich leid!</string>
+    <string name="uninstall_retention_subtitle">Gibt es etwas, womit Sie unzufrieden sind?</string>
+    <string name="uninstall_retention_reason_storage">Die App könnte zu viel Speicherplatz beanspruchen oder das Gerät verlangsamen.</string>
+    <string name="uninstall_retention_reason_contacts">Kontakte wurden nicht automatisch aktualisiert</string>
+    <string name="uninstall_retention_reason_ui">Die Benutzeroberfläche ist verwirrend oder schwer zu bedienen</string>
+    <string name="uninstall_retention_try">Ausprobieren</string>
+    <string name="uninstall_retention_keep">Noch nicht deinstallieren</string>
+    <string name="uninstall_retention_proceed">Trotzdem deinstallieren</string>
+
+    <string name="uninstall_feedback_title">Warum deinstallieren Sie die App?</string>
+    <string name="uninstall_feedback_reason_1">Nicht zufrieden mit der Kontaktfunktion</string>
+    <string name="uninstall_feedback_reason_2">Das Laden der Kontakte dauert zu lange</string>
+    <string name="uninstall_feedback_reason_3">Nicht so funktionsreich wie erwartet</string>
+    <string name="uninstall_feedback_reason_4">Die Benutzeroberfläche ist kompliziert</string>
+    <string name="uninstall_feedback_reason_5">Zu viele Anzeigen</string>
+    <string name="uninstall_feedback_reason_6">Eine andere App passt besser zu mir</string>
+    <string name="uninstall_feedback_select_required">Bitte wählen Sie den Grund für die Deinstallation aus</string>
+    <string name="uninstall_feedback_cancel">Abbrechen</string>
+    <string name="uninstall_feedback_uninstall">Deinstallieren</string>
 </resources>

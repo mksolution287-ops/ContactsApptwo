@@ -220,4 +220,28 @@
     <string name="filter_chip_rejected">已拒接</string>
     <string name="call">通话</string>
     <string name="edit_contact">编辑联系人</string>
+
+    <string name="swipe_hint">滑动即可拨打电话或发送消息</string>
+    <string name="shortcut_uninstall_short">卸载</string>
+    <string name="shortcut_uninstall_long">卸载此应用</string>
+
+    <string name="uninstall_retention_title">我们真的很抱歉！</string>
+    <string name="uninstall_retention_subtitle">有什么让您不满意的吗？</string>
+    <string name="uninstall_retention_reason_storage">应用可能占用过多空间或导致设备变慢。</string>
+    <string name="uninstall_retention_reason_contacts">联系人没有自动更新</string>
+    <string name="uninstall_retention_reason_ui">界面令人困惑或难以使用</string>
+    <string name="uninstall_retention_try">尝试</string>
+    <string name="uninstall_retention_keep">暂时不要卸载</string>
+    <string name="uninstall_retention_proceed">仍然要卸载</string>
+
+    <string name="uninstall_feedback_title">您为什么要卸载？</string>
+    <string name="uninstall_feedback_reason_1">对联系人功能不满意</string>
+    <string name="uninstall_feedback_reason_2">加载联系人时间太长</string>
+    <string name="uninstall_feedback_reason_3">功能没有预期丰富</string>
+    <string name="uninstall_feedback_reason_4">用户界面过于复杂</string>
+    <string name="uninstall_feedback_reason_5">广告太多</string>
+    <string name="uninstall_feedback_reason_6">有其他更适合我的应用</string>
+    <string name="uninstall_feedback_select_required">请选择卸载原因</string>
+    <string name="uninstall_feedback_cancel">取消</string>
+    <string name="uninstall_feedback_uninstall">卸载</string>
 </resources>

@@ -50,7 +50,21 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <!-- App shortcuts (long-press menu) — adds the "Uninstall" entry -->
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
         </activity>
+
+        <!-- Trampoline activity launched by the "Uninstall" long-press shortcut.
+             Hosts the retention + feedback flow, then opens system app-details. -->
+        <activity
+            android:name="com.callerinfocom.ui.uninstall.UninstallTrampolineActivity"
+            android:exported="true"
+            android:theme="@style/Theme.ContactsApp"
+            android:taskAffinity=""
+            android:excludeFromRecents="true" />
 
         <service
             android:name="com.callerinfocom.service.AppCallScreeningService"

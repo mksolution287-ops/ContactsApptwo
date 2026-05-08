@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  res/xml/shortcuts.xml
+
+  Add to AndroidManifest.xml under your launcher activity:
+
+      <activity android:name=".MainActivity" ...>
+          <intent-filter>
+              <action android:name="android.intent.action.MAIN" />
+              <category android:name="android.intent.category.LAUNCHER" />
+          </intent-filter>
+          <meta-data
+              android:name="android.app.shortcuts"
+              android:resource="@xml/shortcuts" />
+      </activity>
+
+  This adds a fourth shortcut ("Uninstall") to the long-press menu, in addition
+  to your existing Call / Dialer / Contacts shortcuts (if those are defined
+  here too, keep them — only add the new <shortcut> block).
+-->
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+      Existing shortcuts (Call / Dialer / Contacts) should be defined here too
+      if you already have them. Add ONLY the <shortcut> block below to your
+      existing file rather than replacing it.
+    -->
+
+    <shortcut
+        android:shortcutId="uninstall"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_uninstall"
+        android:shortcutShortLabel="@string/shortcut_uninstall_short"
+        android:shortcutLongLabel="@string/shortcut_uninstall_long">
+
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.callerinfocom"
+            android:targetClass="com.callerinfocom.ui.uninstall.UninstallTrampolineActivity" />
+
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+
+</shortcuts>

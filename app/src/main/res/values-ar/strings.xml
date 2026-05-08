@@ -220,4 +220,29 @@
     <string name="filter_chip_rejected">المرفوضة</string>
     <string name="call">اتصال</string>
     <string name="edit_contact">تحرير جهة الاتصال</string>
+
+    <!-- Arabic -->
+    <string name="swipe_hint">اسحب للاتصال أو إرسال رسالة</string>
+    <string name="shortcut_uninstall_short">إلغاء التثبيت</string>
+    <string name="shortcut_uninstall_long">إلغاء تثبيت هذا التطبيق</string>
+
+    <string name="uninstall_retention_title">نحن آسفون حقًا!</string>
+    <string name="uninstall_retention_subtitle">هل هناك شيء غير راضٍ عنه؟</string>
+    <string name="uninstall_retention_reason_storage">قد يشغل التطبيق مساحة كبيرة أو يبطئ الجهاز.</string>
+    <string name="uninstall_retention_reason_contacts">لم يتم تحديث جهات الاتصال تلقائيًا</string>
+    <string name="uninstall_retention_reason_ui">واجهة المستخدم مربكة أو صعبة الاستخدام</string>
+    <string name="uninstall_retention_try">جرّب</string>
+    <string name="uninstall_retention_keep">لا تقم بإلغاء التثبيت الآن</string>
+    <string name="uninstall_retention_proceed">ما زلت تريد إلغاء التثبيت</string>
+
+    <string name="uninstall_feedback_title">لماذا تقوم بإلغاء التثبيت؟</string>
+    <string name="uninstall_feedback_reason_1">غير راضٍ عن ميزة جهات الاتصال</string>
+    <string name="uninstall_feedback_reason_2">تحميل جهات الاتصال يستغرق وقتًا طويلًا</string>
+    <string name="uninstall_feedback_reason_3">الميزات أقل من المتوقع</string>
+    <string name="uninstall_feedback_reason_4">واجهة المستخدم معقدة</string>
+    <string name="uninstall_feedback_reason_5">الكثير من الإعلانات</string>
+    <string name="uninstall_feedback_reason_6">هناك تطبيق آخر يناسبني أكثر</string>
+    <string name="uninstall_feedback_select_required">يرجى اختيار سبب إلغاء التثبيت</string>
+    <string name="uninstall_feedback_cancel">إلغاء</string>
+    <string name="uninstall_feedback_uninstall">إلغاء التثبيت</string>
 </resources>

@@ -240,4 +240,28 @@
     <string name="filter_chip_rejected">Reddedilen</string>
     <string name="edit_contact">Kişiyi düzenle</string>
     <string name="call">Ara</string>
+
+    <string name="swipe_hint">Arama yapmak veya mesaj göndermek için kaydırın</string>
+    <string name="shortcut_uninstall_short">Kaldır</string>
+    <string name="shortcut_uninstall_long">Bu uygulamayı kaldır</string>
+
+    <string name="uninstall_retention_title">Gerçekten üzgünüz!</string>
+    <string name="uninstall_retention_subtitle">Memnun olmadığınız bir şey mi var?</string>
+    <string name="uninstall_retention_reason_storage">Uygulama çok fazla yer kaplayabilir veya cihazı yavaşlatabilir.</string>
+    <string name="uninstall_retention_reason_contacts">Kişiler otomatik olarak güncellenmedi</string>
+    <string name="uninstall_retention_reason_ui">Arayüz kafa karıştırıcı veya kullanımı zor</string>
+    <string name="uninstall_retention_try">Dene</string>
+    <string name="uninstall_retention_keep">Henüz kaldırma</string>
+    <string name="uninstall_retention_proceed">Yine de kaldırmak istiyorum</string>
+
+    <string name="uninstall_feedback_title">Neden kaldırıyorsunuz?</string>
+    <string name="uninstall_feedback_reason_1">Kişi özelliğinden memnun değilim</string>
+    <string name="uninstall_feedback_reason_2">Kişilerin yüklenmesi çok uzun sürüyor</string>
+    <string name="uninstall_feedback_reason_3">Beklendiği kadar özellik sunmuyor</string>
+    <string name="uninstall_feedback_reason_4">Kullanıcı arayüzü karmaşık</string>
+    <string name="uninstall_feedback_reason_5">Çok fazla reklam var</string>
+    <string name="uninstall_feedback_reason_6">Bana daha uygun başka bir uygulama var</string>
+    <string name="uninstall_feedback_select_required">Lütfen kaldırma nedeninizi seçin</string>
+    <string name="uninstall_feedback_cancel">İptal</string>
+    <string name="uninstall_feedback_uninstall">Kaldır</string>
 </resources>

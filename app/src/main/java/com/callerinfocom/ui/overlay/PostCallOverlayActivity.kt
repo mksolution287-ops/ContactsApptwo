@@ -10,6 +10,12 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.LaunchedEffect
+import com.callerinfocom.data.model.CallLogEntry
+import com.callerinfocom.data.repository.CallLogRepository
 import com.callerinfocom.data.viewmodel.ContactsViewModel
 import com.callerinfocom.data.viewmodel.SettingsViewModel
 import com.callerinfocom.data.viewmodel.UiState
@@ -35,7 +41,6 @@ class PostCallOverlayActivity : ComponentActivity() {
                     WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
         )
 
-        // Important flags to make this activity transient
         window.setFlags(
             WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
             WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
@@ -48,13 +53,19 @@ class PostCallOverlayActivity : ComponentActivity() {
         val callType    = intent.getStringExtra(EXTRA_CALL_TYPE)    ?: "incoming"
         val isWaUser    = isWhatsAppInstalled() && isWhatsAppContact(number)
 
+        val callLogRepo = CallLogRepository(applicationContext)
 
         setContent {
             val themeSettings by settingsViewModel.themeSettings.collectAsState()
             val contactsState by contactsViewModel.contactsState.collectAsState()
-            ContactsAppTheme(
-                settings = themeSettings
-            ) {
+
+            // Show the 4 most recent calls overall — regardless of number.
+            var callHistory by remember { mutableStateOf<List<CallLogEntry>>(emptyList()) }
+            LaunchedEffect(Unit) {
+                callHistory = callLogRepo.fetchCallLogs(limit = 4)
+            }
+
+            ContactsAppTheme(settings = themeSettings) {
                 val isSaved = (contactsState as? UiState.Success)?.data?.any { contact ->
                     contact.phoneNumbers.any {
                         it.number.filter(Char::isDigit).takeLast(10) ==
@@ -63,60 +74,51 @@ class PostCallOverlayActivity : ComponentActivity() {
                 } == true
 
                 PostCallOverlayScreen(
-                    number      = number,
-                    name        = name,
-                    photoUri    = photoUri,
-                    durationSec = durationSec,
-                    callType    = callType,
+                    number         = number,
+                    name           = name,
+                    photoUri       = photoUri,
+                    durationSec    = durationSec,
+                    callType       = callType,
                     isWhatsAppUser = isWaUser,
                     isContactSaved = isSaved,
-                    onDismiss   = { finishAndRemoveTask() },
-                    onCallBack  = { launchCall(number) },
-                    onSms       = { launchSms(number) },
-                    onWhatsApp  = { launchWhatsApp(number) },
-                    onAddContact = {
-//                        launchAddContact(number)
+                    callHistory    = callHistory,
+                    onDismiss      = { finishAndRemoveTask() },
+                    onCallBack     = { launchCall(number) },
+                    onSms          = { launchSms(number) },
+                    onWhatsApp     = { launchWhatsApp(number) },
+                    onAddContact   = {
                         if (contactsState is UiState.Success) {
                             val contactId = contactsViewModel.getContactIdByNumber(number)
-
-                            if (contactId != null) {
-                                launchEditContact(contactId)
-                            } else {
-                                launchAddContact(number)
-                            }
+                            if (contactId != null) launchEditContact(contactId)
+                            else                   launchAddContact(number)
                         } else {
-                            // fallback (safe)
                             launchAddContact(number)
                         }
-                                   },
-                    onBlock     = { launchBlockFlow(number) }
+                    },
+                    onBlock        = { launchBlockFlow(number) }
                 )
             }
         }
     }
 
     // ── WhatsApp detection ────────────────────────────────────────────────
-    private fun isWhatsAppInstalled(): Boolean {
-        return try {
-            packageManager.getPackageInfo("com.whatsapp", PackageManager.GET_ACTIVITIES)
-            true
-        } catch (e: PackageManager.NameNotFoundException) { false }
-    }
-    private fun isWhatsAppContact(number: String): Boolean {
-        return try {
-            val uri = Uri.parse("content://com.whatsapp.provider.contact/wa_contacts")
-            val cursor = contentResolver.query(uri, null, null, null, null)
-            cursor?.use {
-                while (it.moveToNext()) {
-                    val waNum = it.getString(it.getColumnIndexOrThrow("number")) ?: continue
-                    // Strip non-digits for loose comparison
-                    if (waNum.filter(Char::isDigit).endsWith(number.filter(Char::isDigit).takeLast(10)))
-                        return@use true
-                }
-                false
-            } ?: true
-        } catch (e: Exception) { true }
-    }
+    private fun isWhatsAppInstalled(): Boolean = try {
+        packageManager.getPackageInfo("com.whatsapp", PackageManager.GET_ACTIVITIES)
+        true
+    } catch (e: PackageManager.NameNotFoundException) { false }
+
+    private fun isWhatsAppContact(number: String): Boolean = try {
+        val uri = Uri.parse("content://com.whatsapp.provider.contact/wa_contacts")
+        val cursor = contentResolver.query(uri, null, null, null, null)
+        cursor?.use {
+            while (it.moveToNext()) {
+                val waNum = it.getString(it.getColumnIndexOrThrow("number")) ?: continue
+                if (waNum.filter(Char::isDigit).endsWith(number.filter(Char::isDigit).takeLast(10)))
+                    return@use true
+            }
+            false
+        } ?: true
+    } catch (e: Exception) { true }
 
     // ── Intent launchers ─────────────────────────────────────────────────
 
@@ -135,7 +137,6 @@ class PostCallOverlayActivity : ComponentActivity() {
     }
 
     private fun launchWhatsApp(number: String) {
-        // Normalise: strip leading zeros/+, keep digits only
         val digits = number.filter(Char::isDigit).trimStart('0')
         val waUri  = Uri.parse("https://wa.me/$digits")
         startActivity(Intent(Intent.ACTION_VIEW, waUri).apply {
@@ -154,27 +155,20 @@ class PostCallOverlayActivity : ComponentActivity() {
         )
         finish()
     }
+
     private fun launchEditContact(contactId: Long) {
         val uri = Uri.withAppendedPath(
             android.provider.ContactsContract.Contacts.CONTENT_URI,
             contactId.toString()
         )
-
         val intent = Intent(Intent.ACTION_EDIT).apply {
             setDataAndType(uri, android.provider.ContactsContract.Contacts.CONTENT_ITEM_TYPE)
             flags = Intent.FLAG_ACTIVITY_NEW_TASK
         }
-
-        if (intent.resolveActivity(packageManager) != null) {
-            startActivity(intent)
-        } else {
-            startActivity(Intent(Intent.ACTION_VIEW, uri))
-        }
-
+        if (intent.resolveActivity(packageManager) != null) startActivity(intent)
+        else startActivity(Intent(Intent.ACTION_VIEW, uri))
         finish()
     }
 
-    private fun launchBlockFlow(number: String) {
-        finish()
-    }
+    private fun launchBlockFlow(number: String) { finish() }
 }

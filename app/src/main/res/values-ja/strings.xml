@@ -221,4 +221,28 @@
     <string name="filter_chip_rejected">拒否</string>
     <string name="call">通話</string>
     <string name="edit_contact">連絡先を編集</string>
+
+    <string name="swipe_hint">スワイプして電話またはメッセージ</string>
+    <string name="shortcut_uninstall_short">アンインストール</string>
+    <string name="shortcut_uninstall_long">このアプリをアンインストール</string>
+
+    <string name="uninstall_retention_title">本当に申し訳ありません！</string>
+    <string name="uninstall_retention_subtitle">ご不満な点はありますか？</string>
+    <string name="uninstall_retention_reason_storage">アプリが容量を取りすぎたり、端末を遅くする可能性があります。</string>
+    <string name="uninstall_retention_reason_contacts">連絡先が自動更新されませんでした</string>
+    <string name="uninstall_retention_reason_ui">UI が分かりにくい、または使いにくいです</string>
+    <string name="uninstall_retention_try">試す</string>
+    <string name="uninstall_retention_keep">まだアンインストールしない</string>
+    <string name="uninstall_retention_proceed">それでもアンインストールする</string>
+
+    <string name="uninstall_feedback_title">なぜアンインストールしますか？</string>
+    <string name="uninstall_feedback_reason_1">連絡先機能に満足していません</string>
+    <string name="uninstall_feedback_reason_2">連絡先の読み込みに時間がかかりすぎます</string>
+    <string name="uninstall_feedback_reason_3">期待したほど機能が豊富ではありません</string>
+    <string name="uninstall_feedback_reason_4">ユーザーインターフェースが複雑です</string>
+    <string name="uninstall_feedback_reason_5">広告が多すぎます</string>
+    <string name="uninstall_feedback_reason_6">自分にもっと合った別のアプリがあります</string>
+    <string name="uninstall_feedback_select_required">アンインストールする理由を選択してください</string>
+    <string name="uninstall_feedback_cancel">キャンセル</string>
+    <string name="uninstall_feedback_uninstall">アンインストール</string>
 </resources>
