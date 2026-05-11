@@ -2,6 +2,7 @@
 <resources>
     <!-- App -->
     <string name="app_name">Contacts</string>
+    <string name="app_name_setting" translatable="false">#Contacts</string>
 
     <!-- Navigation Labels -->
     <string name="nav_contacts">Contacts</string>

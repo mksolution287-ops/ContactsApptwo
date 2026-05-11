@@ -742,11 +742,6 @@ private fun appendPermsEverAsked(context: android.content.Context, perms: Collec
     prefs.edit().putStringSet(KEY_PERMS_EVER_ASKED, current).apply()
 }
 
-/**
- * Shows the permission dialog. Priority perms (denied on PermissionScreen) are
- * placed FIRST in the permission launcher array. Cards for any permission the
- * user has already granted are hidden — the dialog only shows what's still missing.
- */
 @Composable
 fun RequiredPermissionsDialog(
     priorityPermissions: List<String>? = null,
@@ -804,15 +799,10 @@ fun RequiredPermissionsDialog(
                 overlaySettingsOpened = true
             }
             !runtimeGranted -> {
-                // Any runtime perm still denied → send the user to app-permission
-                // settings (fallback dialog), NOT to overlay settings. Overlay is
-                // only handled once all runtime perms are granted.
                 Log.d(TAG, "  → runtime denied (overlay=$overlayGranted) → fallback dialog")
                 showFallbackDialog = true
             }
             else -> {
-                // Defensive: runtimeGranted && overlayGranted is handled above;
-                // this branch shouldn't be reachable, but keep it as a safe no-op.
                 Log.d(TAG, "  → unreachable branch reached, dismissing as a safety")
                 onDismiss()
             }
@@ -847,11 +837,6 @@ fun RequiredPermissionsDialog(
                 suppressAppOpenAd(context)
                 overlaySettingsOpened = true
             }
-            // Some runtime perm still denied after seeing all prompts →
-            // go straight to app-settings WITHOUT re-showing the dialog.
-            // The lifecycle observer's app-settings path will react when
-            // the user returns. `showFallbackDialog` stays false so the
-            // dialog UI doesn't pop back up.
             else -> {
                 Log.d(TAG, "  launcher → runtime denied after full prompt → opening app-settings  missingRuntime=$nowMissingRuntime")
                 waitingForAppSettings = true
@@ -1027,8 +1012,6 @@ fun RequiredPermissionsDialog(
         items
     }
 
-    // Safety net: if every card just got hidden but the auto-dismiss in handlePostRequestState
-    // didn't catch it (e.g. lifecycle re-check found everything granted), close the dialog now.
     LaunchedEffect(visibleCards) {
         if (visibleCards.isEmpty() && allPermissionsGranted(context, priorityPerms)) {
             Log.d(TAG, "All cards hidden + perms granted → dismissing ✓")
@@ -1057,9 +1040,6 @@ fun RequiredPermissionsDialog(
         PermissionsDialogContent(
             visibleCards = visibleCards,
             onContinue = {
-                // Single batch — priority perms first in the array.
-                // Filter to only what's currently missing so we don't ask
-                // already-granted perms again.
                 val perms = getRequestablePermissions(priorityPerms)
                     .filter { context.checkSelfPermission(it) != PackageManager.PERMISSION_GRANTED }
 
