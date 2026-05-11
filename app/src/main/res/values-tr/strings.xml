@@ -264,4 +264,15 @@
     <string name="uninstall_feedback_select_required">Lütfen kaldırma nedeninizi seçin</string>
     <string name="uninstall_feedback_cancel">İptal</string>
     <string name="uninstall_feedback_uninstall">Kaldır</string>
+
+    <string name="shortcut_contacts_short">Kişiler</string>
+    <string name="shortcut_contacts_long">Kişileri Aç</string>
+    <string name="shortcut_dialpad_short">Arayıcı</string>
+    <string name="shortcut_dialpad_long">Arayıcıyı Aç</string>
+    <string name="shortcut_recents_short">Son Aramalar</string>
+    <string name="shortcut_recents_long">Arama Geçmişi</string>
+
+    <string name="thankyou_title">Harika bir iş ortağısınız!</string>
+    <string name="thankyou_subtitle">Geri bildiriminiz, bu özelliği daha da geliştirmemiz için bize ilham veriyor</string>
+
 </resources>

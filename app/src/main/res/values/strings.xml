@@ -252,4 +252,18 @@
     <string name="uninstall_feedback_select_required">Please select the reason why you uninstalling</string>
     <string name="uninstall_feedback_cancel">Cancel</string>
     <string name="uninstall_feedback_uninstall">Uninstall</string>
+
+    <string name="shortcut_contacts_short">Contacts</string>
+    <string name="shortcut_contacts_long">Open Contacts</string>
+    <string name="shortcut_dialpad_short">Dialer</string>
+    <string name="shortcut_dialpad_long">Open Dialer</string>
+    <string name="shortcut_recents_short">Recents</string>
+    <string name="shortcut_recents_long">Call History</string>
+
+    <string name="thankyou_title">You are a great partner!</string>
+    <string name="thankyou_subtitle">Your feedback is what drives us to make the feature even better</string>
+
+
+
+
 </resources>

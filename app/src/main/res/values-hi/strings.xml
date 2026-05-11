@@ -246,4 +246,15 @@
     <string name="uninstall_feedback_select_required">कृपया अनइंस्टॉल करने का कारण चुनें</string>
     <string name="uninstall_feedback_cancel">रद्द करें</string>
     <string name="uninstall_feedback_uninstall">अनइंस्टॉल</string>
+
+    <string name="shortcut_contacts_short">संपर्क</string>
+    <string name="shortcut_contacts_long">संपर्क खोलें</string>
+    <string name="shortcut_dialpad_short">डायलर</string>
+    <string name="shortcut_dialpad_long">डायलर खोलें</string>
+    <string name="shortcut_recents_short">हाल ही</string>
+    <string name="shortcut_recents_long">कॉल इतिहास</string>
+
+    <string name="thankyou_title">आप एक शानदार सहयोगी हैं!</string>
+    <string name="thankyou_subtitle">आपकी प्रतिक्रिया ही हमें इस फीचर को और बेहतर बनाने के लिए प्रेरित करती है</string>
+
 </resources>

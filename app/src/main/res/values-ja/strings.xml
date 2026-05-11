@@ -245,4 +245,15 @@
     <string name="uninstall_feedback_select_required">アンインストールする理由を選択してください</string>
     <string name="uninstall_feedback_cancel">キャンセル</string>
     <string name="uninstall_feedback_uninstall">アンインストール</string>
+
+    <string name="shortcut_contacts_short">連絡先</string>
+    <string name="shortcut_contacts_long">連絡先を開く</string>
+    <string name="shortcut_dialpad_short">ダイヤラー</string>
+    <string name="shortcut_dialpad_long">ダイヤラーを開く</string>
+    <string name="shortcut_recents_short">最近</string>
+    <string name="shortcut_recents_long">通話履歴</string>
+
+    <string name="thankyou_title">あなたは素晴らしいパートナーです！</string>
+    <string name="thankyou_subtitle">皆さまのフィードバックが、この機能をさらに良くする原動力です</string>
+
 </resources>

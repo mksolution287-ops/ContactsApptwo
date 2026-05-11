@@ -244,4 +244,15 @@
     <string name="uninstall_feedback_select_required">请选择卸载原因</string>
     <string name="uninstall_feedback_cancel">取消</string>
     <string name="uninstall_feedback_uninstall">卸载</string>
+
+    <string name="shortcut_contacts_short">联系人</string>
+    <string name="shortcut_contacts_long">打开联系人</string>
+    <string name="shortcut_dialpad_short">拨号器</string>
+    <string name="shortcut_dialpad_long">打开拨号器</string>
+    <string name="shortcut_recents_short">最近</string>
+    <string name="shortcut_recents_long">通话记录</string>
+
+    <string name="thankyou_title">您是很棒的伙伴！</string>
+    <string name="thankyou_subtitle">您的反馈推动着我们不断改进此功能</string>
+
 </resources>

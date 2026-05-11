@@ -25,6 +25,50 @@
       if you already have them. Add ONLY the <shortcut> block below to your
       existing file rather than replacing it.
     -->
+    <!-- Contacts shortcut -->
+    <shortcut
+        android:shortcutId="open_contacts"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_contacts"
+        android:shortcutShortLabel="@string/shortcut_contacts_short"
+        android:shortcutLongLabel="@string/shortcut_contacts_long">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.callerinfocom"
+            android:targetClass="com.callerinfocom.MainActivity"
+            android:data="open_tab://contacts" />
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+
+    <!-- Dialer shortcut -->
+    <shortcut
+        android:shortcutId="open_dialpad"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_dialpad"
+        android:shortcutShortLabel="@string/shortcut_dialpad_short"
+        android:shortcutLongLabel="@string/shortcut_dialpad_long">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.callerinfocom"
+            android:targetClass="com.callerinfocom.MainActivity"
+            android:data="open_tab://dialpad" />
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
+
+    <!-- Recents / Call shortcut -->
+    <shortcut
+        android:shortcutId="open_recents"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_recents"
+        android:shortcutShortLabel="@string/shortcut_recents_short"
+        android:shortcutLongLabel="@string/shortcut_recents_long">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.callerinfocom"
+            android:targetClass="com.callerinfocom.MainActivity"
+            android:data="open_tab://recents" />
+        <categories android:name="android.shortcut.conversation" />
+    </shortcut>
 
     <shortcut
         android:shortcutId="uninstall"

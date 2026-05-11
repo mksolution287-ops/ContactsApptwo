@@ -245,4 +245,15 @@ En continuant, j’accepte la politique de confidentialité et les conditions g�
     <string name="uninstall_feedback_select_required">Veuillez sélectionner la raison de la désinstallation</string>
     <string name="uninstall_feedback_cancel">Annuler</string>
     <string name="uninstall_feedback_uninstall">Désinstaller</string>
+
+    <string name="shortcut_contacts_short">Contacts</string>
+    <string name="shortcut_contacts_long">Ouvrir les contacts</string>
+    <string name="shortcut_dialpad_short">Clavier</string>
+    <string name="shortcut_dialpad_long">Ouvrir le clavier</string>
+    <string name="shortcut_recents_short">Récents</string>
+    <string name="shortcut_recents_long">Historique des appels</string>
+
+    <string name="thankyou_title">Vous êtes un excellent partenaire !</string>
+    <string name="thankyou_subtitle">Vos retours nous motivent à améliorer encore davantage cette fonctionnalité</string>
+
 </resources>

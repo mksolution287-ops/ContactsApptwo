@@ -245,4 +245,14 @@
     <string name="uninstall_feedback_select_required">يرجى اختيار سبب إلغاء التثبيت</string>
     <string name="uninstall_feedback_cancel">إلغاء</string>
     <string name="uninstall_feedback_uninstall">إلغاء التثبيت</string>
+
+    <string name="shortcut_contacts_short">جهات الاتصال</string>
+    <string name="shortcut_contacts_long">فتح جهات الاتصال</string>
+    <string name="shortcut_dialpad_short">لوحة الاتصال</string>
+    <string name="shortcut_dialpad_long">فتح لوحة الاتصال</string>
+    <string name="shortcut_recents_short">الأخيرة</string>
+    <string name="shortcut_recents_long">سجل المكالمات</string>
+
+    <string name="thankyou_title">أنت شريك رائع!</string>
+    <string name="thankyou_subtitle">ملاحظاتك هي ما يدفعنا لجعل الميزة أفضل بكثير</string>
 </resources>

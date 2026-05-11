@@ -1,56 +1,3 @@
-//package com.contactsapp
-//
-//import android.content.Context
-//import android.os.Bundle
-//import androidx.activity.ComponentActivity
-//import androidx.activity.compose.setContent
-//import androidx.activity.viewModels
-//import androidx.compose.foundation.layout.fillMaxSize
-//import androidx.compose.material3.MaterialTheme
-//import androidx.compose.material3.Surface
-//import androidx.compose.runtime.collectAsState
-//import androidx.compose.runtime.getValue
-//import androidx.compose.ui.Modifier
-//import androidx.core.view.WindowCompat
-//import com.contactsapp.data.viewmodel.SettingsViewModel
-//import com.contactsapp.data.viewmodel.ContactsViewModel
-//import com.contactsapp.ui.screens.MainScreen
-//import com.contactsapp.ui.theme.ContactsAppTheme
-//import com.contactsapp.utils.BaseContextWrapper
-//
-//class MainActivity : ComponentActivity() {
-//
-//    private val contactsViewModel: ContactsViewModel by viewModels()
-//    private val settingsViewModel: SettingsViewModel by viewModels()
-//
-//    override fun attachBaseContext(newBase: Context) {
-//        super.attachBaseContext(
-//            BaseContextWrapper.wrap(newBase)
-//        )
-//    }
-//
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        WindowCompat.setDecorFitsSystemWindows(window, false)
-//
-//        setContent {
-//            val themeSettings by settingsViewModel.themeSettings.collectAsState()
-//
-//            ContactsAppTheme(settings = themeSettings) {
-//                Surface(
-//                    modifier = Modifier.fillMaxSize(),
-//                    color = MaterialTheme.colorScheme.background
-//                ) {
-//                    MainScreen(
-//                        rootViewModel    = contactsViewModel,
-//                        settingsViewModel = settingsViewModel
-//                    )
-//                }
-//            }
-//        }
-//    }
-//}
-
 package com.callerinfocom
 
 import android.content.Context
@@ -81,16 +28,19 @@ import com.google.firebase.FirebaseApp
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.analytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import kotlinx.coroutines.flow.MutableStateFlow
 
 class MainActivity : ComponentActivity() {
 
     private val contactsViewModel: ContactsViewModel by viewModels()
     private val settingsViewModel: SettingsViewModel by viewModels()
 
+    // Holds the requested tab so MainScreen can observe it reactively
+    private val _initialTab = MutableStateFlow<String?>(null)
+
     lateinit var firebaseAnalytics: FirebaseAnalytics
         private set
 
-    // ── App Open Ad Manager ───────────────────────────────────────────────
     lateinit var appOpenAdManager: AppOpenAdManager
         private set
 
@@ -102,43 +52,52 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
-        // Initialize Firebase
         FirebaseApp.initializeApp(this)
-
         firebaseAnalytics = Firebase.analytics
         AnalyticsHelper.init(firebaseAnalytics)
         val crashlytics = FirebaseCrashlytics.getInstance()
         crashlytics.setCrashlyticsCollectionEnabled(true)
-
-
-        // ==================== Set Device & Model Identifier ====================
         setDeviceInfoToCrashlytics(crashlytics)
 
-        // Optional: Log app open
-//        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.APP_OPEN) {}
-
-        // ── Restore persisted settings ──────────────────────────────
         val prefs = getSharedPreferences("settings", MODE_PRIVATE)
         val callerIdOn = prefs.getBoolean("caller_id_enabled", false)
         settingsViewModel.setCallerIdEnabled(callerIdOn)
 
+        _initialTab.value = resolveTab(intent)
 
         setContent {
             val themeSettings by settingsViewModel.themeSettings.collectAsState()
+            val initialTab    by _initialTab.collectAsState()          // ← observe
 
             ContactsAppTheme(settings = themeSettings) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    color    = MaterialTheme.colorScheme.background
                 ) {
                     MainScreen(
-                        rootViewModel = contactsViewModel,
-                        settingsViewModel = settingsViewModel
+                        rootViewModel     = contactsViewModel,
+                        settingsViewModel = settingsViewModel,
+                        initialTab        = initialTab,                // ← pass
+                        onTabConsumed     = { _initialTab.value = null } // ← reset after nav
                     )
                 }
             }
         }
     }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        _initialTab.value = resolveTab(intent)
+    }
+
+    private fun resolveTab(intent: Intent?): String? =
+        when (intent?.data?.host) {
+            "contacts" -> "contacts"
+            "dialpad"  -> "dialpad"
+            "recents"  -> "recents"
+            else       -> null
+        }
 
     private fun setDeviceInfoToCrashlytics(crashlytics: FirebaseCrashlytics) {
         try {

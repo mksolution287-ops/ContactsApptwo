@@ -245,4 +245,14 @@ Al continuar, acepto la política de privacidad y los términos y condiciones.
     <string name="uninstall_feedback_select_required">Selecciona el motivo de la desinstalación</string>
     <string name="uninstall_feedback_cancel">Cancelar</string>
     <string name="uninstall_feedback_uninstall">Desinstalar</string>
+
+    <string name="shortcut_contacts_short">Contactos</string>
+    <string name="shortcut_contacts_long">Abrir contactos</string>
+    <string name="shortcut_dialpad_short">Marcador</string>
+    <string name="shortcut_dialpad_long">Abrir marcador</string>
+    <string name="shortcut_recents_short">Recientes</string>
+    <string name="shortcut_recents_long">Historial de llamadas</string>
+
+    <string name="thankyou_title">¡Eres un gran compañero!</string>
+    <string name="thankyou_subtitle">Tus comentarios son lo que nos impulsa a mejorar aún más esta función</string>
 </resources>

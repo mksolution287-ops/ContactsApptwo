@@ -265,4 +265,15 @@ Ao tocar em Concordar e continuar, você aceita nossa Política de Privacidade e
     <string name="uninstall_feedback_select_required">Selecione o motivo da desinstalação</string>
     <string name="uninstall_feedback_cancel">Cancelar</string>
     <string name="uninstall_feedback_uninstall">Desinstalar</string>
+
+    <string name="shortcut_contacts_short">Contatos</string>
+    <string name="shortcut_contacts_long">Abrir contatos</string>
+    <string name="shortcut_dialpad_short">Discador</string>
+    <string name="shortcut_dialpad_long">Abrir discador</string>
+    <string name="shortcut_recents_short">Recentes</string>
+    <string name="shortcut_recents_long">Histórico de chamadas</string>
+
+    <string name="thankyou_title">Você é um ótimo parceiro!</string>
+    <string name="thankyou_subtitle">Seu feedback é o que nos motiva a tornar este recurso ainda melhor</string>
+
 </resources>

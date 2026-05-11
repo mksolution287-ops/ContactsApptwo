@@ -1,8 +1,6 @@
 package com.callerinfocom.ui.uninstall
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,9 +9,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -29,13 +27,15 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.callerinfocom.ui.components.AppInstallNativeAdCard
+import com.callerinfocom.R
 
 private val AccentGreen = Color(0xFF22C55E)
 
@@ -49,90 +49,106 @@ fun UninstallRetentionScreen(
     onKeepApp           : () -> Unit,
     onContinueUninstall : () -> Unit
 ) {
-    Box(
+    Column(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
             .statusBarsPadding()
             .navigationBarsPadding()
     ) {
-        Column(modifier = Modifier.fillMaxSize()) {
 
-            // ── Top bar: back arrow + home ────────────────────────────
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp, vertical = 8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                IconButton(onClick = onBack) {
-                    Icon(
-                        imageVector        = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Back",
-                        tint               = MaterialTheme.colorScheme.onBackground
-                    )
-                }
-                Spacer(Modifier.weight(1f))
-                IconButton(onClick = onHome) {
-                    Icon(
-                        imageVector        = Icons.Default.Home,
-                        contentDescription = "Home",
-                        tint               = MaterialTheme.colorScheme.onBackground
-                    )
-                }
-            }
-
-            Spacer(Modifier.height(40.dp))
-
-            // ── Header ────────────────────────────────────────────────
-            Column(
-                modifier            = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                // Big "???" — using emoji glyphs as a stand-in for the 3D
-                // red question marks in the mockup. Replace with an
-                // Image(painterResource(R.drawable.ic_question_3d), ...) if
-                // you have the asset.
-                Text(
-                    text     = "❓❓❓",
-                    fontSize = 64.sp
-                )
-                Spacer(Modifier.height(20.dp))
-                Text(
-                    text       = "We're truly sorry!",
-                    fontSize   = 22.sp,
-                    fontWeight = FontWeight.Bold,
-                    color      = MaterialTheme.colorScheme.onBackground
-                )
-                Spacer(Modifier.height(6.dp))
-                Text(
-                    text     = "Anything you're unhappy about?",
-                    fontSize = 15.sp,
-                    color    = MaterialTheme.colorScheme.onSurfaceVariant
+        // ── Top bar ───────────────────────────────────────────────
+        Row(
+            modifier          = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp, vertical = 4.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            IconButton(onClick = onBack) {
+                Icon(
+                    imageVector        = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = "Back",
+                    tint               = MaterialTheme.colorScheme.onBackground
                 )
             }
-
-            Spacer(Modifier.height(36.dp))
-
-            // ── Reason cards ──────────────────────────────────────────
-            ReasonCard(
-                text    = "The app may take up too much space or slow down the device.",
-                onTry   = onTryStorage
-            )
-            Spacer(Modifier.height(12.dp))
-            ReasonCard(
-                text    = "Contacts were not updating automatically",
-                onTry   = onTryContacts
-            )
-            Spacer(Modifier.height(12.dp))
-            ReasonCard(
-                text    = "UI is confusing or hard to use",
-                onTry   = onTryUi
-            )
-
             Spacer(Modifier.weight(1f))
+            IconButton(onClick = onHome) {
+                Icon(
+                    imageVector        = Icons.Default.Home,
+                    contentDescription = "Home",
+                    tint               = MaterialTheme.colorScheme.onBackground
+                )
+            }
+        }
 
-            // ── Bottom CTAs ───────────────────────────────────────────
+        // ── Scrollable content ────────────────────────────────────
+        LazyColumn(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxWidth()
+        ) {
+            item {
+                Spacer(Modifier.height(16.dp))
+            }
+
+            item {
+                // ── Header ────────────────────────────────────────
+                Column(
+                    modifier            = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text     = "❓❓❓",
+                        fontSize = 48.sp           // was 64
+                    )
+                    Spacer(Modifier.height(10.dp)) // was 20
+                    Text(
+                        text       = stringResource(R.string.uninstall_retention_title),
+                        fontSize   = 20.sp,        // was 22
+                        fontWeight = FontWeight.Bold,
+                        color      = MaterialTheme.colorScheme.onBackground
+                    )
+                    Spacer(Modifier.height(4.dp))  // was 6
+                    Text(
+                        text     = stringResource(R.string.uninstall_retention_subtitle),
+                        fontSize = 13.sp,          // was 15
+                        color    = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+
+            item {
+                Spacer(Modifier.height(16.dp))     // was 36
+            }
+
+            item {
+                // ── Reason cards ──────────────────────────────────
+                ReasonCard(
+                    text  = stringResource(R.string.uninstall_retention_reason_storage),
+                    onTry = onTryStorage
+                )
+                Spacer(Modifier.height(8.dp))      // was 12
+                ReasonCard(
+                    text  = stringResource(R.string.uninstall_retention_reason_contacts),
+                    onTry = onTryContacts
+                )
+                Spacer(Modifier.height(8.dp))
+                ReasonCard(
+                    text  = stringResource(R.string.uninstall_retention_reason_ui),
+                    onTry = onTryUi
+                )
+                Spacer(Modifier.height(8.dp))
+            }
+        }
+
+        // ── Bottom section (pinned) ───────────────────────────────
+        Column(modifier = Modifier.fillMaxWidth()) {
+
+            // Ad above the primary CTA
+            AppInstallNativeAdCard()
+
+            Spacer(Modifier.height(8.dp))
+
             Button(
                 onClick  = onKeepApp,
                 shape    = RoundedCornerShape(28.dp),
@@ -143,26 +159,26 @@ fun UninstallRetentionScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 20.dp)
-                    .height(54.dp)
+                    .height(50.dp)             // was 54
             ) {
                 Text(
-                    text       = "Don't uninstall yet",
-                    fontSize   = 17.sp,
+                    text       = stringResource(R.string.uninstall_retention_keep),
+                    fontSize   = 16.sp,        // was 17
                     fontWeight = FontWeight.Bold
                 )
             }
 
-            Spacer(Modifier.height(8.dp))
+            Spacer(Modifier.height(6.dp))      // was 8
 
             TextButton(
                 onClick  = onContinueUninstall,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 12.dp)
+                    .padding(bottom = 8.dp)    // was 12
             ) {
                 Text(
-                    text           = "Still want to uninstall",
-                    fontSize       = 14.sp,
+                    text           = stringResource(R.string.uninstall_retention_proceed),
+                    fontSize       = 13.sp,    // was 14
                     color          = MaterialTheme.colorScheme.onBackground,
                     textDecoration = TextDecoration.Underline
                 )
@@ -178,22 +194,22 @@ private fun ReasonCard(
 ) {
     Surface(
         color    = MaterialTheme.colorScheme.surfaceVariant,
-        shape    = RoundedCornerShape(14.dp),
+        shape    = RoundedCornerShape(12.dp),  // was 14
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp)
     ) {
         Row(
-            modifier          = Modifier.padding(horizontal = 16.dp, vertical = 14.dp),
+            modifier          = Modifier.padding(horizontal = 12.dp, vertical = 10.dp), // was 16/14
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text      = text,
-                fontSize  = 14.sp,
-                color     = MaterialTheme.colorScheme.onSurface,
-                modifier  = Modifier.weight(1f)
+                text     = text,
+                fontSize = 13.sp,              // was 14
+                color    = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.weight(1f)
             )
-            Spacer(Modifier.width(12.dp))
+            Spacer(Modifier.width(10.dp))      // was 12
             Button(
                 onClick = onTry,
                 shape   = RoundedCornerShape(20.dp),
@@ -202,13 +218,13 @@ private fun ReasonCard(
                     contentColor   = Color.White
                 ),
                 contentPadding = androidx.compose.foundation.layout.PaddingValues(
-                    horizontal = 24.dp,
-                    vertical   = 6.dp
+                    horizontal = 20.dp,        // was 24
+                    vertical   = 4.dp          // was 6
                 )
             ) {
                 Text(
-                    text       = "Try",
-                    fontSize   = 14.sp,
+                    text       = stringResource(R.string.uninstall_retention_try),
+                    fontSize   = 13.sp,        // was 14
                     fontWeight = FontWeight.SemiBold,
                     textAlign  = TextAlign.Center
                 )

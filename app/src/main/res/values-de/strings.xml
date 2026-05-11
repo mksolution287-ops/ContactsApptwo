@@ -244,4 +244,15 @@ Indem ich fortfahre, akzeptiere ich die Datenschutzerklärung und die Allgemeine
     <string name="uninstall_feedback_select_required">Bitte wählen Sie den Grund für die Deinstallation aus</string>
     <string name="uninstall_feedback_cancel">Abbrechen</string>
     <string name="uninstall_feedback_uninstall">Deinstallieren</string>
+
+    <string name="shortcut_contacts_short">Kontakte</string>
+    <string name="shortcut_contacts_long">Kontakte öffnen</string>
+    <string name="shortcut_dialpad_short">Wählfeld</string>
+    <string name="shortcut_dialpad_long">Wählfeld öffnen</string>
+    <string name="shortcut_recents_short">Zuletzt</string>
+    <string name="shortcut_recents_long">Anrufverlauf</string>
+
+    <string name="thankyou_title">Sie sind ein großartiger Partner!</string>
+    <string name="thankyou_subtitle">Ihr Feedback motiviert uns, die Funktion noch besser zu machen</string>
+
 </resources>

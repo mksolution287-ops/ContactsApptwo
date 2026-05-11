@@ -3,7 +3,6 @@ package com.callerinfocom.ui.uninstall
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -15,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -37,22 +37,25 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.callerinfocom.ui.components.AppInstallNativeAdCard
+import com.callerinfocom.R
 
-private val AccentGreen = Color(0xFF22C55E)
-private val DisabledGreen = Color(0xFF14532D) // same hue, dimmer when disabled
+private val AccentGreen   = Color(0xFF22C55E)
+private val DisabledGreen = Color(0xFF14532D)
 
-private data class FeedbackReason(val key: String, val label: String)
+private data class FeedbackReason(val key: String, val label: Int)
 
 private val FeedbackReasons = listOf(
-    FeedbackReason("contact_feature_unhappy", "Not happy with the contact feature"),
-    FeedbackReason("loading_too_long",        "Loading contacts takes too long"),
-    FeedbackReason("not_feature_rich",        "Not as feature-rich as expected"),
-    FeedbackReason("ui_complicated",          "User interface is complicated"),
-    FeedbackReason("too_many_ads",            "Too many ads"),
-    FeedbackReason("better_alternative",      "Another app that suits me more")
+    FeedbackReason("contact_feature_unhappy", R.string.uninstall_feedback_reason_1),
+    FeedbackReason("loading_too_long",        R.string.uninstall_feedback_reason_2),
+    FeedbackReason("not_feature_rich",        R.string.uninstall_feedback_reason_3),
+    FeedbackReason("ui_complicated",          R.string.uninstall_feedback_reason_4),
+    FeedbackReason("too_many_ads",            R.string.uninstall_feedback_reason_5),
+    FeedbackReason("better_alternative",      R.string.uninstall_feedback_reason_6)
 )
 
 @Composable
@@ -63,86 +66,100 @@ fun UninstallFeedbackScreen(
 ) {
     var selected by remember { mutableStateOf<String?>(null) }
 
-    Box(
+    Column(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
             .statusBarsPadding()
             .navigationBarsPadding()
     ) {
-        Column(modifier = Modifier.fillMaxSize()) {
 
-            // ── Top bar: back + title ─────────────────────────────────
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp, vertical = 8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                IconButton(onClick = onBack) {
-                    Icon(
-                        imageVector        = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Back",
-                        tint               = MaterialTheme.colorScheme.onBackground
+        // ── Scrollable content ────────────────────────────────────
+        LazyColumn(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxWidth()
+        ) {
+            item {
+                // ── Top bar ───────────────────────────────────────
+                Row(
+                    modifier          = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp, vertical = 4.dp), // was 8
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    IconButton(onClick = onBack) {
+                        Icon(
+                            imageVector        = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back",
+                            tint               = MaterialTheme.colorScheme.onBackground
+                        )
+                    }
+                    Text(
+                        text       = stringResource(R.string.uninstall_feedback_title),
+                        fontSize   = 16.sp,        // was 18
+                        fontWeight = FontWeight.Bold,
+                        color      = MaterialTheme.colorScheme.onBackground
                     )
                 }
-                Text(
-                    text       = "Why do you uninstall?",
-                    fontSize   = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    color      = MaterialTheme.colorScheme.onBackground
-                )
             }
 
-            Spacer(Modifier.height(8.dp))
+            item { Spacer(Modifier.height(4.dp)) }  // was 8
 
-            // ── Reason list ───────────────────────────────────────────
-            FeedbackReasons.forEach { reason ->
-                ReasonRow(
-                    label      = reason.label,
-                    selected   = selected == reason.key,
-                    onSelected = { selected = reason.key }
-                )
-                HorizontalDivider(
-                    color     = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f),
-                    thickness = 0.5.dp
-                )
+            item {
+                // ── Reason list ───────────────────────────────────
+                FeedbackReasons.forEach { reason ->
+                    ReasonRow(
+                        label      = stringResource(reason.label),
+                        selected   = selected == reason.key,
+                        onSelected = { selected = reason.key }
+                    )
+                    HorizontalDivider(
+                        color     = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f),
+                        thickness = 0.5.dp
+                    )
+                }
             }
+        }
 
-            Spacer(Modifier.weight(1f))
+        // ── Pinned bottom section ─────────────────────────────────
+        Column(modifier = Modifier.fillMaxWidth()) {
 
-            // ── Hint banner ───────────────────────────────────────────
+            // Hint banner
             Surface(
                 color    = MaterialTheme.colorScheme.surfaceVariant,
-                shape    = RoundedCornerShape(28.dp),
+                shape    = RoundedCornerShape(20.dp),              // was 28
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 20.dp, vertical = 8.dp)
+                    .padding(horizontal = 20.dp, vertical = 6.dp) // was 8
             ) {
                 Row(
-                    modifier          = Modifier.padding(horizontal = 16.dp, vertical = 14.dp),
+                    modifier          = Modifier.padding(horizontal = 12.dp, vertical = 10.dp), // was 16/14
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
                         imageVector        = Icons.Outlined.Info,
                         contentDescription = null,
                         tint               = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier           = Modifier.size(20.dp)
+                        modifier           = Modifier.size(16.dp)  // was 20
                     )
-                    Spacer(Modifier.width(12.dp))
+                    Spacer(Modifier.width(10.dp))                   // was 12
                     Text(
-                        text     = "Please select the reason why you uninstalling",
-                        fontSize = 13.sp,
+                        text     = stringResource(R.string.uninstall_feedback_select_required),
+                        fontSize = 12.sp,                           // was 13
                         color    = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
 
-            // ── Bottom buttons ────────────────────────────────────────
+            // Ad above buttons
+            AppInstallNativeAdCard()
+
+            // Cancel / Uninstall buttons
             Row(
                 modifier              = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 20.dp, vertical = 12.dp),
+                    .padding(horizontal = 20.dp, vertical = 8.dp), // was 12
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 Button(
@@ -154,11 +171,11 @@ fun UninstallFeedbackScreen(
                     ),
                     modifier = Modifier
                         .weight(1f)
-                        .height(50.dp)
+                        .height(46.dp)                              // was 50
                 ) {
                     Text(
-                        text       = "Cancel",
-                        fontSize   = 16.sp,
+                        text       = stringResource(R.string.uninstall_feedback_cancel),
+                        fontSize   = 15.sp,                         // was 16
                         fontWeight = FontWeight.SemiBold
                     )
                 }
@@ -175,11 +192,11 @@ fun UninstallFeedbackScreen(
                     ),
                     modifier = Modifier
                         .weight(1f)
-                        .height(50.dp)
+                        .height(46.dp)                              // was 50
                 ) {
                     Text(
-                        text       = "Uninstall",
-                        fontSize   = 16.sp,
+                        text       = stringResource(R.string.uninstall_feedback_uninstall),
+                        fontSize   = 15.sp,                         // was 16
                         fontWeight = FontWeight.SemiBold
                     )
                 }
@@ -195,15 +212,15 @@ private fun ReasonRow(
     onSelected : () -> Unit
 ) {
     Row(
-        modifier = Modifier
+        modifier          = Modifier
             .fillMaxWidth()
             .clickable { onSelected() }
-            .padding(horizontal = 20.dp, vertical = 18.dp),
+            .padding(horizontal = 20.dp, vertical = 12.dp),        // was 18
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
             text     = label,
-            fontSize = 16.sp,
+            fontSize = 14.sp,                                       // was 16
             color    = MaterialTheme.colorScheme.onBackground,
             modifier = Modifier.weight(1f)
         )

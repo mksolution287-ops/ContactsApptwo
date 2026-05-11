@@ -20,19 +20,6 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.analytics
 import com.google.firebase.analytics.logEvent
 
-/**
- * Activity launched by the "Uninstall" long-press shortcut.
- *
- * Hosts a 2-step flow:
- *   1. Retention screen — "We're truly sorry!" with 3 fixable reasons.
- *      - "Try" buttons → open the app (MainActivity).
- *      - "Don't uninstall yet" → finish, keep the app.
- *      - "Still want to uninstall" → step 2.
- *   2. Feedback screen — "Why do you uninstall?" with radio reasons.
- *      - "Cancel" → finish.
- *      - "Uninstall" → log reason to analytics, open system app-details
- *        page where the user can tap the OS-level Uninstall button.
- */
 class UninstallTrampolineActivity : ComponentActivity() {
 
     private val settingsViewModel: SettingsViewModel by viewModels()
@@ -45,26 +32,37 @@ class UninstallTrampolineActivity : ComponentActivity() {
             ContactsAppTheme(settings = themeSettings) {
 
                 var step by remember { mutableStateOf(UninstallStep.Retention) }
+                var pendingReasonKey by remember { mutableStateOf("") }
+
 
                 when (step) {
                     UninstallStep.Retention -> UninstallRetentionScreen(
                         onBack          = { finish() },
-                        onHome          = { finish() },
+                        onHome          = { openMainApp("home") },
                         onTryStorage    = { openMainApp("try_storage") },
                         onTryContacts   = { openMainApp("try_contacts") },
                         onTryUi         = { openMainApp("try_ui") },
                         onKeepApp       = {
                             logEvent("uninstall_kept_app")
-                            finish()
+                            openMainApp("onKeepApp")
                         },
                         onContinueUninstall = { step = UninstallStep.Feedback }
                     )
 
+                    // In Feedback step:
                     UninstallStep.Feedback -> UninstallFeedbackScreen(
                         onBack    = { step = UninstallStep.Retention },
                         onCancel  = { finish() },
                         onConfirm = { reasonKey ->
+                            pendingReasonKey = reasonKey          // store for later
                             logUninstallReason(reasonKey)
+                            step = UninstallStep.ThankYou         // show thank-you first
+                        }
+                    )
+
+// Add ThankYou step:
+                    UninstallStep.ThankYou -> UninstallThankYouScreen(
+                        onTimeout = {
                             openSystemAppDetails()
                             finish()
                         }
@@ -74,11 +72,6 @@ class UninstallTrampolineActivity : ComponentActivity() {
         }
     }
 
-    /**
-     * Opens MainActivity (brings the app to the foreground) and finishes the
-     * trampoline so the back stack stays clean. Logs which "Try" button was
-     * tapped so you can see in Analytics which retention angle works.
-     */
     private fun openMainApp(source: String) {
         logEvent("uninstall_try_tapped") {
             param("source", source)
@@ -92,8 +85,6 @@ class UninstallTrampolineActivity : ComponentActivity() {
                 }
             )
         } catch (_: Exception) {
-            // Fall back to the launcher intent if the direct class reference
-            // fails for any reason (build variants, renamed activity, etc.)
             packageManager.getLaunchIntentForPackage(packageName)?.let { startActivity(it) }
         }
         finish()
@@ -112,11 +103,6 @@ class UninstallTrampolineActivity : ComponentActivity() {
         Firebase.analytics.logEvent(name) { block() }
     }
 
-    /**
-     * Opens the system app-details page for this app. The user taps the OS-level
-     * "Uninstall" button there — Android requires this; an app cannot uninstall
-     * itself silently.
-     */
     private fun openSystemAppDetails() {
         try {
             startActivity(
@@ -138,4 +124,4 @@ class UninstallTrampolineActivity : ComponentActivity() {
     }
 }
 
-private enum class UninstallStep { Retention, Feedback }
+private enum class UninstallStep { Retention, Feedback, ThankYou }

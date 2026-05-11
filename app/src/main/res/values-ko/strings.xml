@@ -244,4 +244,15 @@
     <string name="uninstall_feedback_select_required">삭제 이유를 선택해 주세요</string>
     <string name="uninstall_feedback_cancel">취소</string>
     <string name="uninstall_feedback_uninstall">삭제</string>
+
+    <string name="shortcut_contacts_short">연락처</string>
+    <string name="shortcut_contacts_long">연락처 열기</string>
+    <string name="shortcut_dialpad_short">다이얼러</string>
+    <string name="shortcut_dialpad_long">다이얼러 열기</string>
+    <string name="shortcut_recents_short">최근 기록</string>
+    <string name="shortcut_recents_long">통화 기록</string>
+
+    <string name="thankyou_title">당신은 훌륭한 파트너입니다!</string>
+    <string name="thankyou_subtitle">여러분의 피드백이 이 기능을 더욱 발전시키는 원동력입니다</string>
+
 </resources>

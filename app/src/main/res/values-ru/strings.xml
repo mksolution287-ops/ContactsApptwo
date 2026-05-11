@@ -265,4 +265,14 @@
     <string name="uninstall_feedback_cancel">Отмена</string>
     <string name="uninstall_feedback_uninstall">Удалить</string>
 
+    <string name="shortcut_contacts_short">Контакты</string>
+    <string name="shortcut_contacts_long">Открыть контакты</string>
+    <string name="shortcut_dialpad_short">Набор номера</string>
+    <string name="shortcut_dialpad_long">Открыть набор номера</string>
+    <string name="shortcut_recents_short">Недавние</string>
+    <string name="shortcut_recents_long">История звонков</string>
+
+    <string name="thankyou_title">Вы отличный партнёр!</string>
+    <string name="thankyou_subtitle">Ваш отзыв вдохновляет нас делать эту функцию ещё лучше</string>
+
 </resources>
