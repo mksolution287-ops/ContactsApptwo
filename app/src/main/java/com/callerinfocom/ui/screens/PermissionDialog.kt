@@ -94,13 +94,6 @@
 //        .edit().putBoolean("skip_app_open_ad", true).apply()
 //}
 //
-///**
-// * Card definitions. Each maps a *card* to the set of underlying perms that must
-// * all be granted for the card to disappear. The "Call" card hides only when both
-// * READ_CALL_LOG and CALL_PHONE are granted; "Contacts" hides when READ_CONTACTS
-// * and WRITE_CONTACTS are granted; etc. This way a single missed perm keeps the
-// * relevant card visible.
-// */
 //private data class CardDef(
 //    val icon         : ImageVector,
 //    val label        : String,
@@ -120,10 +113,6 @@
 //    )
 //)
 //
-///**
-// * Per-permission card (used for priority perms denied on PermissionScreen).
-// * Returns null for perms already covered by a base card.
-// */
 //private fun priorityCardFor(permission: String): CardDef? = when (permission) {
 //    Manifest.permission.READ_PHONE_STATE   -> CardDef(
 //        icon        = Icons.Filled.Phone,
@@ -135,7 +124,6 @@
 //        label       = "Notifications",
 //        gatingPerms = listOf(Manifest.permission.POST_NOTIFICATIONS)
 //    )
-//    // Already covered by a base card
 //    Manifest.permission.READ_CONTACTS,
 //    Manifest.permission.WRITE_CONTACTS,
 //    Manifest.permission.READ_CALL_LOG,
@@ -145,6 +133,7 @@
 //
 //private const val PREFS_NAME             = "settings"
 //private const val KEY_DENIED_FROM_SCREEN = "denied_perms_from_permission_screen"
+//private const val KEY_PERMS_EVER_ASKED   = "perms_ever_asked"
 //
 //private fun readDeniedPermsFromPrefs(context: android.content.Context): List<String> {
 //    val saved = context.getSharedPreferences(PREFS_NAME, android.content.Context.MODE_PRIVATE)
@@ -156,11 +145,17 @@
 //    return order.filter { it in saved } + saved.filter { it !in order }
 //}
 //
-///**
-// * Shows the permission dialog. Priority perms (denied on PermissionScreen) are
-// * placed FIRST in the permission launcher array. Cards for any permission the
-// * user has already granted are hidden — the dialog only shows what's still missing.
-// */
+//private fun readPermsEverAsked(context: android.content.Context): Set<String> =
+//    context.getSharedPreferences(PREFS_NAME, android.content.Context.MODE_PRIVATE)
+//        .getStringSet(KEY_PERMS_EVER_ASKED, emptySet()) ?: emptySet()
+//
+//private fun appendPermsEverAsked(context: android.content.Context, perms: Collection<String>) {
+//    val prefs = context.getSharedPreferences(PREFS_NAME, android.content.Context.MODE_PRIVATE)
+//    val current = prefs.getStringSet(KEY_PERMS_EVER_ASKED, emptySet())?.toMutableSet() ?: mutableSetOf()
+//    current.addAll(perms)
+//    prefs.edit().putStringSet(KEY_PERMS_EVER_ASKED, current).apply()
+//}
+//
 //@Composable
 //fun RequiredPermissionsDialog(
 //    priorityPermissions: List<String>? = null,
@@ -185,24 +180,33 @@
 //    var showFallbackDialog    by remember { mutableStateOf(false) }
 //    var waitingForAppSettings by remember { mutableStateOf(false) }
 //
-//    // Bumped whenever permission state may have changed. Used to re-derive
-//    // which cards should still be visible.
+//    // NEW: when true, the *next* return from overlay settings dismisses the dialog
+//    // regardless of whether overlay was granted. Set after the user completed the
+//    // runtime-grant round-trip via app-settings and tapped Continue on the
+//    // overlay-only card.
+//    var dismissAfterOverlayReturn by remember { mutableStateOf(false) }
+//
+//    // NEW: tracks whether we've already done the one-shot "retry denied perms"
+//    // pass for this dialog session. Prevents an infinite re-prompt loop if the
+//    // user keeps denying.
+//    var retryAttempted by remember { mutableStateOf(false) }
+//
 //    var permissionCheckTrigger by remember { mutableStateOf(0) }
 //
 //    var overlayGranted by remember { mutableStateOf(isOverlayGranted(context)) }
 //
 //    Log.d(TAG, "=== Composition ===  overlayGranted=$overlayGranted  " +
 //            "showFallback=$showFallbackDialog  waitingForAppSettings=$waitingForAppSettings  " +
-//            "pollingOverlay=$pollingOverlay  priorityPerms=$priorityPerms  " +
+//            "pollingOverlay=$pollingOverlay  dismissAfterOverlayReturn=$dismissAfterOverlayReturn  " +
+//            "priorityPerms=$priorityPerms  " +
 //            "missingRuntime=${getMissingRuntimePermissions(context, priorityPerms)}")
 //
-//    // Decides what to do once permission requests have fully finished.
 //    fun handlePostRequestState() {
 //        val nowMissingRuntime = getMissingRuntimePermissions(context, priorityPerms)
 //        val nowOverlay        = isOverlayGranted(context)
 //        val runtimeGranted    = nowMissingRuntime.isEmpty()
 //        overlayGranted        = nowOverlay
-//        permissionCheckTrigger++   // re-derive cards
+//        permissionCheckTrigger++
 //
 //        Log.d(TAG, "  handlePostRequestState → missingRuntime=$nowMissingRuntime  " +
 //                "runtimeGranted=$runtimeGranted  overlayGranted=$overlayGranted")
@@ -217,25 +221,84 @@
 //                suppressAppOpenAd(context)
 //                overlaySettingsOpened = true
 //            }
-//            !runtimeGranted && overlayGranted -> {
-//                Log.d(TAG, "  → runtime denied, overlay OK → fallback dialog")
+//            !runtimeGranted -> {
+//                Log.d(TAG, "  → runtime denied (overlay=$overlayGranted) → fallback dialog")
 //                showFallbackDialog = true
 //            }
 //            else -> {
-//                Log.d(TAG, "  → runtime denied + overlay missing → overlay settings first")
-//                overlaySettingsOpened = true
+//                Log.d(TAG, "  → unreachable branch reached, dismissing as a safety")
+//                onDismiss()
 //            }
 //        }
 //    }
 //
 //    // ── Runtime permission launcher ───────────────────────────────────────
+//    // Held in a mutable ref so the callback below can re-invoke the launcher
+//    // for the retry pass. (You can't reference `permissionLauncher` from
+//    // inside the lambda that initializes it.)
+//    val launcherRef = remember {
+//        mutableStateOf<androidx.activity.result.ActivityResultLauncher<Array<String>>?>(null)
+//    }
+//
 //    val permissionLauncher = rememberLauncherForActivityResult(
 //        ActivityResultContracts.RequestMultiplePermissions()
 //    ) { results ->
 //        Log.d(TAG, "── Runtime launcher callback ──")
 //        Log.d(TAG, "  raw results : $results")
-//        handlePostRequestState()
+//
+//        permissionCheckTrigger++
+//        val nowMissingRuntime = getMissingRuntimePermissions(context, priorityPerms)
+//        val nowOverlay        = isOverlayGranted(context)
+//        overlayGranted        = nowOverlay
+//        val runtimeGranted    = nowMissingRuntime.isEmpty()
+//
+//        when {
+//            runtimeGranted && overlayGranted -> {
+//                Log.d(TAG, "  launcher → ALL granted, dismissing ✓")
+//                onDismiss()
+//            }
+//            runtimeGranted && !overlayGranted -> {
+//                Log.d(TAG, "  launcher → runtime OK, overlay missing → opening overlay settings")
+//                suppressAppOpenAd(context)
+//                overlaySettingsOpened = true
+//            }
+//            else -> {
+//                // Before falling back to app-settings, give denied perms one more
+//                // chance through the system dialog. Only re-prompt perms for which
+//                // the OS will still show a dialog (shouldShowRequestPermissionRationale
+//                // == true). Permanently-denied perms wouldn't show anything, so
+//                // they skip the retry and go straight to app-settings.
+//                val activity = context as? android.app.Activity
+//                val retriablePerms = if (activity != null) {
+//                    nowMissingRuntime.filter { perm ->
+//                        androidx.core.app.ActivityCompat
+//                            .shouldShowRequestPermissionRationale(activity, perm)
+//                    }
+//                } else {
+//                    emptyList()
+//                }
+//
+//                val retryLauncher = launcherRef.value
+//                if (!retryAttempted && retriablePerms.isNotEmpty() && retryLauncher != null) {
+//                    Log.d(TAG, "  launcher → ${nowMissingRuntime.size} denied, retrying ${retriablePerms.size}: $retriablePerms")
+//                    retryAttempted = true
+//                    appendPermsEverAsked(context, retriablePerms)
+//                    retryLauncher.launch(retriablePerms.toTypedArray())
+//                } else {
+//                    Log.d(TAG, "  launcher → runtime denied (retryAttempted=$retryAttempted, retriable=$retriablePerms) → opening app-settings  missingRuntime=$nowMissingRuntime")
+//                    waitingForAppSettings = true
+//                    context.startActivity(
+//                        Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+//                            data = Uri.parse("package:${context.packageName}")
+//                        }
+//                    )
+//                }
+//            }
+//        }
 //    }
+//
+//    // Publish the launcher into the ref so the callback can use it for retries.
+//    SideEffect { launcherRef.value = permissionLauncher }
 //
 //    // ── Open overlay settings ─────────────────────────────────────────────
 //    LaunchedEffect(overlaySettingsOpened) {
@@ -285,6 +348,15 @@
 //                Log.d(TAG, "  after overlay grant: runtimeGranted=$runtimeGranted  " +
 //                        "missingRuntime=$nowMissing")
 //
+//                // NEW: if we're in the “dismiss-after-overlay-return” mode,
+//                // close the dialog regardless of runtime state.
+//                if (dismissAfterOverlayReturn) {
+//                    Log.d(TAG, "  → dismissAfterOverlayReturn=true (overlay granted) → dismissing ✓")
+//                    suppressAppOpenAd(context)
+//                    onDismiss()
+//                    break
+//                }
+//
 //                if (runtimeGranted) {
 //                    Log.d(TAG, "  → ALL granted, suppressing app-open ad and dismissing ✓")
 //                    suppressAppOpenAd(context)
@@ -303,12 +375,11 @@
 //    DisposableEffect(lifecycleOwner) {
 //        val observer = LifecycleEventObserver { _, event ->
 //            Log.d(TAG, "── Lifecycle event=$event ──  pollingOverlay=$pollingOverlay  " +
-//                    "waitingForAppSettings=$waitingForAppSettings")
+//                    "waitingForAppSettings=$waitingForAppSettings  " +
+//                    "dismissAfterOverlayReturn=$dismissAfterOverlayReturn")
 //
 //            if (event != Lifecycle.Event.ON_RESUME) return@LifecycleEventObserver
 //
-//            // Whenever the app comes back, re-check perms so cards refresh
-//            // (handles users granting from system Settings outside our flow).
 //            permissionCheckTrigger++
 //
 //            if (pollingOverlay) {
@@ -317,6 +388,16 @@
 //                if (stillDenied) {
 //                    pollingOverlay = false
 //                    overlayGranted = false
+//
+//                    // NEW: if the user came here via the "post app-settings overlay" flow,
+//                    // dismiss now regardless of overlay outcome (denied case).
+//                    if (dismissAfterOverlayReturn) {
+//                        Log.d(TAG, "  → dismissAfterOverlayReturn=true (overlay denied on return) → dismissing ✓")
+//                        suppressAppOpenAd(context)
+//                        onDismiss()
+//                        return@LifecycleEventObserver
+//                    }
+//
 //                    val nowMissing     = getMissingRuntimePermissions(context, priorityPerms)
 //                    val runtimeGranted = nowMissing.isEmpty()
 //                    Log.d(TAG, "  overlay denied on return  runtimeGranted=$runtimeGranted  " +
@@ -343,12 +424,26 @@
 //                Log.d(TAG, "  [app-settings path] runtimeGranted=$runtimeGranted  " +
 //                        "overlayGranted=$overlayGranted  missingRuntime=$nowMissing")
 //
-//                if (runtimeGranted) {
-//                    Log.d(TAG, "  → runtime granted (overlay=$overlayGranted) → suppressing app-open ad and dismissing ✓")
-//                    suppressAppOpenAd(context)
-//                    onDismiss()
-//                } else {
-//                    Log.d(TAG, "  → runtime still missing after app settings → keep fallback")
+//                when {
+//                    // Everything granted → done.
+//                    runtimeGranted && overlayGranted -> {
+//                        Log.d(TAG, "  → ALL granted → suppressing app-open ad and dismissing ✓")
+//                        suppressAppOpenAd(context)
+//                        onDismiss()
+//                    }
+//                    // NEW: runtime now granted but overlay still missing → keep the
+//                    // dialog open showing only the Overlay card. The next Continue tap
+//                    // will open overlay settings, and after the user returns from
+//                    // overlay settings the dialog should auto-dismiss (handled via
+//                    // dismissAfterOverlayReturn=true set in the Continue handler).
+//                    runtimeGranted && !overlayGranted -> {
+//                        Log.d(TAG, "  → runtime granted, overlay missing → showing overlay card, arming dismiss-after-overlay-return")
+//                        showFallbackDialog          = false
+//                        dismissAfterOverlayReturn   = true
+//                    }
+//                    else -> {
+//                        Log.d(TAG, "  → runtime still missing after app settings → keep fallback")
+//                    }
 //                }
 //            }
 //        }
@@ -359,9 +454,6 @@
 //        }
 //    }
 //
-//    // ── Build the *visible* card list (only cards whose perms are still missing) ──
-//    // priorityPerms first (in their requested order), then base cards (Call, Contacts),
-//    // then Overlay (if missing). Anything fully granted is omitted entirely.
 //    val visibleCards: List<PermissionItem> = remember(
 //        priorityPerms,
 //        permissionCheckTrigger,
@@ -370,7 +462,6 @@
 //        val items = mutableListOf<PermissionItem>()
 //        val seenLabels = mutableSetOf<String>()
 //
-//        // 1. Priority cards first
 //        for (perm in priorityPerms) {
 //            val def = priorityCardFor(perm) ?: continue
 //            if (def.label in seenLabels) continue
@@ -383,7 +474,6 @@
 //            }
 //        }
 //
-//        // 2. Base cards (Call, Contacts)
 //        for (def in BASE_CARDS) {
 //            if (def.label in seenLabels) continue
 //            val allGranted = def.gatingPerms.all {
@@ -395,7 +485,6 @@
 //            }
 //        }
 //
-//        // 3. Overlay card (only when not granted)
 //        if (!overlayGranted) {
 //            items.add(PermissionItem(Icons.Filled.Layers, "Overlay", isGranted = false))
 //        }
@@ -403,8 +492,6 @@
 //        items
 //    }
 //
-//    // Safety net: if every card just got hidden but the auto-dismiss in handlePostRequestState
-//    // didn't catch it (e.g. lifecycle re-check found everything granted), close the dialog now.
 //    LaunchedEffect(visibleCards) {
 //        if (visibleCards.isEmpty() && allPermissionsGranted(context, priorityPerms)) {
 //            Log.d(TAG, "All cards hidden + perms granted → dismissing ✓")
@@ -433,18 +520,51 @@
 //        PermissionsDialogContent(
 //            visibleCards = visibleCards,
 //            onContinue = {
-//                // Single batch — priority perms first in the array.
-//                // Filter to only what's currently missing so we don't ask
-//                // already-granted perms again.
+//                // If the only thing missing is overlay (typical after the
+//                // app-settings round-trip granted all runtime perms), arm the
+//                // dismiss-after-overlay-return flag so that whether the user
+//                // grants or denies overlay, the dialog closes when they come back.
+//                val runtimeStillMissing = getMissingRuntimePermissions(context, priorityPerms)
+//                val overlayStillMissing = !isOverlayGranted(context)
+//
+//                if (runtimeStillMissing.isEmpty() && overlayStillMissing) {
+//                    Log.d(TAG, "Continue tapped → only overlay missing → arming dismissAfterOverlayReturn and opening overlay settings")
+//                    dismissAfterOverlayReturn = true
+//                    suppressAppOpenAd(context)
+//                    overlaySettingsOpened = true
+//                    return@PermissionsDialogContent
+//                }
+//
 //                val perms = getRequestablePermissions(priorityPerms)
 //                    .filter { context.checkSelfPermission(it) != PackageManager.PERMISSION_GRANTED }
 //
-//                if (perms.isNotEmpty()) {
-//                    Log.d(TAG, "Continue tapped → single batch (priority first): $perms")
-//                    permissionLauncher.launch(perms.toTypedArray())
-//                } else {
+//                if (perms.isEmpty()) {
 //                    Log.d(TAG, "Continue tapped → no runtime perms missing, going straight to post-request state")
 //                    handlePostRequestState()
+//                    return@PermissionsDialogContent
+//                }
+//
+//                val activity = context as? android.app.Activity
+//                val everAsked = readPermsEverAsked(context)
+//                val allPermanentlyDenied = activity != null && perms.all { perm ->
+//                    perm in everAsked &&
+//                            !androidx.core.app.ActivityCompat
+//                                .shouldShowRequestPermissionRationale(activity, perm)
+//                }
+//
+//                if (allPermanentlyDenied) {
+//                    Log.d(TAG, "Continue tapped → all perms permanently denied → skipping launcher, opening app-settings")
+//                    waitingForAppSettings = true
+//                    showFallbackDialog    = true
+//                    context.startActivity(
+//                        Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+//                            data = Uri.parse("package:${context.packageName}")
+//                        }
+//                    )
+//                } else {
+//                    Log.d(TAG, "Continue tapped → single batch (priority first): $perms")
+//                    appendPermsEverAsked(context, perms)
+//                    permissionLauncher.launch(perms.toTypedArray())
 //                }
 //            },
 //            onDismiss = onDismiss
@@ -493,7 +613,6 @@
 //
 //                Spacer(modifier = Modifier.height(20.dp))
 //
-//                // Only renders cards for perms that are still NOT granted.
 //                visibleCards.forEach { item ->
 //                    Row(
 //                        verticalAlignment = Alignment.CenterVertically,
@@ -570,6 +689,7 @@
 //        }
 //    }
 //}
+
 
 package com.callerinfocom.ui.screens
 
@@ -667,13 +787,6 @@ private fun suppressAppOpenAd(context: android.content.Context) {
         .edit().putBoolean("skip_app_open_ad", true).apply()
 }
 
-/**
- * Card definitions. Each maps a *card* to the set of underlying perms that must
- * all be granted for the card to disappear. The "Call" card hides only when both
- * READ_CALL_LOG and CALL_PHONE are granted; "Contacts" hides when READ_CONTACTS
- * and WRITE_CONTACTS are granted; etc. This way a single missed perm keeps the
- * relevant card visible.
- */
 private data class CardDef(
     val icon         : ImageVector,
     val label        : String,
@@ -693,10 +806,6 @@ private val BASE_CARDS: List<CardDef> = listOf(
     )
 )
 
-/**
- * Per-permission card (used for priority perms denied on PermissionScreen).
- * Returns null for perms already covered by a base card.
- */
 private fun priorityCardFor(permission: String): CardDef? = when (permission) {
     Manifest.permission.READ_PHONE_STATE   -> CardDef(
         icon        = Icons.Filled.Phone,
@@ -708,7 +817,6 @@ private fun priorityCardFor(permission: String): CardDef? = when (permission) {
         label       = "Notifications",
         gatingPerms = listOf(Manifest.permission.POST_NOTIFICATIONS)
     )
-    // Already covered by a base card
     Manifest.permission.READ_CONTACTS,
     Manifest.permission.WRITE_CONTACTS,
     Manifest.permission.READ_CALL_LOG,
@@ -730,7 +838,6 @@ private fun readDeniedPermsFromPrefs(context: android.content.Context): List<Str
     return order.filter { it in saved } + saved.filter { it !in order }
 }
 
-/** Permissions that have ever been launched through this app's permission flow. */
 private fun readPermsEverAsked(context: android.content.Context): Set<String> =
     context.getSharedPreferences(PREFS_NAME, android.content.Context.MODE_PRIVATE)
         .getStringSet(KEY_PERMS_EVER_ASKED, emptySet()) ?: emptySet()
@@ -755,9 +862,16 @@ fun RequiredPermissionsDialog(
     }
     Log.d(TAG, "RequiredPermissionsDialog opened with priorityPerms=$priorityPerms")
 
-    if (allPermissionsGranted(context, priorityPerms)) {
-        Log.d(TAG, "=== First composition: all permissions granted → immediate dismiss ===")
-        LaunchedEffect(Unit) { onDismiss() }
+    // FLICKER FIX 1:
+    // Synchronous early-return: don't render ANYTHING if perms already granted.
+    // Using LaunchedEffect(Unit) { onDismiss() } caused a 1-frame flicker of the
+    // empty card because LaunchedEffect schedules its body for AFTER the first
+    // frame is laid out. `remember` + `SideEffect` + an early `return` ensures
+    // the Dialog composable subtree is never entered at all.
+    val alreadyGrantedAtStart = remember { allPermissionsGranted(context, priorityPerms) }
+    if (alreadyGrantedAtStart) {
+        Log.d(TAG, "=== First composition: all permissions granted → immediate dismiss (no render) ===")
+        SideEffect { onDismiss() }
         return
     }
 
@@ -766,24 +880,29 @@ fun RequiredPermissionsDialog(
     var showFallbackDialog    by remember { mutableStateOf(false) }
     var waitingForAppSettings by remember { mutableStateOf(false) }
 
-    // Bumped whenever permission state may have changed. Used to re-derive
-    // which cards should still be visible.
+    var dismissAfterOverlayReturn by remember { mutableStateOf(false) }
+
+    // NEW: tracks whether we've already done the one-shot "retry denied perms"
+    // pass for this dialog session. Prevents an infinite re-prompt loop if the
+    // user keeps denying.
+    var retryAttempted by remember { mutableStateOf(false) }
+
     var permissionCheckTrigger by remember { mutableStateOf(0) }
 
     var overlayGranted by remember { mutableStateOf(isOverlayGranted(context)) }
 
     Log.d(TAG, "=== Composition ===  overlayGranted=$overlayGranted  " +
             "showFallback=$showFallbackDialog  waitingForAppSettings=$waitingForAppSettings  " +
-            "pollingOverlay=$pollingOverlay  priorityPerms=$priorityPerms  " +
+            "pollingOverlay=$pollingOverlay  dismissAfterOverlayReturn=$dismissAfterOverlayReturn  " +
+            "priorityPerms=$priorityPerms  " +
             "missingRuntime=${getMissingRuntimePermissions(context, priorityPerms)}")
 
-    // Decides what to do once permission requests have fully finished.
     fun handlePostRequestState() {
         val nowMissingRuntime = getMissingRuntimePermissions(context, priorityPerms)
         val nowOverlay        = isOverlayGranted(context)
         val runtimeGranted    = nowMissingRuntime.isEmpty()
         overlayGranted        = nowOverlay
-        permissionCheckTrigger++   // re-derive cards
+        permissionCheckTrigger++
 
         Log.d(TAG, "  handlePostRequestState → missingRuntime=$nowMissingRuntime  " +
                 "runtimeGranted=$runtimeGranted  overlayGranted=$overlayGranted")
@@ -810,15 +929,19 @@ fun RequiredPermissionsDialog(
     }
 
     // ── Runtime permission launcher ───────────────────────────────────────
+    // Held in a mutable ref so the callback below can re-invoke the launcher
+    // for the retry pass. (You can't reference `permissionLauncher` from
+    // inside the lambda that initializes it.)
+    val launcherRef = remember {
+        mutableStateOf<androidx.activity.result.ActivityResultLauncher<Array<String>>?>(null)
+    }
+
     val permissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { results ->
         Log.d(TAG, "── Runtime launcher callback ──")
         Log.d(TAG, "  raw results : $results")
 
-        // The launcher walked through every permission it was given.
-        // Android shows them in sequence inside the same launcher invocation,
-        // so by the time we get here the user has seen every prompt.
         permissionCheckTrigger++
         val nowMissingRuntime = getMissingRuntimePermissions(context, priorityPerms)
         val nowOverlay        = isOverlayGranted(context)
@@ -826,28 +949,52 @@ fun RequiredPermissionsDialog(
         val runtimeGranted    = nowMissingRuntime.isEmpty()
 
         when {
-            // Everything granted → done.
             runtimeGranted && overlayGranted -> {
                 Log.d(TAG, "  launcher → ALL granted, dismissing ✓")
                 onDismiss()
             }
-            // Runtime fully granted, overlay missing → existing overlay flow.
             runtimeGranted && !overlayGranted -> {
                 Log.d(TAG, "  launcher → runtime OK, overlay missing → opening overlay settings")
                 suppressAppOpenAd(context)
                 overlaySettingsOpened = true
             }
             else -> {
-                Log.d(TAG, "  launcher → runtime denied after full prompt → opening app-settings  missingRuntime=$nowMissingRuntime")
-                waitingForAppSettings = true
-                context.startActivity(
-                    Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                        data = Uri.parse("package:${context.packageName}")
+                // Before falling back to app-settings, give denied perms one more
+                // chance through the system dialog. Only re-prompt perms for which
+                // the OS will still show a dialog (shouldShowRequestPermissionRationale
+                // == true). Permanently-denied perms wouldn't show anything, so
+                // they skip the retry and go straight to app-settings.
+                val activity = context as? android.app.Activity
+                val retriablePerms = if (activity != null) {
+                    nowMissingRuntime.filter { perm ->
+                        androidx.core.app.ActivityCompat
+                            .shouldShowRequestPermissionRationale(activity, perm)
                     }
-                )
+                } else {
+                    emptyList()
+                }
+
+                val retryLauncher = launcherRef.value
+                if (!retryAttempted && retriablePerms.isNotEmpty() && retryLauncher != null) {
+                    Log.d(TAG, "  launcher → ${nowMissingRuntime.size} denied, retrying ${retriablePerms.size}: $retriablePerms")
+                    retryAttempted = true
+                    appendPermsEverAsked(context, retriablePerms)
+                    retryLauncher.launch(retriablePerms.toTypedArray())
+                } else {
+                    Log.d(TAG, "  launcher → runtime denied (retryAttempted=$retryAttempted, retriable=$retriablePerms) → opening app-settings  missingRuntime=$nowMissingRuntime")
+                    waitingForAppSettings = true
+                    context.startActivity(
+                        Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                            data = Uri.parse("package:${context.packageName}")
+                        }
+                    )
+                }
             }
         }
     }
+
+    // Publish the launcher into the ref so the callback can use it for retries.
+    SideEffect { launcherRef.value = permissionLauncher }
 
     // ── Open overlay settings ─────────────────────────────────────────────
     LaunchedEffect(overlaySettingsOpened) {
@@ -897,6 +1044,15 @@ fun RequiredPermissionsDialog(
                 Log.d(TAG, "  after overlay grant: runtimeGranted=$runtimeGranted  " +
                         "missingRuntime=$nowMissing")
 
+                // NEW: if we're in the “dismiss-after-overlay-return” mode,
+                // close the dialog regardless of runtime state.
+                if (dismissAfterOverlayReturn) {
+                    Log.d(TAG, "  → dismissAfterOverlayReturn=true (overlay granted) → dismissing ✓")
+                    suppressAppOpenAd(context)
+                    onDismiss()
+                    break
+                }
+
                 if (runtimeGranted) {
                     Log.d(TAG, "  → ALL granted, suppressing app-open ad and dismissing ✓")
                     suppressAppOpenAd(context)
@@ -915,12 +1071,11 @@ fun RequiredPermissionsDialog(
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             Log.d(TAG, "── Lifecycle event=$event ──  pollingOverlay=$pollingOverlay  " +
-                    "waitingForAppSettings=$waitingForAppSettings")
+                    "waitingForAppSettings=$waitingForAppSettings  " +
+                    "dismissAfterOverlayReturn=$dismissAfterOverlayReturn")
 
             if (event != Lifecycle.Event.ON_RESUME) return@LifecycleEventObserver
 
-            // Whenever the app comes back, re-check perms so cards refresh
-            // (handles users granting from system Settings outside our flow).
             permissionCheckTrigger++
 
             if (pollingOverlay) {
@@ -929,6 +1084,16 @@ fun RequiredPermissionsDialog(
                 if (stillDenied) {
                     pollingOverlay = false
                     overlayGranted = false
+
+                    // NEW: if the user came here via the "post app-settings overlay" flow,
+                    // dismiss now regardless of overlay outcome (denied case).
+                    if (dismissAfterOverlayReturn) {
+                        Log.d(TAG, "  → dismissAfterOverlayReturn=true (overlay denied on return) → dismissing ✓")
+                        suppressAppOpenAd(context)
+                        onDismiss()
+                        return@LifecycleEventObserver
+                    }
+
                     val nowMissing     = getMissingRuntimePermissions(context, priorityPerms)
                     val runtimeGranted = nowMissing.isEmpty()
                     Log.d(TAG, "  overlay denied on return  runtimeGranted=$runtimeGranted  " +
@@ -955,12 +1120,22 @@ fun RequiredPermissionsDialog(
                 Log.d(TAG, "  [app-settings path] runtimeGranted=$runtimeGranted  " +
                         "overlayGranted=$overlayGranted  missingRuntime=$nowMissing")
 
-                if (runtimeGranted) {
-                    Log.d(TAG, "  → runtime granted (overlay=$overlayGranted) → suppressing app-open ad and dismissing ✓")
-                    suppressAppOpenAd(context)
-                    onDismiss()
-                } else {
-                    Log.d(TAG, "  → runtime still missing after app settings → keep fallback")
+                when {
+                    // Everything granted → done.
+                    runtimeGranted && overlayGranted -> {
+                        Log.d(TAG, "  → ALL granted → suppressing app-open ad and dismissing ✓")
+                        suppressAppOpenAd(context)
+                        onDismiss()
+                    }
+
+                    runtimeGranted && !overlayGranted -> {
+                        Log.d(TAG, "  → runtime granted, overlay missing → showing overlay card, arming dismiss-after-overlay-return")
+                        showFallbackDialog          = false
+                        dismissAfterOverlayReturn   = true
+                    }
+                    else -> {
+                        Log.d(TAG, "  → runtime still missing after app settings → keep fallback")
+                    }
                 }
             }
         }
@@ -979,7 +1154,6 @@ fun RequiredPermissionsDialog(
         val items = mutableListOf<PermissionItem>()
         val seenLabels = mutableSetOf<String>()
 
-        // 1. Priority cards first
         for (perm in priorityPerms) {
             val def = priorityCardFor(perm) ?: continue
             if (def.label in seenLabels) continue
@@ -992,7 +1166,6 @@ fun RequiredPermissionsDialog(
             }
         }
 
-        // 2. Base cards (Call, Contacts)
         for (def in BASE_CARDS) {
             if (def.label in seenLabels) continue
             val allGranted = def.gatingPerms.all {
@@ -1004,7 +1177,6 @@ fun RequiredPermissionsDialog(
             }
         }
 
-        // 3. Overlay card (only when not granted)
         if (!overlayGranted) {
             items.add(PermissionItem(Icons.Filled.Layers, "Overlay", isGranted = false))
         }
@@ -1012,10 +1184,16 @@ fun RequiredPermissionsDialog(
         items
     }
 
-    LaunchedEffect(visibleCards) {
-        if (visibleCards.isEmpty() && allPermissionsGranted(context, priorityPerms)) {
-            Log.d(TAG, "All cards hidden + perms granted → dismissing ✓")
-            onDismiss()
+    // FLICKER FIX 3:
+    // If `visibleCards` is empty AND all perms are granted, dismiss synchronously
+    // (SideEffect) rather than via LaunchedEffect, which would let an empty card
+    // render for a frame first.
+    if (visibleCards.isEmpty()) {
+        SideEffect {
+            if (allPermissionsGranted(context, priorityPerms)) {
+                Log.d(TAG, "All cards hidden + perms granted → dismissing ✓")
+                onDismiss()
+            }
         }
     }
 
@@ -1040,6 +1218,21 @@ fun RequiredPermissionsDialog(
         PermissionsDialogContent(
             visibleCards = visibleCards,
             onContinue = {
+                // If the only thing missing is overlay (typical after the
+                // app-settings round-trip granted all runtime perms), arm the
+                // dismiss-after-overlay-return flag so that whether the user
+                // grants or denies overlay, the dialog closes when they come back.
+                val runtimeStillMissing = getMissingRuntimePermissions(context, priorityPerms)
+                val overlayStillMissing = !isOverlayGranted(context)
+
+                if (runtimeStillMissing.isEmpty() && overlayStillMissing) {
+                    Log.d(TAG, "Continue tapped → only overlay missing → arming dismissAfterOverlayReturn and opening overlay settings")
+                    dismissAfterOverlayReturn = true
+                    suppressAppOpenAd(context)
+                    overlaySettingsOpened = true
+                    return@PermissionsDialogContent
+                }
+
                 val perms = getRequestablePermissions(priorityPerms)
                     .filter { context.checkSelfPermission(it) != PackageManager.PERMISSION_GRANTED }
 
@@ -1068,7 +1261,6 @@ fun RequiredPermissionsDialog(
                     )
                 } else {
                     Log.d(TAG, "Continue tapped → single batch (priority first): $perms")
-                    // Record that these perms have now been asked from this Activity.
                     appendPermsEverAsked(context, perms)
                     permissionLauncher.launch(perms.toTypedArray())
                 }
@@ -1084,6 +1276,13 @@ private fun PermissionsDialogContent(
     onContinue  : () -> Unit,
     onDismiss   : () -> Unit
 ) {
+    // FLICKER FIX 2:
+    // Don't render an empty shell — caller should be dismissing via the
+    // SideEffect above. Returning here prevents the bare Card (title + Continue
+    // button with no card rows) from briefly appearing on screen during
+    // navigation transitions or rapid state changes.
+    if (visibleCards.isEmpty()) return
+
     Dialog(
         onDismissRequest = { onDismiss() },
         properties = DialogProperties(
@@ -1119,7 +1318,6 @@ private fun PermissionsDialogContent(
 
                 Spacer(modifier = Modifier.height(20.dp))
 
-                // Only renders cards for perms that are still NOT granted.
                 visibleCards.forEach { item ->
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
