@@ -316,16 +316,24 @@ fun MainScreen(
                 composable(Screen.Language.route) {
                     LanguageSelectScreen(
                         initialLanguage  = selectedLanguage,
+//                        onLanguageChosen = { language ->
+//                            LocaleHelper.saveLanguage(context, language.code)
+//                            onboardingViewModel.saveLanguage(language)
+//                            // Language chosen — skip splash on next launch, go to permissions
+////                            navController.navigate(Screen.Permission.route) {
+////                                popUpTo(Screen.Language.route) { inclusive = true }
+////                            }
+//                            navController.navigate(Screen.Recents.route) {
+//                                popUpTo(Screen.Language.route) { inclusive = true }
+//                            }
+//                            (context as Activity).recreate()
+//                        }
                         onLanguageChosen = { language ->
                             LocaleHelper.saveLanguage(context, language.code)
                             onboardingViewModel.saveLanguage(language)
-                            // Language chosen — skip splash on next launch, go to permissions
-//                            navController.navigate(Screen.Permission.route) {
-//                                popUpTo(Screen.Language.route) { inclusive = true }
-//                            }
-                            navController.navigate(Screen.Recents.route) {
-                                popUpTo(Screen.Language.route) { inclusive = true }
-                            }
+                            // recreate() will tear down this Activity. The next launch will read
+                            // selectedLanguage != null and start directly on Recents — no need to
+                            // navigate first (the navigation would be discarded anyway).
                             (context as Activity).recreate()
                         }
                     )
