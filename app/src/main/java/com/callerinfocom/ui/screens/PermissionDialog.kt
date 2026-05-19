@@ -1,3 +1,4 @@
+//
 //package com.callerinfocom.ui.screens
 //
 //import android.Manifest
@@ -169,9 +170,16 @@
 //    }
 //    Log.d(TAG, "RequiredPermissionsDialog opened with priorityPerms=$priorityPerms")
 //
-//    if (allPermissionsGranted(context, priorityPerms)) {
-//        Log.d(TAG, "=== First composition: all permissions granted → immediate dismiss ===")
-//        LaunchedEffect(Unit) { onDismiss() }
+//    // FLICKER FIX 1:
+//    // Synchronous early-return: don't render ANYTHING if perms already granted.
+//    // Using LaunchedEffect(Unit) { onDismiss() } caused a 1-frame flicker of the
+//    // empty card because LaunchedEffect schedules its body for AFTER the first
+//    // frame is laid out. `remember` + `SideEffect` + an early `return` ensures
+//    // the Dialog composable subtree is never entered at all.
+//    val alreadyGrantedAtStart = remember { allPermissionsGranted(context, priorityPerms) }
+//    if (alreadyGrantedAtStart) {
+//        Log.d(TAG, "=== First composition: all permissions granted → immediate dismiss (no render) ===")
+//        SideEffect { onDismiss() }
 //        return
 //    }
 //
@@ -180,10 +188,6 @@
 //    var showFallbackDialog    by remember { mutableStateOf(false) }
 //    var waitingForAppSettings by remember { mutableStateOf(false) }
 //
-//    // NEW: when true, the *next* return from overlay settings dismisses the dialog
-//    // regardless of whether overlay was granted. Set after the user completed the
-//    // runtime-grant round-trip via app-settings and tapped Continue on the
-//    // overlay-only card.
 //    var dismissAfterOverlayReturn by remember { mutableStateOf(false) }
 //
 //    // NEW: tracks whether we've already done the one-shot "retry denied perms"
@@ -431,11 +435,7 @@
 //                        suppressAppOpenAd(context)
 //                        onDismiss()
 //                    }
-//                    // NEW: runtime now granted but overlay still missing → keep the
-//                    // dialog open showing only the Overlay card. The next Continue tap
-//                    // will open overlay settings, and after the user returns from
-//                    // overlay settings the dialog should auto-dismiss (handled via
-//                    // dismissAfterOverlayReturn=true set in the Continue handler).
+//
 //                    runtimeGranted && !overlayGranted -> {
 //                        Log.d(TAG, "  → runtime granted, overlay missing → showing overlay card, arming dismiss-after-overlay-return")
 //                        showFallbackDialog          = false
@@ -492,10 +492,16 @@
 //        items
 //    }
 //
-//    LaunchedEffect(visibleCards) {
-//        if (visibleCards.isEmpty() && allPermissionsGranted(context, priorityPerms)) {
-//            Log.d(TAG, "All cards hidden + perms granted → dismissing ✓")
-//            onDismiss()
+//    // FLICKER FIX 3:
+//    // If `visibleCards` is empty AND all perms are granted, dismiss synchronously
+//    // (SideEffect) rather than via LaunchedEffect, which would let an empty card
+//    // render for a frame first.
+//    if (visibleCards.isEmpty()) {
+//        SideEffect {
+//            if (allPermissionsGranted(context, priorityPerms)) {
+//                Log.d(TAG, "All cards hidden + perms granted → dismissing ✓")
+//                onDismiss()
+//            }
 //        }
 //    }
 //
@@ -578,6 +584,13 @@
 //    onContinue  : () -> Unit,
 //    onDismiss   : () -> Unit
 //) {
+//    // FLICKER FIX 2:
+//    // Don't render an empty shell — caller should be dismissing via the
+//    // SideEffect above. Returning here prevents the bare Card (title + Continue
+//    // button with no card rows) from briefly appearing on screen during
+//    // navigation transitions or rapid state changes.
+//    if (visibleCards.isEmpty()) return
+//
 //    Dialog(
 //        onDismissRequest = { onDismiss() },
 //        properties = DialogProperties(
@@ -689,7 +702,9 @@
 //        }
 //    }
 //}
-
+//
+//
+//
 
 package com.callerinfocom.ui.screens
 
@@ -1284,9 +1299,12 @@ private fun PermissionsDialogContent(
     if (visibleCards.isEmpty()) return
 
     Dialog(
+        // Back press is wired to onDismiss so the user can simply close the
+        // dialog with the system/back gesture. Outside taps are still ignored
+        // so an accidental fumble outside the card won't close it.
         onDismissRequest = { onDismiss() },
         properties = DialogProperties(
-            dismissOnBackPress    = false,
+            dismissOnBackPress    = true,
             dismissOnClickOutside = false
         )
     ) {

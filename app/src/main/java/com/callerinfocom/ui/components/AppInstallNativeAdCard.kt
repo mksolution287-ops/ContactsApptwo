@@ -84,9 +84,10 @@ fun AppInstallNativeAdCard(modifier: Modifier = Modifier) {
                 adView.bodyView         = adView.findViewById(R.id.ad_body)
                 adView.iconView         = adView.findViewById(R.id.ad_app_icon)
                 adView.callToActionView = adView.findViewById(R.id.ad_call_to_action)
-                adView.storeView        = adView.findViewById(R.id.ad_store)
-                adView.priceView        = adView.findViewById(R.id.ad_price)
-                adView.starRatingView   = adView.findViewById(R.id.ad_stars)
+
+//                adView.storeView        = adView.findViewById(R.id.ad_store)
+//                adView.priceView        = adView.findViewById(R.id.ad_price)
+//                adView.starRatingView   = adView.findViewById(R.id.ad_stars)
 
                 adView
             },
@@ -125,16 +126,16 @@ fun AppInstallNativeAdCard(modifier: Modifier = Modifier) {
                 }
 
                 // Stars + meta row visibility
-                val metaRow = adView.findViewById<LinearLayout>(R.id.ad_meta_row)
-                val starsView = adView.starRatingView as? RatingBar
-                if (ad.starRating != null) {
-                    starsView?.rating = ad.starRating!!.toFloat()
-                    metaRow?.visibility = View.VISIBLE
-                } else if (ad.store != null || ad.price != null) {
-                    metaRow?.visibility = View.VISIBLE
-                } else {
-                    metaRow?.visibility = View.GONE
-                }
+//                val metaRow = adView.findViewById<LinearLayout>(R.id.ad_meta_row)
+//                val starsView = adView.starRatingView as? RatingBar
+//                if (ad.starRating != null) {
+//                    starsView?.rating = ad.starRating!!.toFloat()
+//                    metaRow?.visibility = View.VISIBLE
+//                } else if (ad.store != null || ad.price != null) {
+//                    metaRow?.visibility = View.VISIBLE
+//                } else {
+//                    metaRow?.visibility = View.GONE
+//                }
 
                 // Required — registers all views for click tracking
                 adView.setNativeAd(ad)
