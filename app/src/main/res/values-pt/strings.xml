@@ -276,4 +276,6 @@ Ao tocar em Concordar e continuar, você aceita nossa Política de Privacidade e
     <string name="thankyou_title">Você é um ótimo parceiro!</string>
     <string name="thankyou_subtitle">Seu feedback é o que nos motiva a tornar este recurso ainda melhor</string>
 
+    <string name="action_video_call">Chamada de vídeo</string>
+
 </resources>

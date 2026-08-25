@@ -13,6 +13,7 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,6 +30,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -40,6 +42,7 @@ import androidx.compose.material.icons.outlined.PersonAdd
 import androidx.compose.material.icons.outlined.PersonOutline
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.StarBorder
+import androidx.compose.material.icons.outlined.Videocam
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -68,6 +71,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
@@ -372,6 +376,12 @@ fun ContactsScreen(
                                                         }
                                                         expandedContactId = null
                                                     },
+                                                    onVideoCallClick = {
+                                                        contact.primaryPhone?.let {
+                                                            IntentUtils.videoCall(context, it)
+                                                        }
+                                                        expandedContactId = null
+                                                    },
                                                     onWhatsAppClick = {
                                                         contact.primaryPhone?.let {
                                                             openWhatsApp(context, it)
@@ -416,6 +426,7 @@ private fun ContactInlineActionRow(
     contact        : Contact,
     onContactClick : () -> Unit,
     onCallClick    : () -> Unit,
+    onVideoCallClick : () -> Unit,
     onMessageClick : () -> Unit,
     onWhatsAppClick: () -> Unit
 ) {
@@ -423,8 +434,9 @@ private fun ContactInlineActionRow(
         modifier              = Modifier
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
+            .horizontalScroll(rememberScrollState())
             .padding(horizontal = 16.dp, vertical = 10.dp),
-        horizontalArrangement = Arrangement.SpaceEvenly,
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
         verticalAlignment     = Alignment.CenterVertically
     ) {
         // Call — only if a phone number exists
@@ -434,6 +446,13 @@ private fun ContactInlineActionRow(
                 label = "Call",
                 tint  = MaterialTheme.colorScheme.primary,
                 onClick = onCallClick
+            )
+            // Video Call
+            ContactActionButton(
+                icon    = rememberVectorPainter(Icons.Outlined.Videocam),
+                label   = "Video",
+                tint    = MaterialTheme.colorScheme.primary,
+                onClick = onVideoCallClick
             )
             // WhatsApp
             ContactActionButton(
@@ -445,7 +464,7 @@ private fun ContactInlineActionRow(
             ContactActionButton(
                 icon  = painterResource(R.drawable.baseline_message_24),
                 label = "Message",
-                tint  = MaterialTheme.colorScheme.secondary,
+                tint  = MaterialTheme.colorScheme.primary,
                 onClick = onMessageClick
             )
         }

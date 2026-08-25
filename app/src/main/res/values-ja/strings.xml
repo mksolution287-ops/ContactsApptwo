@@ -256,4 +256,6 @@
     <string name="thankyou_title">あなたは素晴らしいパートナーです！</string>
     <string name="thankyou_subtitle">皆さまのフィードバックが、この機能をさらに良くする原動力です</string>
 
+    <string name="action_video_call">ビデオ通話</string>
+
 </resources>

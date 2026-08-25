@@ -1,8 +1,11 @@
 package com.callerinfocom.ui.screens
 
+import android.os.Build
 import androidx.activity.compose.BackHandler
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -29,6 +32,7 @@ import com.callerinfocom.data.model.AppLanguage
 import com.callerinfocom.ui.components.AppInstallNativeAdCard
 import com.callerinfocom.ui.components.NativeAdCard
 
+@RequiresApi(Build.VERSION_CODES.HONEYCOMB_MR2)
 @Composable
 fun LanguageSelectScreen(
     initialLanguage: AppLanguage? = null,

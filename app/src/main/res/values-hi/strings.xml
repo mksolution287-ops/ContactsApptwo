@@ -257,4 +257,6 @@
     <string name="thankyou_title">आप एक शानदार सहयोगी हैं!</string>
     <string name="thankyou_subtitle">आपकी प्रतिक्रिया ही हमें इस फीचर को और बेहतर बनाने के लिए प्रेरित करती है</string>
 
+    <string name="action_video_call">वीडियो कॉल</string>
+
 </resources>

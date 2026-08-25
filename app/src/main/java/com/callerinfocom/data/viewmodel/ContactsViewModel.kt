@@ -1,6 +1,12 @@
 package com.callerinfocom.data.viewmodel
 
 import android.app.Application
+import android.content.ActivityNotFoundException
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.telecom.TelecomManager
+import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.callerinfocom.data.model.CallLogEntry
@@ -176,6 +182,30 @@ val filteredContacts: StateFlow<List<Contact>> = combine(
      */
     private fun normalizeNumber(number: String): String {
         return number.filter { it.isDigit() }.takeLast(10)
+    }
+
+    fun makeVideoCall(context: Context, phoneNumber: String, errorMessage: String) {
+        try {
+            val intent = Intent(Intent.ACTION_CALL).apply {
+                data = Uri.parse("tel:$phoneNumber")
+                putExtra(TelecomManager.EXTRA_START_CALL_WITH_VIDEO_STATE, true)
+            }
+            context.startActivity(intent)
+        } catch (e: SecurityException) {
+            // Missing CALL_PHONE permission – fall back to the dialer with the video extra set,
+            // same behavior the system Contacts app uses when it lacks direct-call permission.
+            try {
+                val fallback = Intent(Intent.ACTION_DIAL).apply {
+                    data = Uri.parse("tel:$phoneNumber")
+                    putExtra(TelecomManager.EXTRA_START_CALL_WITH_VIDEO_STATE, true)
+                }
+                context.startActivity(fallback)
+            } catch (e2: Exception) {
+                Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
+            }
+        } catch (e: ActivityNotFoundException) {
+            Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
+        }
     }
 
 }

@@ -255,4 +255,6 @@ Indem ich fortfahre, akzeptiere ich die Datenschutzerklärung und die Allgemeine
     <string name="thankyou_title">Sie sind ein großartiger Partner!</string>
     <string name="thankyou_subtitle">Ihr Feedback motiviert uns, die Funktion noch besser zu machen</string>
 
+    <string name="action_video_call">Videoanruf</string>
+
 </resources>

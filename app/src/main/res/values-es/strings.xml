@@ -255,4 +255,7 @@ Al continuar, acepto la política de privacidad y los términos y condiciones.
 
     <string name="thankyou_title">¡Eres un gran compañero!</string>
     <string name="thankyou_subtitle">Tus comentarios son lo que nos impulsa a mejorar aún más esta función</string>
+
+    <string name="action_video_call">Videollamada</string>
+
 </resources>

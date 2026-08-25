@@ -105,7 +105,7 @@ class CallerIdOverlayService : Service() {
                     WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED or
                     WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON,
             PixelFormat.TRANSLUCENT
-        ).apply { gravity = Gravity.TOP }
+        ).apply { gravity = Gravity.CENTER }
 
         val view = buildOverlayView(phoneNumber, isIncoming)
         overlayView = view
@@ -276,17 +276,39 @@ class CallerIdOverlayService : Service() {
         ))
         return wrapper
     }
+//    private fun removeOverlay() {
+//        overlayView?.let { view ->
+//            TranslateAnimation(0f, 0f, 0f, -300f).apply {
+//                duration = 250
+//                interpolator = AccelerateInterpolator()
+//                view.startAnimation(this)
+//            }
+//            Handler(Looper.getMainLooper()).postDelayed({
+//                try { windowManager.removeView(view) } catch (_: Exception) {}
+//                overlayView = null
+//            }, 240)
+//        }
+//    }
+
     private fun removeOverlay() {
         overlayView?.let { view ->
-            TranslateAnimation(0f, 0f, 0f, -300f).apply {
-                duration = 250
+            val scaleAnim = ScaleAnimation(
+                1f, 0.85f, 1f, 0.85f,
+                Animation.RELATIVE_TO_SELF, 0.5f,
+                Animation.RELATIVE_TO_SELF, 0.5f
+            )
+            val fadeAnim = AlphaAnimation(1f, 0f)
+            AnimationSet(true).apply {
+                addAnimation(fadeAnim)
+                addAnimation(scaleAnim)
+                duration = 220
                 interpolator = AccelerateInterpolator()
                 view.startAnimation(this)
             }
             Handler(Looper.getMainLooper()).postDelayed({
                 try { windowManager.removeView(view) } catch (_: Exception) {}
                 overlayView = null
-            }, 240)
+            }, 220)
         }
     }
 

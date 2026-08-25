@@ -255,4 +255,6 @@
     <string name="thankyou_title">당신은 훌륭한 파트너입니다!</string>
     <string name="thankyou_subtitle">여러분의 피드백이 이 기능을 더욱 발전시키는 원동력입니다</string>
 
+    <string name="action_video_call">영상 통화</string>
+
 </resources>

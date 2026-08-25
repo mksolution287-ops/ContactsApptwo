@@ -275,4 +275,6 @@
     <string name="thankyou_title">Harika bir iş ortağısınız!</string>
     <string name="thankyou_subtitle">Geri bildiriminiz, bu özelliği daha da geliştirmemiz için bize ilham veriyor</string>
 
+    <string name="action_video_call">Görüntülü Arama</string>
+
 </resources>

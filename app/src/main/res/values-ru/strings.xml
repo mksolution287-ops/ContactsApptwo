@@ -275,4 +275,6 @@
     <string name="thankyou_title">Вы отличный партнёр!</string>
     <string name="thankyou_subtitle">Ваш отзыв вдохновляет нас делать эту функцию ещё лучше</string>
 
+    <string name="action_video_call">Видеозвонок</string>
+
 </resources>

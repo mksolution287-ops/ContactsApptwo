@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -31,6 +32,7 @@ import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.History
 import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material.icons.outlined.StarBorder
+import androidx.compose.material.icons.outlined.Videocam
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -191,47 +193,70 @@ fun ContactDetailScreen(
 
                 // ── 4 action buttons ───────────────────────────────────────────
                 item {
-                    Row(
+                    LazyRow(
                         modifier              = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 12.dp),
                         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
                     ) {
                         // Call
-                        ActionButton(
-                            icon    = Icons.Outlined.Call,
-                            label   = stringResource(R.string.action_call),
-                            enabled = c.primaryPhone != null,
-                            onClick = {
-                                c.primaryPhone?.let {
-                                    IntentUtils.makeCall(context, it, context.getString(R.string.error_no_phone_app))
+                        item{
+                            ActionButton(
+                                icon    = Icons.Outlined.Call,
+                                label   = stringResource(R.string.action_call),
+                                enabled = c.primaryPhone != null,
+                                onClick = {
+                                    c.primaryPhone?.let {
+                                        IntentUtils.makeCall(context, it, context.getString(R.string.error_no_phone_app))
+                                    }
                                 }
-                            }
-                        )
-                        // Share
-                        ActionButton(
-                            icon    = Icons.Outlined.Share,
-                            label   = stringResource(R.string.action_share),
-                            onClick = { IntentUtils.shareContact(context, c.id) }
-                        )
+                            )
+                        }
+
                         // Message
-                        ActionButton(
-                            icon    = Icons.Outlined.ChatBubbleOutline,
-                            label   = stringResource(R.string.action_message),
-                            enabled = c.primaryPhone != null,
-                            onClick = {
-                                c.primaryPhone?.let {
-                                    IntentUtils.sendSms(context, it, context.getString(R.string.error_no_messaging_app))
+                        item{
+                            ActionButton(
+                                icon    = Icons.Outlined.ChatBubbleOutline,
+                                label   = stringResource(R.string.action_message),
+                                enabled = c.primaryPhone != null,
+                                onClick = {
+                                    c.primaryPhone?.let {
+                                        IntentUtils.sendSms(context, it, context.getString(R.string.error_no_messaging_app))
+                                    }
                                 }
-                            }
-                        )
+                            )
+                        }
+
+                        // Video Call
+                        item{
+                            ActionButton(
+                                icon    = Icons.Outlined.Videocam,
+                                label   = stringResource(R.string.action_video_call),
+                                enabled = c.primaryPhone != null,
+                                onClick = {
+                                    c.primaryPhone?.let { IntentUtils.videoCall(context, it) }
+                                }
+                            )
+                        }
+
                         // Favourite toggle
-                        ActionButton(
-                            icon    = if (c.isFavorite) Icons.Filled.Star else Icons.Outlined.StarBorder,
-                            label   = "Favourite",
-                            tint    = if (c.isFavorite) Color(0xFFFFD700) else null,
-                            onClick = { viewModel.toggleFavorite(c.id) }
-                        )
+                        item{
+                            ActionButton(
+                                icon    = if (c.isFavorite) Icons.Filled.Star else Icons.Outlined.StarBorder,
+                                label   = "Favourite",
+                                tint    = if (c.isFavorite) Color(0xFFFFD700) else null,
+                                onClick = { viewModel.toggleFavorite(c.id) }
+                            )
+                        }
+
+                        // Share
+                        item{
+                            ActionButton(
+                                icon    = Icons.Outlined.Share,
+                                label   = stringResource(R.string.action_share),
+                                onClick = { IntentUtils.shareContact(context, c.id) }
+                            )
+                        }
                     }
                     Spacer(Modifier.height(20.dp))
                 }
@@ -262,7 +287,8 @@ fun ContactDetailScreen(
                                         },
                                         onSms    = {
                                             IntentUtils.sendSms(context, phone.number, context.getString(R.string.error_no_messaging_app))
-                                        }
+                                        },
+                                        onVideoCall = { IntentUtils.videoCall(context, phone.number) }
                                     )
                                 }
                             }
@@ -421,7 +447,8 @@ private fun PhoneRow(
     number  : String,
     label   : String,
     onCall  : () -> Unit,
-    onSms   : () -> Unit
+    onSms   : () -> Unit,
+    onVideoCall: () -> Unit
 ) {
     Row(
         modifier          = Modifier
@@ -458,6 +485,17 @@ private fun PhoneRow(
                 tint               = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier           = Modifier.size(18.dp)
             )
+        }
+
+        Spacer(Modifier.width(10.dp))
+
+        // Video call icon
+        Box(
+            modifier = Modifier.size(36.dp).clip(CircleShape).clickable(onClick = onVideoCall)
+                .background(MaterialTheme.colorScheme.surfaceVariant),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(Icons.Outlined.Videocam, "Video Call", tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(18.dp))
         }
 
         Spacer(Modifier.width(10.dp))

@@ -256,4 +256,5 @@ En continuant, j’accepte la politique de confidentialité et les conditions g�
     <string name="thankyou_title">Vous êtes un excellent partenaire !</string>
     <string name="thankyou_subtitle">Vos retours nous motivent à améliorer encore davantage cette fonctionnalité</string>
 
+    <string name="action_video_call">Appel vidéo</string>
 </resources>
