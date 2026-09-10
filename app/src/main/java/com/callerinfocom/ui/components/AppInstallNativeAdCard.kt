@@ -45,6 +45,11 @@ fun AppInstallNativeAdCard(modifier: Modifier = Modifier) {
                 nativeAd?.destroy()
                 nativeAd = ad
                 adReady = true
+
+                // ── Revenue tracking ────────────────────────────────────
+                ad.setOnPaidEventListener { adValue ->
+                    AdManager.trackPaidAd(context.applicationContext, adValue)
+                }
             }
             .withAdListener(object : AdListener() {
                 override fun onAdFailedToLoad(error: LoadAdError) {

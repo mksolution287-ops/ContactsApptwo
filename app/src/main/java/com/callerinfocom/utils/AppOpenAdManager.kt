@@ -66,9 +66,10 @@ class AppOpenAdManager(private val application: Application) :
         isLoadingAd = true
 
         val adUnitId = AdManager.getAppOpenAdUnitId()
+        val appContext = context.applicationContext
 
         AppOpenAd.load(
-            context,
+            appContext,
             adUnitId,
             AdRequest.Builder().build(),
             object : AppOpenAd.AppOpenAdLoadCallback() {
@@ -77,6 +78,11 @@ class AppOpenAdManager(private val application: Application) :
                     isLoadingAd = false
                     loadTime = Date().time
                     Log.d(TAG, "App open ad loaded ✅")
+
+                    // ── Revenue tracking ────────────────────────────────
+                    ad.setOnPaidEventListener { adValue ->
+                        AdManager.trackPaidAd(appContext, adValue)
+                    }
                 }
 
                 override fun onAdFailedToLoad(error: LoadAdError) {

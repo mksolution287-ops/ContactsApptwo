@@ -109,6 +109,15 @@ object AdManager {
         KEY_APP_OPEN_AD_UNIT     to TEST_APP_OPEN_ID
     )
 
+    // ── Revenue tracking helper — used by every ad format ──────────────────
+    fun trackPaidAd(context: Context, adValue: AdValue) {
+        try {
+            val revenue = adValue.valueMicros / 1_000_000.0
+            val currency = adValue.currencyCode
+            AdConstants.trackAdRevenue(context.applicationContext, revenue, currency)
+        } catch (_: Exception) {
+        }
+    }
 
     fun init(context: Context) {
         val remoteConfig = Firebase.remoteConfig
@@ -191,29 +200,6 @@ object AdManager {
     }
 
     // ── Preload interstitial ──────────────────────────────────────────────
-//    fun preloadInterstitial(context: Context) {
-//        val config = Firebase.remoteConfig
-//        if (!config.getBoolean(KEY_ADS_ENABLED) ||
-//            !config.getBoolean(KEY_INTERSTITIAL_ENABLED)) return
-//
-//        val adUnitId = config.getString(KEY_INTERSTITIAL_AD_UNIT).ifBlank { TEST_INTERSTITIAL_ID }
-//
-//        InterstitialAd.load(
-//            context,
-//            adUnitId,
-//            AdRequest.Builder().build(),
-//            object : InterstitialAdLoadCallback() {
-//                override fun onAdLoaded(ad: InterstitialAd) {
-//                    interstitialAd = ad
-//                    Log.d("AdManager", "Interstitial loaded ✅")
-//                }
-//                override fun onAdFailedToLoad(error: LoadAdError) {
-//                    interstitialAd = null
-//                    Log.e("AdManager", "Interstitial failed ❌ ${error.message}")
-//                }
-//            }
-//        )
-//    }
     fun preloadInterstitial(context: Context) {
         val config = Firebase.remoteConfig
 
@@ -241,6 +227,11 @@ object AdManager {
                 override fun onAdLoaded(ad: InterstitialAd) {
                     interstitialAd = ad
                     Log.d("AdManager", "✅ Interstitial LOADED")
+
+                    // ── Revenue tracking ────────────────────────────────
+                    ad.setOnPaidEventListener { adValue ->
+                        trackPaidAd(appContext, adValue)
+                    }
                 }
 
                 override fun onAdFailedToLoad(error: LoadAdError) {
@@ -260,12 +251,6 @@ object AdManager {
         actionCount++
         val triggerCount = config.getLong(KEY_INTERSTITIAL_TRIGGER).toInt()
 
-//        if (actionCount >= triggerCount) {
-//            actionCount = 0
-//            showInterstitial(activity) {
-//                preloadInterstitial(context)
-//            }
-//        }
         if (actionCount >= triggerCount) {
             actionCount = 0
 
@@ -288,13 +273,13 @@ object AdManager {
             return
         }
 
-        isInterstitialShowing = true  // ← ADD THIS
+        isInterstitialShowing = true
 
         interstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
             override fun onAdDismissedFullScreenContent() {
                 interstitialAd = null
                 isInterstitialShowing = false
-                interstitialDismissedAt = System.currentTimeMillis()  // ← ADD THIS too
+                interstitialDismissedAt = System.currentTimeMillis()
                 onDismiss()
             }
             override fun onAdFailedToShowFullScreenContent(error: AdError) {
@@ -319,12 +304,19 @@ object AdManager {
 
         Log.d("AdManager", "preloadNativeAd: loading adUnitId=$adUnitId")
 
+        val appContext = context.applicationContext
+
         val adLoader = AdLoader.Builder(context, adUnitId)
             .forNativeAd { ad ->
                 nativeAd?.destroy()
                 nativeAd = ad
                 _nativeAdReady.value = true
                 Log.d("AdManager", "Native ad loaded ✅")
+
+                // ── Revenue tracking ────────────────────────────────────
+                ad.setOnPaidEventListener { adValue ->
+                    trackPaidAd(appContext, adValue)
+                }
             }
             .withAdListener(object : AdListener() {
                 override fun onAdFailedToLoad(error: LoadAdError) {
@@ -521,4 +513,3 @@ fun AdLoadingOverlay(isVisible: Boolean) {
         }
     }
 }
-

@@ -15,28 +15,6 @@ import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.LoadAdError
 
-//@Composable
-//fun BannerAd(modifier: Modifier = Modifier) {
-//    val adsEnabled by AdManager.adsEnabled.collectAsState()
-//    val bannerEnabled by AdManager.bannerEnabled.collectAsState()
-//
-//    if (!adsEnabled || !bannerEnabled) return
-//
-//    AndroidView(
-//        modifier = modifier.fillMaxWidth(),
-//        factory = { context ->
-//            val displayMetrics = context.resources.displayMetrics
-//            val adWidth = (displayMetrics.widthPixels / displayMetrics.density).toInt()
-//            val adSize = AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(context, adWidth)
-//
-//            AdView(context).apply {
-//                setAdSize(adSize)
-//                adUnitId = AdManager.getBannerAdUnitId()
-//                loadAd(AdRequest.Builder().build())
-//            }
-//        }
-//    )
-//}
 
 @Composable
 fun BannerAd(modifier: Modifier = Modifier) {
@@ -75,6 +53,11 @@ fun BannerAd(modifier: Modifier = Modifier) {
                     override fun onAdImpression() {
                         Log.d("BannerAd", "Banner impression recorded")
                     }
+                }
+
+                // ── Revenue tracking ────────────────────────────────────
+                setOnPaidEventListener { adValue ->
+                    AdManager.trackPaidAd(ctx.applicationContext, adValue)
                 }
 
                 loadAd(AdRequest.Builder().build())
