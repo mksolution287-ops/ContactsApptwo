@@ -1,0 +1,5 @@
+<resources>
+    <color name="native_ad_bg">#F5F5F5</color>        <!-- light bg for dark app theme -->
+    <color name="native_ad_border">#8BC34A</color>
+    <color name="native_ad_text_primary">#000000</color>
+</resources>

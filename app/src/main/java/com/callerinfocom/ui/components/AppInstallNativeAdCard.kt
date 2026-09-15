@@ -15,6 +15,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.content.ContextCompat
 import com.callerinfocom.R
 import com.callerinfocom.utils.AdManager
 import com.google.android.gms.ads.AdListener
@@ -102,10 +103,21 @@ fun AppInstallNativeAdCard(modifier: Modifier = Modifier) {
                 // Media
                 adView.mediaView?.mediaContent = ad.mediaContent
 
-                // Text fields
-                (adView.headlineView as? TextView)?.text = ad.headline
-                (adView.bodyView as? TextView)?.text = ad.body
+                // Text fields + theme-aware colors
+                val textColor = ContextCompat.getColor(context, R.color.native_ad_text_primary)
+
+                (adView.headlineView as? TextView)?.apply {
+                    text = ad.headline
+                    setTextColor(textColor)
+                }
+                (adView.bodyView as? TextView)?.apply {
+                    text = ad.body
+                    setTextColor(textColor)
+                }
                 (adView.callToActionView as? Button)?.text = ad.callToAction
+
+                // Attribution label — must always be visible per AdMob policy
+                adView.findViewById<TextView>(R.id.ad_attribution)?.visibility = View.VISIBLE
 
                 // Icon
                 ad.icon?.drawable?.let {
