@@ -4,6 +4,8 @@ import android.app.Activity
 import android.app.Application
 import android.content.Context
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
@@ -21,9 +23,14 @@ class AppOpenAdManager(private val application: Application) :
     companion object {
         private const val TAG = "AppOpenAdManager"
         private const val AD_EXPIRY_MS = 4 * 60 * 60 * 1000L
+        private const val MAX_RETRIES = 3
+        private const val RETRY_BASE_MS = 2000L
     }
 
+    private val handler = Handler(Looper.getMainLooper())
+
     private var appOpenAd: AppOpenAd? = null
+    private var loadedUnitId: String? = null
     private var isLoadingAd = false
     private var isShowingAd = false
     private var loadTime: Long = 0
@@ -53,20 +60,40 @@ class AppOpenAdManager(private val application: Application) :
     override fun onStop(owner: LifecycleOwner) {
         Log.d(TAG, "ProcessLifecycle → onStop  → wasInBackground=true")
         wasInBackground = true
+        // User is leaving → make sure a fresh ad is waiting for when they return
+        loadAd(application)
     }
 
     // ── Ad loading ────────────────────────────────────────────────────────
 
     private fun isAdExpired(): Boolean = Date().time - loadTime > AD_EXPIRY_MS
-    private fun isAdAvailable(): Boolean = appOpenAd != null && !isAdExpired()
 
+    private fun isAdAvailable(): Boolean =
+        appOpenAd != null &&
+                !isAdExpired() &&
+                loadedUnitId == AdManager.getAppOpenAdUnitId()
+
+    /**
+     * Loads an app-open ad. Safe to call from any thread and repeatedly.
+     * Does nothing until AdManager reports ads ready — for the first load use
+     * AdManager.runWhenReady { loadAd(...) }.
+     */
     fun loadAd(context: Context) {
+        if (Looper.myLooper() != Looper.getMainLooper()) {
+            handler.post { loadAdInternal(0) }
+        } else {
+            loadAdInternal(0)
+        }
+    }
+
+    private fun loadAdInternal(attempt: Int) {
         if (!AdManager.isAppOpenAdEnabled()) return
+        if (!AdManager.isAdsReady) return
         if (isLoadingAd || isAdAvailable()) return
         isLoadingAd = true
 
         val adUnitId = AdManager.getAppOpenAdUnitId()
-        val appContext = context.applicationContext
+        val appContext = application.applicationContext
 
         AppOpenAd.load(
             appContext,
@@ -75,6 +102,7 @@ class AppOpenAdManager(private val application: Application) :
             object : AppOpenAd.AppOpenAdLoadCallback() {
                 override fun onAdLoaded(ad: AppOpenAd) {
                     appOpenAd = ad
+                    loadedUnitId = adUnitId
                     isLoadingAd = false
                     loadTime = Date().time
                     Log.d(TAG, "App open ad loaded ✅")
@@ -88,6 +116,15 @@ class AppOpenAdManager(private val application: Application) :
                 override fun onAdFailedToLoad(error: LoadAdError) {
                     isLoadingAd = false
                     Log.e(TAG, "App open ad failed ❌ ${error.message}")
+
+                    if (attempt < MAX_RETRIES &&
+                        error.code != AdRequest.ERROR_CODE_INVALID_REQUEST
+                    ) {
+                        handler.postDelayed(
+                            { loadAdInternal(attempt + 1) },
+                            RETRY_BASE_MS shl attempt
+                        )
+                    }
                 }
             }
         )
@@ -137,7 +174,7 @@ class AppOpenAdManager(private val application: Application) :
                 isShowingAd = false
                 wasInBackground = false
                 Log.d(TAG, "App open ad dismissed")
-                loadAd(activity)
+                loadAd(activity)   // next one starts loading immediately
             }
 
             override fun onAdFailedToShowFullScreenContent(error: AdError) {
@@ -160,7 +197,7 @@ class AppOpenAdManager(private val application: Application) :
 
     override fun onActivityResumed(activity: Activity) {
         currentActivity = activity
-        // Note: ad display is triggered by ProcessLifecycleOwner.onStart(), not here.
+        // Ad display is triggered by ProcessLifecycleOwner.onStart(), not here.
         // This avoids double-firing and correctly handles the Settings → app return case.
     }
 

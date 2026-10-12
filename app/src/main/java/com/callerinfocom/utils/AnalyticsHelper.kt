@@ -6,11 +6,9 @@ import com.google.firebase.analytics.FirebaseAnalytics
 object AnalyticsHelper {
 
     private var analytics: FirebaseAnalytics? = null
-
     fun init(firebaseAnalytics: FirebaseAnalytics) {
         analytics = firebaseAnalytics
     }
-
     // Screen View
     fun logScreenView(screenName: String) {
         analytics?.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, Bundle().apply {
@@ -25,7 +23,6 @@ object AnalyticsHelper {
             putString("screen", screen)
         })
     }
-
     // Call Event
     fun logCallEvent(callType: String, durationSec: Long?) {
         val bundle = Bundle().apply {

@@ -19,24 +19,24 @@ import com.callerinfocom.R
 @Composable
 fun NativeAdCard(modifier: Modifier = Modifier) {
     val context = LocalContext.current
-    val nativeAdReady by AdManager.nativeAdReady.collectAsState()
+    val nativeAdReady by AdManager.nativeAdReadyFlow(AdManager.NATIVE_KEY_DEFAULT).collectAsState()
     val adsEnabled by AdManager.adsEnabled.collectAsState()
     val nativeEnabled by AdManager.nativeEnabled.collectAsState()
 
     // Don't show or load if ads are disabled
     if (!adsEnabled || !nativeEnabled) return
 
-    // Preload when composable first enters composition
+    // Normally already preloaded at app start → no-op. If we got here first,
+    // it's queued/loaded immediately.
     LaunchedEffect(Unit) {
-        if (!nativeAdReady) {
-            AdManager.preloadNativeAd(context)
-        }
+        AdManager.preloadNativeAd(context, AdManager.NATIVE_KEY_DEFAULT)
     }
 
-    // Destroy ad when composable leaves composition
+    // When this card leaves the screen, replace the (now seen) ad with a fresh
+    // preloaded one so the next visit shows a new ad instantly.
     DisposableEffect(Unit) {
         onDispose {
-            AdManager.destroyNativeAd()
+            AdManager.recycleNativeAd(context, AdManager.NATIVE_KEY_DEFAULT)
         }
     }
 
@@ -53,15 +53,15 @@ fun NativeAdCard(modifier: Modifier = Modifier) {
                     .inflate(R.layout.native_ad_view, null) as NativeAdView
 
                 // Wire up all the views to the NativeAdView
-                adView.headlineView    = adView.findViewById(R.id.ad_headline)
-                adView.bodyView        = adView.findViewById(R.id.ad_body)
-                adView.iconView        = adView.findViewById(R.id.ad_app_icon)
+                adView.headlineView     = adView.findViewById(R.id.ad_headline)
+                adView.bodyView         = adView.findViewById(R.id.ad_body)
+                adView.iconView         = adView.findViewById(R.id.ad_app_icon)
                 adView.callToActionView = adView.findViewById(R.id.ad_call_to_action)
 
                 adView
             },
             update = { adView ->
-                val ad = AdManager.getNativeAd() ?: return@AndroidView
+                val ad = AdManager.getNativeAd(AdManager.NATIVE_KEY_DEFAULT) ?: return@AndroidView
 
                 // Populate each view with ad content
                 (adView.headlineView as? TextView)?.text = ad.headline
@@ -74,6 +74,9 @@ fun NativeAdCard(modifier: Modifier = Modifier) {
 
                 // CRITICAL: must call this to register all views for click tracking
                 adView.setNativeAd(ad)
+
+                // Tell AdManager this ad has been rendered (so it gets recycled later)
+                AdManager.markNativeAdShown(AdManager.NATIVE_KEY_DEFAULT)
             }
         )
     }

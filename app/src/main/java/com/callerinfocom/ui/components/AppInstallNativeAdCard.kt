@@ -4,8 +4,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.RatingBar
 import android.widget.TextView
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -18,59 +16,34 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import com.callerinfocom.R
 import com.callerinfocom.utils.AdManager
-import com.google.android.gms.ads.AdListener
-import com.google.android.gms.ads.AdLoader
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.LoadAdError
-import com.google.android.gms.ads.nativead.NativeAd
-import com.google.android.gms.ads.nativead.NativeAdOptions
 import com.google.android.gms.ads.nativead.NativeAdView
 
+/**
+ * App-install style native ad (landscape media, AdChoices top-right).
+ *
+ * The ad itself is preloaded by [AdManager] into [AdManager.NATIVE_KEY_APP_INSTALL]
+ * at app start, so it normally shows instantly instead of loading when this
+ * composable first appears.
+ */
 @Composable
 fun AppInstallNativeAdCard(modifier: Modifier = Modifier) {
     val context = LocalContext.current
     val adsEnabled by AdManager.adsEnabled.collectAsState()
     val nativeEnabled by AdManager.nativeEnabled.collectAsState()
-
-    var nativeAd by remember { mutableStateOf<NativeAd?>(null) }
-    var adReady by remember { mutableStateOf(false) }
+    val adReady by AdManager.nativeAdReadyFlow(AdManager.NATIVE_KEY_APP_INSTALL).collectAsState()
 
     if (!adsEnabled || !nativeEnabled) return
 
+    // No-op when already preloaded; queued automatically if ads aren't ready yet.
     LaunchedEffect(Unit) {
-
-        val adUnitId = AdManager.getAppInstallNativeAdUnitId()
-
-        AdLoader.Builder(context, adUnitId)
-            .forNativeAd { ad ->
-                nativeAd?.destroy()
-                nativeAd = ad
-                adReady = true
-
-                // ── Revenue tracking ────────────────────────────────────
-                ad.setOnPaidEventListener { adValue ->
-                    AdManager.trackPaidAd(context.applicationContext, adValue)
-                }
-            }
-            .withAdListener(object : AdListener() {
-                override fun onAdFailedToLoad(error: LoadAdError) {
-                    adReady = false
-                }
-            })
-            .withNativeAdOptions(
-                NativeAdOptions.Builder()
-                    .setAdChoicesPlacement(NativeAdOptions.ADCHOICES_TOP_RIGHT)
-                    .setMediaAspectRatio(NativeAdOptions.NATIVE_MEDIA_ASPECT_RATIO_LANDSCAPE)
-                    .build()
-            )
-            .build()
-            .loadAd(AdRequest.Builder().build())
+        AdManager.preloadNativeAd(context, AdManager.NATIVE_KEY_APP_INSTALL)
     }
 
+    // When this card leaves the screen, replace the (now seen) ad with a fresh
+    // preloaded one so the next visit shows a new ad instantly.
     DisposableEffect(Unit) {
         onDispose {
-            nativeAd?.destroy()
-            nativeAd = null
+            AdManager.recycleNativeAd(context, AdManager.NATIVE_KEY_APP_INSTALL)
         }
     }
 
@@ -98,7 +71,8 @@ fun AppInstallNativeAdCard(modifier: Modifier = Modifier) {
                 adView
             },
             update = { adView ->
-                val ad = nativeAd ?: return@AndroidView
+                val ad = AdManager.getNativeAd(AdManager.NATIVE_KEY_APP_INSTALL)
+                    ?: return@AndroidView
 
                 // Media
                 adView.mediaView?.mediaContent = ad.mediaContent
@@ -142,20 +116,11 @@ fun AppInstallNativeAdCard(modifier: Modifier = Modifier) {
                     priceView?.visibility = View.GONE
                 }
 
-                // Stars + meta row visibility
-//                val metaRow = adView.findViewById<LinearLayout>(R.id.ad_meta_row)
-//                val starsView = adView.starRatingView as? RatingBar
-//                if (ad.starRating != null) {
-//                    starsView?.rating = ad.starRating!!.toFloat()
-//                    metaRow?.visibility = View.VISIBLE
-//                } else if (ad.store != null || ad.price != null) {
-//                    metaRow?.visibility = View.VISIBLE
-//                } else {
-//                    metaRow?.visibility = View.GONE
-//                }
-
                 // Required — registers all views for click tracking
                 adView.setNativeAd(ad)
+
+                // Tell AdManager this ad has been rendered (so it gets recycled later)
+                AdManager.markNativeAdShown(AdManager.NATIVE_KEY_APP_INSTALL)
             }
         )
     }

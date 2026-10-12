@@ -1,67 +1,44 @@
 package com.callerinfocom.ui.components
 
-import android.util.Log
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import com.callerinfocom.utils.AdManager
-import com.google.android.gms.ads.AdListener
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.AdSize
-import com.google.android.gms.ads.AdView
-import com.google.android.gms.ads.LoadAdError
 
-
+/**
+ * Banner ad. The AdView is preloaded and cached by [AdManager], so it's
+ * usually already loaded by the time a screen shows it. This composable only
+ * attaches/detaches that cached view.
+ */
 @Composable
 fun BannerAd(modifier: Modifier = Modifier) {
+    val context = LocalContext.current
+    val adsReady by AdManager.adsReady.collectAsState()
     val adsEnabled by AdManager.adsEnabled.collectAsState()
     val bannerEnabled by AdManager.bannerEnabled.collectAsState()
 
-    if (!adsEnabled || !bannerEnabled) return
+    // Not ready yet (SDK / Remote Config still starting) or switched off.
+    // Recomposes automatically the moment adsReady flips to true.
+    if (!adsReady || !adsEnabled || !bannerEnabled) return
 
-    val context = LocalContext.current
+    val adView = remember(adsReady, bannerEnabled) {
+        AdManager.acquireBanner(context)
+    } ?: return
+
+    // Drop the Activity reference + pause when leaving; the AdView stays
+    // cached in AdManager for the next screen.
+    DisposableEffect(adView) {
+        onDispose { AdManager.releaseBanner() }
+    }
 
     AndroidView(
         modifier = modifier.fillMaxWidth(),
-        factory = { ctx ->
-            val displayMetrics = ctx.resources.displayMetrics
-            val adWidthPixels = displayMetrics.widthPixels
-            val density = displayMetrics.density
-            val adWidth = (adWidthPixels / density).toInt()
-
-            // Use Large Anchored Adaptive Banner (Recommended by Google)
-            val adSize = AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(ctx, adWidth)
-
-            AdView(ctx).apply {
-                setAdSize(adSize)
-//                adUnitId = "ca-app-pub-3940256099942544/6300978111"   // Official Test Banner ID
-                adUnitId = AdManager.getBannerAdUnitId()
-
-                adListener = object : AdListener() {
-                    override fun onAdLoaded() {
-                        Log.d("BannerAd", "✅ Banner LOADED successfully")
-                    }
-
-                    override fun onAdFailedToLoad(error: LoadAdError) {
-                        Log.e("BannerAd", "❌ Banner FAILED: ${error.code} - ${error.message}")
-                    }
-
-                    override fun onAdImpression() {
-                        Log.d("BannerAd", "Banner impression recorded")
-                    }
-                }
-
-                // ── Revenue tracking ────────────────────────────────────
-                setOnPaidEventListener { adValue ->
-                    AdManager.trackPaidAd(ctx.applicationContext, adValue)
-                }
-
-                loadAd(AdRequest.Builder().build())
-            }
-        }
+        factory = { adView }
     )
 }

@@ -25,23 +25,38 @@ object LocaleHelper {
         return prefs.getString(KEY_LANGUAGE, "en") ?: "en"
     }
 
-    // Apply locale
+    fun hasLanguage(context: Context): Boolean =
+        context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE).contains(KEY_LANGUAGE)
+
     fun setLocale(context: Context, languageCode: String): Context {
-        val locale = Locale(languageCode)
+        // Adjust to whatever code AppLanguage.SYSTEM_DEFAULT uses
+        if (languageCode.isBlank() || languageCode == "system") return context
+
+        val locale = Locale.forLanguageTag(languageCode)
         Locale.setDefault(locale)
 
         val config = Configuration(context.resources.configuration)
-
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            config.setLocale(locale)
-            context.createConfigurationContext(config)
-        } else {
-            config.locale = locale
-            context.resources.updateConfiguration(
-                config,
-                context.resources.displayMetrics
-            )
-            context
-        }
+        config.setLocale(locale)
+        return context.createConfigurationContext(config)
     }
+
+    // Apply locale
+//    fun setLocale(context: Context, languageCode: String): Context {
+//        val locale = Locale(languageCode)
+//        Locale.setDefault(locale)
+//
+//        val config = Configuration(context.resources.configuration)
+//
+//        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//            config.setLocale(locale)
+//            context.createConfigurationContext(config)
+//        } else {
+//            config.locale = locale
+//            context.resources.updateConfiguration(
+//                config,
+//                context.resources.displayMetrics
+//            )
+//            context
+//        }
+//    }
 }

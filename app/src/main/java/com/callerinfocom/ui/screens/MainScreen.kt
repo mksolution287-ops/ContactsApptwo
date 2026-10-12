@@ -33,6 +33,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -171,9 +172,14 @@ fun MainScreen(
         currentRoute?.let { logScreenView(it) }
     }
 
-    val startDestination = when {
-        selectedLanguage != null -> Screen.Recents.route
-        else                     -> Screen.Splash.route
+//    val startDestination = when {
+//        selectedLanguage != null -> Screen.Recents.route
+//        else                     -> Screen.Splash.route
+//    }
+
+    val startDestination = remember {
+        if (LocaleHelper.hasLanguage(context)) Screen.Recents.route
+        else Screen.Splash.route
     }
 
     // ── Navigate to shortcut tab ───────────────────────────────────
@@ -319,22 +325,21 @@ fun MainScreen(
 //                        onLanguageChosen = { language ->
 //                            LocaleHelper.saveLanguage(context, language.code)
 //                            onboardingViewModel.saveLanguage(language)
-//                            // Language chosen — skip splash on next launch, go to permissions
-////                            navController.navigate(Screen.Permission.route) {
-////                                popUpTo(Screen.Language.route) { inclusive = true }
-////                            }
-//                            navController.navigate(Screen.Recents.route) {
-//                                popUpTo(Screen.Language.route) { inclusive = true }
-//                            }
+//                            // recreate() will tear down this Activity. The next launch will read
+//                            // selectedLanguage != null and start directly on Recents — no need to
+//                            // navigate first (the navigation would be discarded anyway).
 //                            (context as Activity).recreate()
 //                        }
                         onLanguageChosen = { language ->
                             LocaleHelper.saveLanguage(context, language.code)
                             onboardingViewModel.saveLanguage(language)
-                            // recreate() will tear down this Activity. The next launch will read
-                            // selectedLanguage != null and start directly on Recents — no need to
-                            // navigate first (the navigation would be discarded anyway).
-                            (context as Activity).recreate()
+
+                            navController.navigate(Screen.Recents.route) {
+                                popUpTo(Screen.Language.route) { inclusive = true }
+                                launchSingleTop = true
+                            }
+                            // Post so the navigation state is committed before the Activity is recreated
+                            activity?.window?.decorView?.post { activity.recreate() }
                         }
                     )
                 }
@@ -383,7 +388,6 @@ fun MainScreen(
                             navController.navigate(Screen.Favorites.route)
                         },
                         onSettingsClick  = {
-//                            navController.navigate(Screen.Settings.route)
                             AdManager.immediateInterstitialAd(activity) {
                                 navController.navigate(Screen.Settings.route)
                             }

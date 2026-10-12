@@ -23,6 +23,7 @@ import com.callerinfocom.ui.theme.ContactsAppTheme
 import com.callerinfocom.utils.AnalyticsHelper
 import com.callerinfocom.utils.AppOpenAdManager
 import com.callerinfocom.utils.BaseContextWrapper
+import com.callerinfocom.utils.LocaleHelper
 import com.google.firebase.Firebase
 import com.google.firebase.FirebaseApp
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -34,8 +35,8 @@ class MainActivity : ComponentActivity() {
 
     private val contactsViewModel: ContactsViewModel by viewModels()
     private val settingsViewModel: SettingsViewModel by viewModels()
-
     // Holds the requested tab so MainScreen can observe it reactively
+
     private val _initialTab = MutableStateFlow<String?>(null)
 
     lateinit var firebaseAnalytics: FirebaseAnalytics
@@ -45,12 +46,15 @@ class MainActivity : ComponentActivity() {
         private set
 
     override fun attachBaseContext(newBase: Context) {
-        super.attachBaseContext(BaseContextWrapper.wrap(newBase))
+        super.attachBaseContext(
+            LocaleHelper.setLocale(newBase, LocaleHelper.getLanguage(newBase))
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
+
 
         FirebaseApp.initializeApp(this)
         firebaseAnalytics = Firebase.analytics
